@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import * as models from '../types/models'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import './ScoresOverTime.css'

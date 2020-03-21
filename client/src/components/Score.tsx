@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getScoreDetailsThunkAsync } from '../actions/scoresActions'
 import { ReduxState } from '../types'
 import * as models from '../types/models'
-import * as moment from 'moment'
+import moment from 'moment'
 import ScoreDetails from './ScoreDetails'
 import './Score.css'
 

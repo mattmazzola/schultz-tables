@@ -1,16 +1,5 @@
 import * as models from '../types/models'
-import * as moment from 'moment'
-
-/* tslint:disable */
-export function guid(): string {
-    var d = new Date().getTime()
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c: string) {
-        var r = (d + Math.random() * 16) % 16 | 0
-        d = Math.floor(d / 16)
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
-    })
-}
-/* tslint:enable */
+import moment from 'moment'
 
 export const randomize = <T>(xs: T[]): T[] => {
     let unrandomized = xs.slice(0);
@@ -133,8 +122,10 @@ export const generateDefaultGameState = () =>
         userSequence: []
     })
 
-export const getTimeDifference = (timeA: string, timeB: string) =>
-    moment.duration(moment(timeA).diff(moment(timeB))).asSeconds()
+export const getTimeDifference = (timeA: string, timeB: string) => {
+
+    return moment.duration(moment(timeA).diff(moment(timeB))).asSeconds()
+}
 
 export const getUserTableTypeKey = (userId: string, tableTypeId: string) =>
     `${userId}_${tableTypeId}`

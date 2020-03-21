@@ -1,8 +1,6 @@
-import RSA from 'react-simple-auth'
-import { microsoftProvider } from '../providers/microsoft'
 export const baseUrl: string = process.env.REACT_APP_BASE_URL!
 
-export const makeGraphqlRequest = async (operationName: string | null, query: string) => {
+export const makeGraphqlRequest = async (operationName: string | null, query: string, token = '') => {
     return await fetch(baseUrl, {
         "credentials": "omit",
         "headers": {
@@ -10,7 +8,7 @@ export const makeGraphqlRequest = async (operationName: string | null, query: st
             "accept-language": "en-US,en;q=0.9,ko;q=0.8",
             "cache-control": "no-cache",
             "content-type": "application/json",
-            'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
+            'Authorization': `Bearer ${token}`,
         },
         "body": JSON.stringify({
             operationName,
@@ -22,7 +20,7 @@ export const makeGraphqlRequest = async (operationName: string | null, query: st
     })
 }
 
-export const makeGraphqlMutation = async (operationName: string, mutation: string) => {
+export const makeGraphqlMutation = async (operationName: string, mutation: string, token: string = '') => {
     return await fetch(baseUrl, {
         "credentials": "omit",
         "headers": {
@@ -30,7 +28,7 @@ export const makeGraphqlMutation = async (operationName: string, mutation: strin
             "accept-language": "en-US,en;q=0.9,ko;q=0.8",
             "cache-control": "no-cache",
             "content-type": "application/json",
-            'Authorization': `Bearer ${RSA.getAccessToken(microsoftProvider, '')}`,
+            'Authorization': `Bearer ${token}`,
         },
         "body": JSON.stringify({
             operationName,

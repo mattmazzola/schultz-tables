@@ -1,6 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import * as models from '../types/models'
-import * as moment from 'moment'
+import moment from 'moment'
 import { getTimeDifference } from '../services/utilities'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import GamePreview from './GamePreview'
