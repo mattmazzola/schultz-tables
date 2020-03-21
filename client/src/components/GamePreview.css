@@ -1,0 +1,34 @@
+.game-preview {
+    position: relative;
+}
+
+.game-preview:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.game-preview-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.table-preview {
+    display: grid;
+    grid-template: repeat(5, 1fr)/repeat(5, 1fr);
+    grid-gap: 1px;
+    color: rgba(51,51,51,1);
+    background: rgba(51,51,51,1);
+    border: 2px solid rgba(51,51,51,1);
+}
+  
+.table-preview__cell {
+    border: 1px solid rgba(51,51,51,1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    background: white;
+}
