@@ -1,0 +1,28 @@
+{
+  "name": "migrate-cosmos-to-mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ./build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Matt Mazzola <mattmazzola@live.com> (https://github.com/mattmazzola)",
+  "license": "MIT",
+  "dependencies": {
+    "@azure/cosmos": "^2.1.2",
+    "@types/json-stable-stringify": "^1.0.32",
+    "dotenv": "^6.2.0",
+    "json-stable-stringify": "^1.0.1",
+    "mongodb": "^3.1.13"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "@types/mongodb": "^3.1.20",
+    "@types/node": "^11.10.4",
+    "typescript": "^3.3.3333"
+  }
+}
