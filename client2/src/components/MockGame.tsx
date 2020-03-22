@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { getSymbols, randomize } from '../utils'
+import { getSymbols, randomize } from '../utilities'
 import './MockGame.css'
 
 const Game: React.FC = () => {

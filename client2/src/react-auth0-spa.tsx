@@ -3,7 +3,7 @@ import createAuth0Client from "@auth0/auth0-spa-js"
 
 type Auth0Client = any
 
-type Auth0User = {
+export type Auth0User = {
     given_name: string
     family_name: string
     nickname: string

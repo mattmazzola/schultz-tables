@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
 import { Auth0Provider } from "./react-auth0-spa"
 import config from "./auth_config.json"
-import history from "./utils/history"
+import history from "./utilities/history"
 import './index.css'
 
 // A function that routes the user to the right place

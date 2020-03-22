@@ -1,0 +1,30 @@
+.game-type {
+    position: relative;
+    height: 17em;
+    background: white;
+    padding: 0.5em;
+    border: 1ps solid rgba(0,0,0,0.8);
+    border-radius: 4px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}
+
+.game-type__title {
+    background: white;
+    border-bottom: 2px solid rgba(0,0,0,0.5);
+    margin-bottom: 0.5em;
+    padding: 0 0.5em 0.5em 0.5em;
+}
+
+.game-type-grid {
+    display: grid;
+    position: absolute;
+    background: white;
+}
+
+.game-type-grid__cell {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    padding: 0.4em;
+}

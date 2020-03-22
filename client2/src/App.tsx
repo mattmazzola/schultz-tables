@@ -1,11 +1,11 @@
 import React from 'react'
 import * as RRD from 'react-router-dom'
-import Index from './routes/Index'
+import Index from './routes/Index/Index'
 import Profile from './routes/Profile'
 import Scores from './routes/Scores'
 import NoMatch from './routes/NoMatch'
 import * as Auth0 from "./react-auth0-spa"
-import history from "./utils/history"
+import history from "./utilities/history"
 import MockGame from './components/MockGame'
 import './App.css'
 
@@ -68,7 +68,7 @@ function App() {
         </header>
         <main>
           <Routes>
-            <RRD.Route path="/" element={<Index />} />
+            <RRD.Route path="/" element={<Index user={user} />} />
             <RRD.Route path="scores" element={<Scores />} />
             <RRD.Route path="users" element={<Scores />} />
             <RRD.Route path="profile" element={<Profile />} />
