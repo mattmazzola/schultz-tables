@@ -18,6 +18,7 @@ adal.Logging.setLoggingOptions({
 {
   (async () => {
     const audience = process.env.AUDIENCE!
+    const issuer = process.env.ISSUER!
     const publicKey = await getCertificate()
     const db = await getDb()
     const server = new ApolloServer({
@@ -27,12 +28,12 @@ adal.Logging.setLoggingOptions({
       },
       introspection: true,
       playground: true,
-      context: ({ req }: any) => context({ req }, db, audience, publicKey, process.env.PLAYGROUND_SECRET!),
+      context: ({ req }: any) => context({ req }, db, publicKey, { audience, issuer }, process.env.PLAYGROUND_SECRET!),
     })
 
     const port = process.env.PORT || 4000
     const serverInfo = await server.listen(port)
     const { url } = serverInfo
-    console.log(`🚀  Server ready at ${url}`);
+    console.log(`🚀  Server ready at ${url} `);
   })()
 }

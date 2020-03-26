@@ -1,10 +1,9 @@
 import * as types from './generated/types'
 import crypto from 'crypto'
 import dotent from 'dotenv'
-import fetch from 'node-fetch'
 import jsonwebtoken from 'jsonwebtoken'
-import getPem from 'rsa-pem-from-mod-exp'
-import adal from 'adal-node'
+import jwksRsa from 'jwks-rsa'
+
 import * as models from './models'
 
 const result = dotent.config()
@@ -58,24 +57,19 @@ const hex: crypto.HexBase64BinaryEncoding = 'hex'
 const password: string = process.env.CIPHER_PASSWORD!
 
 export function encrypt(text: string): string {
-    var cipher = crypto.createCipher(algorithm, password)
-    var crypted = cipher.update(text, encoding, hex)
+    let cipher = crypto.createCipher(algorithm, password)
+    let crypted = cipher.update(text, encoding, hex)
     crypted += cipher.final(hex)
     return crypted
 }
 
 export function decrypt(text: string): string {
-    var decipher = crypto.createDecipher(algorithm, password)
-    var dec = decipher.update(text, hex, encoding)
+    let decipher = crypto.createDecipher(algorithm, password)
+    let dec = decipher.update(text, hex, encoding)
     dec += decipher.final(encoding)
     return dec
 }
 
-
-
-interface IKeyResponse {
-    keys: IKey[]
-}
 interface IKey {
     kid: string
     nbf: number
@@ -83,24 +77,43 @@ interface IKey {
     kty: string
     e: string
     n: string
+    x5t: string
+    x5c: string[]
 }
+
+const client = jwksRsa({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: `https://${process.env.DOMAIN}/.well-known/jwks.json`
+})
+
 // https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-tokens#token-validation
 // https://github.com/rzcoder/node-rsa/issues/43
 export async function getCertificate(): Promise<string> {
-    const response = await fetch(`https://login.microsoftonline.com/schultztables.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1_signinfb`)
-    if (!response.ok) {
-        throw new Error(`Could not get public for token verification: ${response.statusText}`)
-    }
+    const keys = await getKeys()
 
-    const keysResponse: IKeyResponse = await response.json()
-    const key = keysResponse.keys[0]
-    const publicKey = getPem(key.n, key.e)
+    // https://github.com/nearform/fastify-auth0-verify/blob/master/index.js#L103
+    const key = keys[0].x5c[0]
+    const publicKey = `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----\n`
 
-    return publicKey as string
+    return publicKey
+}
+
+async function getKeys(): Promise<IKey[]> {
+    return new Promise((res, rej) => {
+        client.getKeys((error, keys) => {
+            if (error) {
+                rej(error)
+            }
+
+            res(keys as IKey[])
+        })
+    })
 }
 
 // https://github.com/auth0/node-jsonwebtoken
-export async function getJwt(authorization: string, audience: string, publicKey: string): Promise<object> {
+export async function getJwt(authorization: string, publicKey: string, options: { issuer: string, audience: string }): Promise<object> {
     const tokenType = 'Bearer'
     const jwt = authorization && authorization.startsWith(tokenType)
         ? authorization.slice(`${tokenType} `.length)
@@ -114,7 +127,7 @@ export async function getJwt(authorization: string, audience: string, publicKey:
 
     try {
         decodedJwt = await new Promise((res, rej) => {
-            jsonwebtoken.verify(jwt, publicKey, { audience, algorithms: ['RS256'] }, (error: Error, decoded: any) => {
+            jsonwebtoken.verify(jwt, publicKey, { ...options, algorithms: ['RS256'] }, (error: Error, decoded: any) => {
                 if (error) {
                     rej(error)
                     return
@@ -130,54 +143,4 @@ export async function getJwt(authorization: string, audience: string, publicKey:
     }
 
     return decodedJwt
-}
-
-
-
-
-const authenticationContext = new adal.AuthenticationContext(`https://login.microsoftonline.com/${process.env.AAD_TENANT}`)
-
-export async function acqureAadToken(): Promise<adal.TokenResponse> {
-    const token = await new Promise<adal.TokenResponse | adal.ErrorResponse>((res, rej) => {
-        authenticationContext.acquireTokenWithClientCredentials(`https://graph.windows.net`, process.env.AAD_APPLICATION_ID!, process.env.AAD_APPLICATION_KEY!, (err, tokenResponse) => {
-            if (err) {
-                rej(err)
-                return
-            }
-
-            res(tokenResponse)
-            return
-        })
-    })
-
-    if (token.error) {
-        throw new Error(`${token.error} ${token.errorDescription}`)
-    }
-
-    const tokenResponse: adal.TokenResponse = token as any
-
-    return tokenResponse
-}
-
-export async function getUsersByIds (userIds: string[], accessToken: string): Promise<models.IGraphApiRespnse<models.IGraphUser[]>> {
-    const response = await fetch(`https://graph.windows.net/${process.env.AAD_TENANT}/getObjectsByObjectIds?api-version=1.6`, {
-        method: "POST",
-        body: JSON.stringify({
-            objectIds: userIds,
-            types: ["user"]
-        }),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-        }
-    })
-
-    if (!response.ok) {
-        throw new Error(response.statusText)
-    }
-
-    const graphUsers: models.IGraphApiRespnse<models.IGraphUser[]> = await response.json()
-
-    return graphUsers
 }

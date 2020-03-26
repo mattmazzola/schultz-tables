@@ -7,7 +7,7 @@ import getDb from './db'
 import { getJwt } from '../utilities'
 
 // https://www.apollographql.com/docs/apollo-server/features/authentication.html
-export const context = async ({ req }: { req: any }, db: mongo.Db, audence: string, publicKey: string, playgroundSecret: string): Promise<IContext | Error> => {
+export const context = async ({ req }: { req: any }, db: mongo.Db, publicKey: string, options: { audience: string, issuer: string }, playgroundSecret?: string): Promise<IContext | Error> => {
     const authorization: string = req.headers.authorization
     let decodedJwt
 
@@ -27,13 +27,13 @@ export const context = async ({ req }: { req: any }, db: mongo.Db, audence: stri
                 name: "Development"
             }
         }
-        else if (authorization === playgroundSecret) {
+        else if (typeof playgroundSecret === 'string' &&  authorization === playgroundSecret) {
             decodedJwt = {
                 name: "Super User"
             }
         }
         else {
-            decodedJwt = await getJwt(authorization, audence, publicKey)
+            decodedJwt = await getJwt(authorization, publicKey, options)
         }
     }
     catch (e) {

@@ -35,22 +35,24 @@ const Query: types.QueryResolvers.Resolvers = {
             .limit(50)
             .sort({ duration: 1 })
             .toArray()
-        
+
         if (scores.length === 0) {
             return {
                 scores: [],
                 users: []
             }
         }
-        
+
         const userIds = [... new Set(scores.map(s => s.userId))] as string[]
-        const tokenResponse = await utilities.acqureAadToken()
-        const graphUsers = await utilities.getUsersByIds(userIds, tokenResponse.accessToken)
-        const users = graphUsers.value.map<types.User>(gu => ({
-            id: gu.objectId,
-            email: gu.otherMails[0] || '',
-            name: gu.displayName
-        }))
+        // const tokenResponse = await utilities.acqureAadToken()
+        // const graphUsers = await utilities.getUsersByIds(userIds, tokenResponse.accessToken)
+        // const users = graphUsers.value.map<types.User>(gu => ({
+        //     id: gu.objectId,
+        //     email: gu.otherMails[0] || '',
+        //     name: gu.displayName
+        // }))
+
+        const users = []
 
         return {
             scores,
