@@ -56,15 +56,22 @@ const encoding: crypto.Utf8AsciiBinaryEncoding = 'utf8'
 const hex: crypto.HexBase64BinaryEncoding = 'hex'
 const password: string = process.env.CIPHER_PASSWORD!
 
+// make the key something other than a blank buffer
+let key = Buffer.alloc(32)
+key = Buffer.concat([Buffer.from(password)], key.length)
+
+const iv = crypto.randomBytes(16)
+
+
 export function encrypt(text: string): string {
-    let cipher = crypto.createCipher(algorithm, password)
+    let cipher = crypto.createCipheriv(algorithm, key, iv)
     let crypted = cipher.update(text, encoding, hex)
     crypted += cipher.final(hex)
     return crypted
 }
 
 export function decrypt(text: string): string {
-    let decipher = crypto.createDecipher(algorithm, password)
+    let decipher = crypto.createDecipheriv(algorithm, key, iv)
     let dec = decipher.update(text, hex, encoding)
     dec += decipher.final(encoding)
     return dec
