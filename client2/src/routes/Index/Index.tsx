@@ -15,7 +15,6 @@ const Index: React.FC<Props> = (props) => {
     const { getTokenSilently } = Auth0.useAuth0()
     const indexState = ReactRedux.useSelector(IndexSlice.selectIndex)
     const dispatch = ReactRedux.useDispatch()
-    const audio = React.useMemo(() => new AudioContext(), [])
 
     const onClickStart = async (gameType: models.IOption<models.ITableConfig>) => {
         const token = await getTokenSilently()
@@ -31,17 +30,16 @@ const Index: React.FC<Props> = (props) => {
     }
 
     const playBuzzerSound = () => {
+        const audio = new AudioContext()
         const oscillator = audio.createOscillator()
         oscillator.type = 'sine'
-        oscillator.frequency.value = 300
+        oscillator.frequency.value = 600
         oscillator.connect(audio.destination)
         oscillator.start(0)
 
         setTimeout(() => {
             oscillator.stop()
         }, 150)
-
-        return oscillator
     }
 
     return (
@@ -73,7 +71,7 @@ const Index: React.FC<Props> = (props) => {
                     </div>
                 )
             }
-        </div >
+        </div>
     )
 }
 
