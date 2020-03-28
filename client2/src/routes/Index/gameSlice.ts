@@ -116,6 +116,6 @@ export const startThunk = (token: string, gameType: models.IOption<models.ITable
 }
 
 export const selectIndex = (state: RootState) =>
-    state.index
+    state
 
 export default slice.reducer

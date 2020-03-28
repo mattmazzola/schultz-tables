@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as models from '../types/models'
+import produce from "immer"
 import './Game.css'
 
 interface Position {
@@ -37,60 +38,73 @@ const initialState: State = {
     chosenSequence: []
 }
 
-export default class Game extends React.Component<Props, State> {
-    state = initialState
-    element: HTMLElement | undefined
+enum ActionTypes {
+    SetSequence = 'SetSequence',
+    SetPosition = 'SetPosition'
+}
 
-    constructor(props: Props) {
-        super(props)
+type SetSequence = {
+    type: ActionTypes.SetSequence,
+    payload: models.IChosenCell[]
+}
 
-        this.state.chosenSequence = props.table.expectedSequence.map((s, i) => ({
-            text: s,
-            used: false,
-            current: i === 0
-        }))
-    }
+type SetPosition = {
+    type: ActionTypes.SetPosition,
+    payload: Position
+}
 
-    componentWillMount() {
-        window.addEventListener("resize", this.onResize)
-    }
+type Action
+    = SetSequence
+    | SetPosition
 
-    componentDidMount() {
-        this.computeTablePosition()
-    }
-
-    componentWillReceiveProps(nextProps: Props) {
-        const chosenSequence = nextProps.table.expectedSequence.map((s, i) => ({
-            text: s,
-            used: i < nextProps.gameState.expectedSymbolIndex,
-            current: i === nextProps.gameState.expectedSymbolIndex
-        }))
-
-        this.setState({
-            chosenSequence
-        })
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.onResize)
-    }
-
-    onRef = (element: HTMLElement | null) => {
-        if (element) {
-            this.element = element
+const reducer: React.Reducer<State, Action> = produce((state, action) => {
+    switch (action.type) {
+        case ActionTypes.SetSequence: {
+            state.chosenSequence = action.payload
+            break
+        }
+        case ActionTypes.SetPosition: {
+            state.position = action.payload
+            break
         }
     }
 
-    onResize = (event: UIEvent) => {
-        this.computeTablePosition()
-    }
+    return state
+})
 
-    private computeTablePosition() {
-        if (!this.element) {
+const Game: React.FC<Props> = (props) => {
+    const [state, dispatch] = React.useReducer(reducer, initialState)
+    const elementRef = React.createRef<HTMLDivElement>()
+
+    const onResize = React.useCallback((event: UIEvent) => computeTablePosition(), [])
+    
+    // Setup resize of game when window resizes
+    React.useLayoutEffect(() => {
+        computeTablePosition()
+        window.addEventListener("resize", onResize)
+        return () => window.removeEventListener("resize", onResize)
+    }, [])
+
+    // Update game footer to show progress
+    React.useEffect(() => {
+        const chosenSequence = props.table.expectedSequence.map((s, i) => ({
+            text: s,
+            used: i < props.gameState.expectedSymbolIndex,
+            current: i === props.gameState.expectedSymbolIndex
+        }))
+
+        dispatch({
+            type: ActionTypes.SetSequence,
+            payload: chosenSequence,
+        })
+    }, [props.gameState.userSequence.length])
+
+    const computeTablePosition = () => {
+        if (!elementRef.current) {
             return
         }
 
-        const rect = this.element.getBoundingClientRect();
+        const rect = elementRef.current.getBoundingClientRect()
         const maxSize = Math.min(rect.width, rect.height)
         const horizontalCenter = (rect.right - rect.left) / 2
         const left = horizontalCenter - (maxSize / 2)
@@ -106,40 +120,41 @@ export default class Game extends React.Component<Props, State> {
             height: `${maxSize}px`
         }
 
-        this.setState({
-            position
+        dispatch({
+            type: ActionTypes.SetPosition,
+            payload: position,
         })
     }
 
-    render() {
-        const tableStyle: any = {
-            ...this.state.position,
-            gridTemplate: `repeat(${this.props.width}, 1fr)/repeat(${this.props.height}, 1fr)`
-        }
-
-        return (
-            <div className="game">
-                <header className="game__header">
-                    <div>
-                        {this.props.gameState.isCompleted ? `Finished ${this.props.gameState.duration / 1000}` : ''}
-                    </div>
-                    <button className={`button-close ${this.props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => this.props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
-                </header>
-                <div className="game__table" ref={this.onRef}>
-                    <div className={`table ${this.props.table.classes.join(' ')}`} style={tableStyle}>
-                        {this.props.table.cells.map((cell, i) =>
-                            <div key={i} className={`table__cell ${cell.classes.join(' ')}`} onClick={() => this.props.onClickCell(cell)}>
-                                {cell.text}
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <footer className="game__footer">
-                    {this.state.chosenSequence.map((symbol, i) =>
-                        <div className={`game-symbol ${symbol.used ? 'game-symbol--used': ''} ${symbol.current ? 'game-symbol--current': ''}`} key={i}>{symbol.text}</div>
-                    )}
-                </footer>
-            </div>
-        );
+    const tableStyle: any = {
+        ...state.position,
+        gridTemplate: `repeat(${props.width}, 1fr)/repeat(${props.height}, 1fr)`
     }
+
+    return (
+        <div className="game">
+            <header className="game__header">
+                <div>
+                    {props.gameState.isCompleted ? `Finished ${props.gameState.duration / 1000}` : ''}
+                </div>
+                <button className={`button-close ${props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
+            </header>
+            <div className="game__table" ref={elementRef}>
+                <div className={`table ${props.table.classes.join(' ')}`} style={tableStyle}>
+                    {props.table.cells.map((cell, i) =>
+                        <div key={i} className={`table__cell ${cell.classes.join(' ')}`} onClick={() => props.onClickCell(cell)}>
+                            {cell.text}
+                        </div>
+                    )}
+                </div>
+            </div>
+            <footer className="game__footer">
+                {state.chosenSequence.map((symbol, i) =>
+                    <div className={`game-symbol ${symbol.used ? 'game-symbol--used' : ''} ${symbol.current ? 'game-symbol--current' : ''}`} key={i}>{symbol.text}</div>
+                )}
+            </footer>
+        </div>
+    )
 }
+
+export default Game
