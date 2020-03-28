@@ -74,13 +74,14 @@ const reducer: React.Reducer<State, Action> = produce((state, action) => {
 
 const Game: React.FC<Props> = (props) => {
     const [state, dispatch] = React.useReducer(reducer, initialState)
-    const elementRef = React.createRef<HTMLDivElement>()
+    const elementRef = React.useRef<HTMLDivElement>(null)
 
     const onResize = React.useCallback((event: UIEvent) => computeTablePosition(), [])
     
     // Setup resize of game when window resizes
-    React.useLayoutEffect(() => {
-        computeTablePosition()
+    React.useEffect(() => {
+        // Needs footer to be drawn before computation works correctly.
+        setImmediate(() => computeTablePosition())
         window.addEventListener("resize", onResize)
         return () => window.removeEventListener("resize", onResize)
     }, [])

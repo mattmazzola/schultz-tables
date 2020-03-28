@@ -2,7 +2,7 @@ import React from 'react'
 import * as RRD from 'react-router-dom'
 import Index from './routes/Index/Index'
 import Profile from './routes/Profile'
-import Scores from './routes/Scores'
+import Scores from './routes/Scores/Scores'
 import NoMatch from './routes/NoMatch'
 import * as Auth0 from "./react-auth0-spa"
 import history from "./utilities/history"
