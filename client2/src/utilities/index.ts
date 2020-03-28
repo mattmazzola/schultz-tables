@@ -1,6 +1,12 @@
 import * as models from '../types/models'
 import moment from 'moment'
 
+export async function delay(ms: number) {
+    return new Promise((res, rej) => {
+        setTimeout(() => res(), ms)
+    })
+}
+
 export const randomize = <T>(xs: T[]): T[] => {
     let unrandomized = xs.slice(0);
     const randomized = [];

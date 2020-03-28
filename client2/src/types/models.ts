@@ -155,19 +155,6 @@ export interface IScoreResponse {
     userId: string
 }
 
-export interface IScoreRequestGraphql {
-    // duration: number
-    endTime: number
-    expectedSequence: string[]
-    randomizedSequence: string[]
-    signedStartTime: string
-    startTime: number
-    tableHeight: number
-    tableWidth: number
-    tableProperties: KVPair<string, string>[]
-    userSequence: IUserSelection<number>[]
-}
-
 export interface IStartScoreResponse {
     value: string
 }

@@ -3,17 +3,19 @@ import * as RRD from 'react-router-dom'
 import Index from './routes/Index/Index'
 import Profile from './routes/Profile'
 import Scores from './routes/Scores/Scores'
+import Users from './routes/Users/Users'
 import NoMatch from './routes/NoMatch'
 import * as Auth0 from "./react-auth0-spa"
 import history from "./utilities/history"
 import MockGame from './components/MockGame'
 import './App.css'
 
+
 const Navigate = (RRD as any).Navigate
 const Routes = (RRD as any).Routes
 
 function App() {
-  const { loading, user, isAuthenticated, logout, loginWithRedirect } = Auth0.useAuth0()
+  const { loading, user, isAuthenticated, loginWithRedirect } = Auth0.useAuth0()
 
   React.useEffect(() => {
     if (loading || isAuthenticated) {
@@ -51,7 +53,7 @@ function App() {
               </RRD.NavLink>
               <RRD.NavLink className="link" to="/users">
                 <div className="icon"><i className="material-icons">group</i></div>
-                <div className="label">User</div>
+                <div className="label">Users</div>
               </RRD.NavLink>
               <RRD.NavLink className="link" to="/profile">
                 <div className="icon"><i className="material-icons">account_circle</i></div>
@@ -70,7 +72,7 @@ function App() {
           <Routes>
             <RRD.Route path="/" element={<Index user={user} />} />
             <RRD.Route path="scores" element={<Scores />} />
-            <RRD.Route path="users" element={<Scores />} />
+            <RRD.Route path="users" element={<Users />} />
             <RRD.Route path="profile" element={<Profile />} />
             <RRD.Route path="" element={<NoMatch />} />
           </Routes>

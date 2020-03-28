@@ -2,12 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { store } from './app/store'
-import { Provider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 import * as serviceWorker from './serviceWorker'
 import { Auth0Provider } from "./react-auth0-spa"
 import config from "./auth_config.json"
 import history from "./utilities/history"
+import { createClient, Provider as UrlQlProvider } from 'urql'
 import './index.css'
+
+const client = createClient({
+  url: 'http://localhost:3000/graphql',
+})
+
 
 // A function that routes the user to the right place
 // after login
@@ -25,9 +31,11 @@ ReactDOM.render(
     redirect_uri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
   >
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ReduxProvider store={store}>
+      <UrlQlProvider value={client}>
+        <App />
+      </UrlQlProvider>
+    </ReduxProvider>
   </Auth0Provider>,
   document.getElementById('root')
 )
