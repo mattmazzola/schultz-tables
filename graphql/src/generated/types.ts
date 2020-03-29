@@ -7,8 +7,6 @@ export interface ScoreInput {
 
   startTime: number;
 
-  endTime: number;
-
   userSequence: AnswerInput[];
 
   expectedSequence: string[];

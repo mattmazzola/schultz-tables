@@ -84,7 +84,7 @@ const Game: React.FC<Props> = (props) => {
         setImmediate(() => computeTablePosition())
         window.addEventListener("resize", onResize)
         return () => window.removeEventListener("resize", onResize)
-    }, [])
+    }, [onResize])
 
     // Update game footer to show progress
     React.useEffect(() => {

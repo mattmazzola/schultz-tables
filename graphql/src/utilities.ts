@@ -13,11 +13,13 @@ if (result.error) {
 
 export function isTimeValid(
     serverStartTime: number,
+    scoreInputEndTime: number,
     serverEndTime: number,
     scoreInput: types.ScoreInput,
-    allowedDeviation: number): boolean {
+    allowedDeviation: number
+): boolean {
 
-    if (scoreInput.endTime < scoreInput.startTime) {
+    if (scoreInputEndTime < scoreInput.startTime) {
         return false
     }
 
@@ -26,19 +28,19 @@ export function isTimeValid(
         return false
     }
 
-    const endTimeSkew = Math.abs(serverEndTime - scoreInput.endTime)
+    const endTimeSkew = Math.abs(serverEndTime - scoreInputEndTime)
     if (endTimeSkew > allowedDeviation) {
         return false
     }
 
-    const durationDifference = (serverEndTime - serverStartTime) - (scoreInput.endTime - scoreInput.startTime)
+    const durationDifference = (serverEndTime - serverStartTime) - (scoreInputEndTime - scoreInput.startTime)
     if (durationDifference > allowedDeviation) {
         return false
     }
 
     const anyAnwsersOutsideOfSubmissionRange = scoreInput.userSequence
         .map(s => s.time)
-        .some(time => (time < scoreInput.startTime) || (time > scoreInput.endTime))
+        .some(time => (time < scoreInput.startTime) || (time > scoreInputEndTime))
 
     if (anyAnwsersOutsideOfSubmissionRange) {
         return false

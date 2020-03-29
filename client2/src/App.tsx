@@ -1,6 +1,6 @@
 import React from 'react'
 import * as RRD from 'react-router-dom'
-import Index from './routes/Index/Index'
+import Game from './routes/Game/Game'
 import Profile from './routes/Profile'
 import Scores from './routes/Scores/Scores'
 import Users from './routes/Users/Users'
@@ -70,7 +70,7 @@ function App() {
         </header>
         <main>
           <Routes>
-            <RRD.Route path="/" element={<Index user={user} />} />
+            <RRD.Route path="/" element={<Game user={user} />} />
             <RRD.Route path="scores" element={<Scores />} />
             <RRD.Route path="users" element={<Users />} />
             <RRD.Route path="profile" element={<Profile />} />

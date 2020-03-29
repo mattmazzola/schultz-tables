@@ -116,33 +116,21 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
     }
 }
 
-export const generateDefaultGameState = () =>
+export const generateDefaultGameState = (): models.IGameState =>
     ({
-        startTime: new Date(),
+        startTime: Date.now(),
         duration: 0,
         isStarted: false,
         isCompleted: false,
         isSoundEnabled: true,
         playSoundOnCorrect: false,
         expectedSymbolIndex: 0,
-        userSequence: []
+        userSequence: [],
     })
 
 export const getTimeDifference = (timeA: string, timeB: string) => {
-
     return moment.duration(moment(timeA).diff(moment(timeB))).asSeconds()
 }
 
 export const getUserTableTypeKey = (userId: string, tableTypeId: string) =>
     `${userId}_${tableTypeId}`
-
-export const convertScoreRequstToGraphql = (scoreRequest: models.IScoreRequest): models.IScoreRequestGraphql => {
-    const { startTime, endTime, userSequence, duration, ...scoreGraphql } = scoreRequest
-
-    return {
-        ...scoreGraphql,
-        userSequence: userSequence.map(answer => ({ ...answer, time: answer.time.getTime() })),
-        startTime: startTime.getTime(),
-        endTime: endTime.getTime()
-    }
-}

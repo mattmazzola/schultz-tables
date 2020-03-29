@@ -81,9 +81,11 @@ const Mutation: types.MutationResolvers.Resolvers = {
         const allowedSkew = 2000 // 2 seconds
 
         const now = new Date().getTime()
+        const endTime = scoreInput.userSequence[scoreInput.userSequence.length - 1].time
         const isTimeValid = utilities.isTimeValid(
             startTime,
             now,
+            endTime,
             scoreInput,
             allowedSkew
         )
@@ -119,9 +121,9 @@ const Mutation: types.MutationResolvers.Resolvers = {
             tableLayoutId: tableLayout.id,
             tableTypeId: tableType.id,
             startTime: scoreInput.startTime,
-            endTime: scoreInput.endTime,
-            duration: scoreInput.endTime - scoreInput.startTime,
-            durationMilliseconds: scoreInput.endTime - scoreInput.startTime,
+            endTime,
+            duration: endTime - scoreInput.startTime,
+            durationMilliseconds: endTime - scoreInput.startTime,
             userId: scoreInput.userId
         }
 

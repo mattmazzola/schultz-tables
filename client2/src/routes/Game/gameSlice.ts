@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { StartThunk, RootState } from '../../app/store'
+import { StartThunk, RootState, ClickCellThunk } from '../../app/store'
 import * as models from '../../types/models'
 import * as options from '../../utilities/options'
 import * as utilities from '../../utilities'
 import * as client from '../../services/client'
+import moment from 'moment'
 
 type State = {
     isGameVisible: boolean
@@ -45,7 +46,7 @@ export const slice = createSlice({
             state.isGameVisible = true
             state.gameState = {
                 ...defaultGameState,
-                startTime: new Date(),
+                startTime: Date.now(),
                 isStarted: true
             }
         },
@@ -55,59 +56,35 @@ export const slice = createSlice({
         },
         clickCell: (state, action: PayloadAction<models.ICell>) => {
             const cell = action.payload
-            const prevGameState = state.gameState
-            let isCompleted = prevGameState.isCompleted
+            console.log({ cell })
+
+            // If game is already completed, ignore
+            let isCompleted = state.gameState.isCompleted
             if (isCompleted) {
                 return state
             }
 
-            const expectedSymbol = state.table.expectedSequence[prevGameState.expectedSymbolIndex]
+            const expectedSymbol = state.table.expectedSequence[state.gameState.expectedSymbolIndex]
             const correct = cell.text === expectedSymbol
-            let expectedSymbolIndex = prevGameState.expectedSymbolIndex
-            let duration = prevGameState.duration
-            const userSequence = [...prevGameState.userSequence, {
+            const clickTime = Date.now()
+            const newSequenceEntry: models.IUserSelection = {
                 correct,
-                time: new Date(),
-                cell
-            }]
-
-            if (correct) {
-                if (expectedSymbolIndex === state.table.expectedSequence.length - 1) {
-                    isCompleted = true
-                    const endTime = new Date()
-                    duration = endTime.getTime() - prevGameState.startTime.getTime()
-                    const gameTypeSelected = state.gameTypes.find(t => t.id === state.gameTypeIdSelected)!
-                    const { width, height, ...gameOptions } = gameTypeSelected.value
-
-                    const scoreRequest: models.IScoreRequest = {
-                        duration,
-                        endTime,
-                        expectedSequence: state.table.expectedSequence,
-                        // TODO: API should accept cells so we can do analysis on harder arrangement of numbers
-                        randomizedSequence: state.table.cells.map(c => c.text),
-                        signedStartTime: state.signedStartTime!,
-                        startTime: state.gameState.startTime,
-                        tableHeight: height,
-                        tableProperties: Object.entries(gameOptions).map(([key, value]) => ({ key, value })),
-                        tableWidth: width,
-                        userSequence
-                    }
-                }
-                expectedSymbolIndex += 1
+                time: clickTime,
+                cell,
             }
 
-            state.gameState = {
-                ...prevGameState,
-                duration,
-                expectedSymbolIndex,
-                isCompleted,
-                userSequence: userSequence,
+            state.gameState.userSequence.push(newSequenceEntry)
+
+            if (correct) {
+                state.gameState.duration = clickTime - state.gameState.startTime
+                state.gameState.expectedSymbolIndex += 1
             }
         }
     },
 })
 
-export const { start, closeGame, clickCell } = slice.actions
+const { start, closeGame, clickCell } = slice.actions
+export { closeGame, clickCell }
 
 export const startThunk = (token: string, gameType: models.IOption<models.ITableConfig>): StartThunk => async dispatch => {
     const signedStartTime = await client.start(token)
@@ -115,7 +92,11 @@ export const startThunk = (token: string, gameType: models.IOption<models.ITable
     dispatch(start({ signedStartTime, gameType }))
 }
 
+export const clickCellThunk = (token: string, cell: models.ICell): ClickCellThunk => async dispatch => {
+
+}
+
 export const selectIndex = (state: RootState) =>
-    state
+    state.game
 
 export default slice.reducer

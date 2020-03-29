@@ -21,9 +21,9 @@ export interface ICell {
     classes: string[]
 }
 
-export interface IUserSelection<T = Date> {
+export interface IUserSelection<TDate = number> {
     correct: boolean
-    time: T
+    time: TDate
     cell: ICell
 }
 
@@ -34,7 +34,7 @@ export interface IChosenCell {
 }
 
 export interface IGameState {
-    startTime: Date
+    startTime: number
     duration: number
     isStarted: boolean
     isCompleted: boolean
@@ -118,12 +118,10 @@ export interface KVPair<K,V> {
 }
 
 export interface IScoreRequest {
-    duration: number
-    endTime: Date
     expectedSequence: string[]
     randomizedSequence: string[]
     signedStartTime: string
-    startTime: Date
+    startTime: number
     tableHeight: number
     tableWidth: number
     tableProperties: KVPair<string, string>[]
@@ -131,8 +129,6 @@ export interface IScoreRequest {
 }
 
 export interface IScoreRequestGraphql {
-    // duration: number
-    endTime: number
     expectedSequence: string[]
     randomizedSequence: string[]
     signedStartTime: string

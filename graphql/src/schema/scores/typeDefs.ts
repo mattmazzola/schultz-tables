@@ -10,7 +10,6 @@ const typeDefs = gql`
         signedStartTime: String!
         userId: String!
         startTime: Float!
-        endTime: Float!
         userSequence: [AnswerInput!]!
         expectedSequence: [String!]!
         randomizedSequence: [String!]!
