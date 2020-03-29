@@ -71,7 +71,7 @@ const GameRoute: React.FC<Props> = (props) => {
 
             submitScore(scoreRequest)
         }
-    }, [state.gameState.expectedSymbolIndex])
+    }, [state.gameState.expectedSymbolIndex, state.gameState.isCompleted])
 
     const playBuzzerSound = () => {
         const audio = new AudioContext()

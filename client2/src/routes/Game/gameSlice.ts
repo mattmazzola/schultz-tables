@@ -76,7 +76,12 @@ export const slice = createSlice({
             state.gameState.userSequence.push(newSequenceEntry)
 
             if (correct) {
-                state.gameState.duration = clickTime - state.gameState.startTime
+                let isLastSymbol = state.gameState.expectedSymbolIndex === state.table.expectedSequence.length - 1
+                if (isLastSymbol) {
+                    state.gameState.isCompleted = true
+                    state.gameState.duration = clickTime - state.gameState.startTime
+                }
+                
                 state.gameState.expectedSymbolIndex += 1
             }
         }
