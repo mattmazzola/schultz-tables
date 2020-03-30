@@ -12,6 +12,25 @@ type Props = {
     user: Auth0.Auth0User
 }
 
+const playBuzzerSound = () => {
+    const audio = new AudioContext()
+    const gainNode = audio.createGain()
+    gainNode.gain.value = 0.5
+
+    const oscillator = audio.createOscillator()
+    oscillator.type = 'sine'
+    oscillator.frequency.value = 600
+    oscillator
+        .connect(gainNode)
+        .connect(audio.destination)
+
+    oscillator.start(0)
+
+    setTimeout(() => {
+        oscillator.stop()
+    }, 150)
+}
+
 const GameRoute: React.FC<Props> = (props) => {
     const state = useSelector(GameSlice.selectIndex)
     const dispatch = useDispatch()
@@ -72,25 +91,6 @@ const GameRoute: React.FC<Props> = (props) => {
             submitScore(scoreRequest)
         }
     }, [state.gameState.expectedSymbolIndex, state.gameState.isCompleted])
-
-    const playBuzzerSound = () => {
-        const audio = new AudioContext()
-        const gainNode = audio.createGain()
-        gainNode.gain.value = 0.5
-
-        const oscillator = audio.createOscillator()
-        oscillator.type = 'sine'
-        oscillator.frequency.value = 600
-        oscillator
-            .connect(gainNode)
-            .connect(audio.destination)
-
-        oscillator.start(0)
-
-        setTimeout(() => {
-            oscillator.stop()
-        }, 150)
-    }
 
     return (
         <div className="home-page" >
