@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as RRD from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import * as Auth0 from "../../react-auth0-spa"
 import { getUsersAsync, selectUsers } from './usersSlice'
 import * as models from "../../types/models"
 import './Users.css'
@@ -28,9 +29,15 @@ const Users: React.FC<Props> = (props) => {
 const UsersContainer: React.FC = () => {
   const usersState = useSelector(selectUsers)
   const dispatch = useDispatch()
+  const { getTokenSilently } = Auth0.useAuth0()
 
   React.useEffect(() => {
-    dispatch(getUsersAsync())
+    async function fn() {
+      const token = await getTokenSilently()
+      dispatch(getUsersAsync(token))
+    }
+
+    fn()
   }, [])
 
   return (

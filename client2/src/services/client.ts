@@ -27,6 +27,33 @@ export async function start(token: string) {
     return signedStartTime
 }
 
+export async function getUsers(token: string) {
+    const response = await graphql.makeGraphqlRequest(
+        'users',
+        `query users {
+            users {
+                id
+                email
+                name
+            }
+        }`,
+        token,
+    )
+
+    if (!response.ok) {
+        console.log(`status test: `, response.statusText)
+        const text = await response.text()
+        throw new Error(text)
+    }
+
+    const json: models.IGraphQlResponse<{ users: models.IUser[] }> = await response.json()
+    if (json.errors && json.errors.length >= 1) {
+        throw new Error(json.errors[0].message)
+    }
+
+    return json.data.users
+}
+
 export async function addScore(token: string, userId: string, scoreReqeust: models.IScoreRequest) {
     let tableProperties = JSON.stringify(scoreReqeust.tableProperties)
     tableProperties = tableProperties.replace(/\"([^(\")"]+)\":/g, "$1:")
@@ -34,7 +61,7 @@ export async function addScore(token: string, userId: string, scoreReqeust: mode
     let userSequence = JSON.stringify(scoreReqeust.userSequence)
     userSequence = userSequence.replace(/\"([^(\")"]+)\":/g, "$1:")
 
-    const response = await graphql.makeGraphqlMutation(
+    const response = await graphql.makeGraphqlRequest(
         "AddScore",
         `mutation AddScore {
             addScore (scoreInput: {

@@ -71,8 +71,7 @@ const GameRoute: React.FC<Props> = (props) => {
             await client.addScore(token, user.sub, scoreRequest)
         }
 
-        let isLastSymbol = state.gameState.expectedSymbolIndex === state.table.expectedSequence.length
-        if (isLastSymbol) {
+        if (state.gameState.isCompleted) {
             const gameTypeSelected = state.gameTypes.find(t => t.id === state.gameTypeIdSelected)!
             const { width, height, ...gameOptions } = gameTypeSelected.value
 

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppThunk, RootState } from '../../app/store'
 import * as models from "../../types/models"
 import { delay } from "../../utilities"
+import * as client from "../../services/client"
 
 interface UserState {
   loading: boolean
@@ -32,21 +33,12 @@ export const { setLoading, setUsers } = slice.actions
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const getUsersAsync = (): AppThunk => async dispatch => {
+export const getUsersAsync = (token: string): AppThunk => async dispatch => {
   dispatch(setLoading(true))
 
   await delay(1000)
 
-  const users = [
-    {
-      name: 'My Person',
-      id: '2341',
-    },
-    {
-      name: 'asdfas2',
-      id: '23421123',
-    },
-  ] as models.IUser[]
+  const users = await client.getUsers(token)
 
   dispatch(setUsers(users))
   dispatch(setLoading(false))

@@ -97,10 +97,6 @@ export const startThunk = (token: string, gameType: models.IOption<models.ITable
     dispatch(start({ signedStartTime, gameType }))
 }
 
-export const clickCellThunk = (token: string, cell: models.ICell): ClickCellThunk => async dispatch => {
-
-}
-
 export const selectIndex = (state: RootState) =>
     state.game
 
