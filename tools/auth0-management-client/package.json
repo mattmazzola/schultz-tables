@@ -1,0 +1,17 @@
+{
+  "name": "auth0-management-client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node ./build/index.js"
+  },
+  "dependencies": {
+    "@types/auth0": "^2.20.2",
+    "auth0": "^2.24.0",
+    "dotenv": "^8.2.0",
+    "typescript": "^3.8.3"
+  }
+}
