@@ -3,6 +3,7 @@ import { AppThunk, RootState } from '../../app/store'
 import * as models from "../../types/models"
 import { delay } from "../../utilities"
 import * as options from "../../utilities/options"
+import * as client from '../../services/client'
 
 interface ScoresState {
     tableTypes: models.ITableType[],
@@ -56,79 +57,35 @@ export const slice = createSlice({
             scoresByType.users.push(...response.users)
             scoresByType.continuationToken = response.continuationToken
         },
+        setTableTypes: (state, action: PayloadAction<{ tableTypes: models.ITableType[] }>) => {
+            const { tableTypes } = action.payload
+
+            state.tableTypes = tableTypes
+        }
     },
 })
 
-const { setLoading, addScoreToType } = slice.actions
+const { setLoading, addScoreToType, setTableTypes } = slice.actions
 export { setLoading }
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched
-export const getScoresAsync = (): AppThunk => async dispatch => {
+export const getScoresAsync = (token: string, tableTypeId: string): AppThunk => async dispatch => {
     dispatch(setLoading(true))
 
-    await delay(1000)
+    const scoresResponse = await client.getScoresThunkAsync(token, tableTypeId)
 
-    const scoresResponse: models.IScoresResponse = {
-        scores: [
-            {
-                durationMilliseconds: 1234,
-                endTime: '2134',
-                id: '1232341231',
-                sequence: [],
-                startTime: '12312',
-                tableLayout: {
-                    expectedSequence: [],
-                    height: 5,
-                    width: 5,
-                    id: 'z234123',
-                    randomizedSequence: []
-                },
-                tableType: {
-                    height: 5,
-                    width: 5,
-                    id: 'ww12312',
-                    properties: []
-                },
-                user: {
-                    name: 'Matt',
-                    id: '1qw34q34'
-                },
-                userId: '123123',
-            },
-            {
-                durationMilliseconds: 1234,
-                endTime: '2134',
-                id: 'aa1231',
-                sequence: [],
-                startTime: '12312',
-                tableLayout: {
-                    expectedSequence: [],
-                    height: 5,
-                    width: 5,
-                    id: 'we123',
-                    randomizedSequence: []
-                },
-                tableType: {
-                    height: 5,
-                    width: 5,
-                    id: '12345a12312',
-                    properties: []
-                },
-                user: {
-                    name: 'Matt',
-                    id: '1qw34q34'
-                },
-                userId: '123123',
-            },
-        ],
-        users: [],
-        continuationToken: null,
-    }
+    dispatch(addScoreToType({ scoreType: tableTypeId, response: scoresResponse }))
+    dispatch(setLoading(false))
+}
 
-    dispatch(addScoreToType({ scoreType: 'myType', response: scoresResponse }))
+export const getTableTypes = (token: string): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
+    const tableTypes = await client.getTableTypesThunkAsync(token)
+
+    dispatch(setTableTypes({ tableTypes }))
     dispatch(setLoading(false))
 }
 

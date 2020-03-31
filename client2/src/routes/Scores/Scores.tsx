@@ -1,13 +1,16 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import * as models from "../../types/models"
+import * as Auth0 from "../../react-auth0-spa"
 import Score from '../../components/Score'
 import './Scores.css'
-import { getScoresAsync, selectScores } from './scoresSlice'
+import { getScoresAsync, selectScores, getTableTypes } from './scoresSlice'
 
 type Props = {
     tableTypes: models.ITableType[],
     scoresByType: { [x: string]: models.IScoresResponse }
+
+    getScoresByType: (tableTypeId: string) => void
 }
 
 const Scores: React.FC<Props> = (props) => {
@@ -20,6 +23,11 @@ const Scores: React.FC<Props> = (props) => {
         if (continuationToken !== null) {
             console.log('onClick Load more', continuationToken)
         }
+    }
+
+    const onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const tableTypeId = event.target.value
+        props.getScoresByType(tableTypeId)
     }
 
     const key = Object.keys(props.scoresByType)[0]
@@ -100,6 +108,12 @@ const Scores: React.FC<Props> = (props) => {
             <div className="scores-grid__score">24.3 Matt Mazzola</div> */}
             </div>
 
+            <select onChange={onChangeTableType}>
+                {props.tableTypes.map(tableType =>
+                    <option value={tableType.id}>{JSON.stringify(tableType)}</option>
+                )}
+            </select>
+
             {Object.entries(props.scoresByType).map(([type, scores], i) => {
                 return (
                     <div key={`${type}-${i}`}>
@@ -122,15 +136,27 @@ const Scores: React.FC<Props> = (props) => {
 const ScoresContainer: React.FC = () => {
     const scoresState = useSelector(selectScores)
     const dispatch = useDispatch()
+    const { getTokenSilently } = Auth0.useAuth0()
 
     React.useEffect(() => {
-        dispatch(getScoresAsync())
+        async function fn() {
+            const token = await getTokenSilently()
+            dispatch(getTableTypes(token))
+        }
+
+        fn()
     }, [])
+
+    const getScoresByType = async (tableTypeId: string) => {
+        const token = await getTokenSilently()
+        dispatch(getScoresAsync(token, tableTypeId))
+    }
 
     return (
         <Scores
             scoresByType={scoresState.scoresByType}
             tableTypes={scoresState.tableTypes}
+            getScoresByType={getScoresByType}
         />
     )
 }
