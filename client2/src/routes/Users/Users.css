@@ -1,7 +1,7 @@
 .users {
-  border: 1px solid rgba(51,51,51, 0.25);
-  background: white;
-  border-radius: 3px;
+
+  display: grid;
+  grid-gap: 0.25rem;
 }
 
 .users a:link,
@@ -11,8 +11,10 @@
 }
 
 .user {
+  border: 1px solid rgba(51,51,51, 0.25);
+  background: white;
+  border-radius: 3px;
   white-space: nowrap;
-  padding: 1em;
   display: grid;
   grid-template-columns: min-content min-content min-content 1fr;
   grid-gap: 1em;
@@ -22,18 +24,10 @@
   background-color: rgba(0,0,0,0.1);
 }
 
-.user > * {
-  word-wrap: break-word;
-  overflow: hidden;
-  max-width: 28ch;
-  text-overflow: ellipsis;
+.user > *:not(:nth-child(1)) {
+  padding: 1rem;
 }
 
-.user:not(:last-of-type) {
-  border-bottom: 1px solid rgba(51,51,51, 0.25);
-}
-
-.user .icon-person {
-  line-height: 0;
-  vertical-align: middle;
+.userImage {
+  max-width: 3.5rem;
 }

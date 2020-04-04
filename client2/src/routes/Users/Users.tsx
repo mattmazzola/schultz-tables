@@ -16,10 +16,11 @@ const Users: React.FC<Props> = (props) => {
     <div className="users">
       {props.loading
         ? <div className="user">Loading...</div>
-        : props.users.map((user: any) =>
+        : props.users.map(user =>
           <RRD.NavLink to={{ pathname: `/users/${user.id}`, state: { user } }} className="user" key={user.id}>
-            <span><i className="icon-person material-icons">person</i></span>
-            <span>{user.name}</span>
+            <img src={user.picture} className="userImage" />
+            <span>{user.nickname ?? user.name}</span>
+            <span>{user.email} {user.emailVerified === true && '✔'} </span>
           </RRD.NavLink>
         )}
     </div>
@@ -37,7 +38,9 @@ const UsersContainer: React.FC = () => {
       dispatch(getUsersAsync(token))
     }
 
-    fn()
+    if (usersState.users.length === 0) {
+      fn()
+    }
   }, [])
 
   return (

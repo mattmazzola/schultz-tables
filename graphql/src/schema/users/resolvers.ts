@@ -9,7 +9,10 @@ const Query: types.QueryResolvers.Resolvers = {
             return {
                 id: user.user_id ?? 'unknown',
                 email: user.email ?? 'unknown',
+                emailVerified:  user.email_verified ?? false,
                 name: user.name ?? 'unknown',
+                nickname: user.nickname ?? 'unknown',
+                picture: user.picture ?? 'https://via.placeholder.com/60'
             }
         })
     }

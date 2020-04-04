@@ -36,8 +36,6 @@ export const { setLoading, setUsers } = slice.actions
 export const getUsersAsync = (token: string): AppThunk => async dispatch => {
   dispatch(setLoading(true))
 
-  await delay(1000)
-
   const users = await client.getUsers(token)
 
   dispatch(setUsers(users))

@@ -4,7 +4,6 @@ import * as models from '../../types/models'
 import * as options from '../../utilities/options'
 import * as utilities from '../../utilities'
 import * as client from '../../services/client'
-import moment from 'moment'
 
 type State = {
     isGameVisible: boolean
@@ -57,7 +56,6 @@ export const slice = createSlice({
         },
         clickCell: (state, action: PayloadAction<models.ICell>) => {
             const cell = action.payload
-            console.log({ cell })
 
             // If game is already completed, ignore
             let isCompleted = state.gameState.isCompleted

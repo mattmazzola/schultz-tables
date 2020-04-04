@@ -34,7 +34,10 @@ export async function getUsers(token: string) {
             users {
                 id
                 email
+                emailVerified
                 name
+                nickname
+                picture
             }
         }`,
         token,

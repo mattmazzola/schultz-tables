@@ -39,22 +39,20 @@ export const slice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload
         },
-        addScoreToType: (state, action: PayloadAction<{ scoreType: string, response: models.IScoresResponse }>) => {
+        setScoresForType: (state, action: PayloadAction<{ scoreType: string, response: models.IScoresResponse }>) => {
             const { scoreType, response } = action.payload
 
-            let scoresByType = state.scoresByType[scoreType]
-            if (scoresByType === undefined) {
-                scoresByType = {
+            if (state.scoresByType[scoreType] === undefined) {
+                state.scoresByType[scoreType] = {
                     scores: [],
                     users: [],
                     continuationToken: null,
                 }
-
-                state.scoresByType[scoreType] = scoresByType
             }
 
-            scoresByType.scores.push(...response.scores)
-            scoresByType.users.push(...response.users)
+            const scoresByType = state.scoresByType[scoreType]
+            scoresByType.scores = response.scores
+            scoresByType.users = response.users
             scoresByType.continuationToken = response.continuationToken
         },
         setTableTypes: (state, action: PayloadAction<{ tableTypes: models.ITableType[] }>) => {
@@ -65,7 +63,7 @@ export const slice = createSlice({
     },
 })
 
-const { setLoading, addScoreToType, setTableTypes } = slice.actions
+const { setLoading, setScoresForType, setTableTypes } = slice.actions
 export { setLoading }
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -77,15 +75,7 @@ export const getScoresAsync = (token: string, tableTypeId: string): AppThunk => 
 
     const scoresResponse = await client.getScoresThunkAsync(token, tableTypeId)
 
-    dispatch(addScoreToType({ scoreType: tableTypeId, response: scoresResponse }))
-    dispatch(setLoading(false))
-}
-
-export const getTableTypes = (token: string): AppThunk => async dispatch => {
-    dispatch(setLoading(true))
-    const tableTypes: any = []
-
-    dispatch(setTableTypes({ tableTypes }))
+    dispatch(setScoresForType({ scoreType: tableTypeId, response: scoresResponse }))
     dispatch(setLoading(false))
 }
 

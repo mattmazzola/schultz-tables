@@ -23,10 +23,11 @@ const Query: types.QueryResolvers.Resolvers = {
         return score
     },
     scores: async (_, { tableTypeId, page = 1 }, context, info) => {
+        const pageSize = 50
         const scores = await context.scores
             .find({ $query: { tableTypeId } })
-            .skip((page! - 1) * 50)
-            // .limit(50)
+            .skip((page! - 1) * pageSize)
+            .limit(pageSize)
             .sort({ durationMilliseconds: 1 })
             .toArray()
 

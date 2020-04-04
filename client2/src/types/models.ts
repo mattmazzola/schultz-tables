@@ -70,8 +70,12 @@ export interface IGraphQlResponse<T> {
 }
 
 export interface IUser {
-    name: string
     id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    nickname: string
+    picture: string
 }
 
 export interface IScoresResponse {
@@ -112,7 +116,7 @@ export interface ITableType {
     properties: KVPair<string, string>[]
 }
 
-export interface KVPair<K,V> {
+export interface KVPair<K, V> {
     key: K
     value: V
 }
