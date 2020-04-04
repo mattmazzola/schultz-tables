@@ -54,25 +54,25 @@ export async function getUsers(token: string) {
     return json.data.users
 }
 
-export async function addScore(token: string, userId: string, scoreReqeust: models.IScoreRequest) {
-    let tableProperties = JSON.stringify(scoreReqeust.tableProperties)
+export async function addScore(token: string, userId: string, scoreRequest: models.IScoreRequest) {
+    let tableProperties = JSON.stringify(scoreRequest.tableProperties)
     tableProperties = tableProperties.replace(/\"([^(\")"]+)\":/g, "$1:")
 
-    let userSequence = JSON.stringify(scoreReqeust.userSequence)
+    let userSequence = JSON.stringify(scoreRequest.userSequence)
     userSequence = userSequence.replace(/\"([^(\")"]+)\":/g, "$1:")
 
     const response = await graphql.makeGraphqlRequest(
         "AddScore",
         `mutation AddScore {
             addScore (scoreInput: {
-                signedStartTime: "${scoreReqeust.signedStartTime}",
+                signedStartTime: "${scoreRequest.signedStartTime}",
                 userId: "${userId}",
-                startTime: ${scoreReqeust.startTime},
-                expectedSequence: ${JSON.stringify(scoreReqeust.expectedSequence)}
-                randomizedSequence: ${JSON.stringify(scoreReqeust.randomizedSequence)},
+                startTime: ${scoreRequest.startTime},
+                expectedSequence: ${JSON.stringify(scoreRequest.expectedSequence)}
+                randomizedSequence: ${JSON.stringify(scoreRequest.randomizedSequence)},
                 userSequence: ${userSequence},
-                tableWidth: ${scoreReqeust.tableWidth},
-                tableHeight: ${scoreReqeust.tableHeight},
+                tableWidth: ${scoreRequest.tableWidth},
+                tableHeight: ${scoreRequest.tableHeight},
                 tableProperties: ${tableProperties}
             }) {
                 id

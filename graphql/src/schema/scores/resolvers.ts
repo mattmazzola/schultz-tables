@@ -89,7 +89,13 @@ const Mutation: types.MutationResolvers.Resolvers = {
             throw new ApolloError(`You have been logged for attempted cheating.  Your account will be reviewed and may be deleted.`)
         }
 
-        const tableTypeString = utilities.sha256(stringify(scoreInput.tableProperties.sort((a, b) => a.key.localeCompare(b.key))))
+        const tableType = {
+            width: scoreInput.tableWidth,
+            height: scoreInput.tableHeight,
+            properties: scoreInput.tableProperties.sort((a, b) => a.key.localeCompare(b.key)),
+        }
+
+        const tableTypeString = utilities.sha256(stringify(tableType))
         const durationMilliseconds = endTime - scoreInput.startTime
         const score: types.Score = {
             ...scoreInput,

@@ -48,7 +48,7 @@ export function isTimeValid(
 }
 
 export function sha256(s: string) {
-    return crypto.createHash('sha256').update(s).digest('base64')
+    return crypto.createHash('sha256').update(s).digest('hex')
 }
 
 const algorithm = 'aes-256-ctr'
