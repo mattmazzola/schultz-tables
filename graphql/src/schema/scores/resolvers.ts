@@ -4,6 +4,7 @@ import uuid from 'uuid/v4'
 import * as types from '../../generated/types'
 import stringify from 'json-stable-stringify'
 import auth0ManagementClient from "../../services/auth0service"
+import { IContext } from '../../context'
 
 // const Query = {
 const Query: types.QueryResolvers.Resolvers = {
@@ -19,22 +20,15 @@ const Query: types.QueryResolvers.Resolvers = {
             throw new Error(`Could not find score by id: ${id}`)
         }
 
-        const tableType = await context.tableTypes.findOne({ id: score.tableTypeId })
-        const tableLayout = await context.tableLayouts.findOne({ id: score.tableLayoutId })
-
-        const anyScore = score as any
-        anyScore.tableType = tableType
-        anyScore.tableLayout = tableLayout
-
-        return anyScore
+        return score
     },
-    scores: async (_, { tableTypeId, page = 1 }, context, info) => {
+    scores: async (_, { page = 1 }, context, info) => {
         const scores = await context.scores
             // .find({ $query: { tableTypeId }, $orderby: { durationMilliseconds: 1 } })
             .find()
             .skip((page! - 1) * 50)
             // .limit(50)
-            .sort({ startTime: 1 })
+            .sort({ durationMilliseconds: 1 })
             .toArray()
 
         if (scores.length === 0) {
@@ -72,7 +66,7 @@ const Mutation: types.MutationResolvers.Resolvers = {
         }
     },
 
-    addScore: async (_, { scoreInput }, context) => {
+    addScore: async (_, { scoreInput }, context: IContext) => {
         if (!scoreInput) {
             throw Error(`ScoreInput not defined`)
         }
@@ -95,41 +89,17 @@ const Mutation: types.MutationResolvers.Resolvers = {
             throw new ApolloError(`You have been logged for attempted cheating.  Your account will be reviewed and may be deleted.`)
         }
 
-        const tableLayout: types.TableLayout = {
-            width: scoreInput.tableWidth,
-            height: scoreInput.tableHeight,
-            expectedSequence: scoreInput.expectedSequence,
-            randomizedSequence: scoreInput.randomizedSequence,
-            id: null!
-        }
-
-        const tableType: types.TableType = {
-            width: scoreInput.tableWidth,
-            height: scoreInput.tableHeight,
-            properties: scoreInput.tableProperties.sort((a, b) => a.key.localeCompare(b.key)),
-            id: null!
-        }
-
-        const tableLayoutString = stringify(tableLayout)
-        tableLayout.id = utilities.sha256(tableLayoutString)
-
-        const tableTypeString = stringify(tableType)
-        tableType.id = utilities.sha256(tableTypeString)
-
+        const tableTypeString = utilities.sha256(stringify(scoreInput.tableProperties.sort((a, b) => a.key.localeCompare(b.key))))
+        const durationMilliseconds = endTime - scoreInput.startTime
         const score: types.Score = {
+            ...scoreInput,
             id: uuid(),
-            sequence: scoreInput.userSequence,
-            tableLayoutId: tableLayout.id,
-            tableTypeId: tableType.id,
-            startTime: scoreInput.startTime,
             endTime,
-            duration: endTime - scoreInput.startTime,
-            durationMilliseconds: endTime - scoreInput.startTime,
-            userId: scoreInput.userId
+            durationMilliseconds,
+            userId: context.user.sub,
+            tableTypeId: tableTypeString
         }
 
-        const tableLayoutResult = await context.tableLayouts.insertOne(tableLayout)
-        const tableTypeResult = await context.tableTypes.updateOne({ id: tableType.id }, { $set: tableType }, { upsert: true })
         const result = await context.scores.insertOne(score)
 
         return score

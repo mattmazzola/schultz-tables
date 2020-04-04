@@ -43,14 +43,10 @@ export const context = async ({ req }: { req: any }, db: mongo.Db, publicKey: st
 
     try {
         const scores = db.collection<types.Score>('scores')
-        const tableTypes = db.collection<types.TableType>('tabletypes')
-        const tableLayouts = db.collection<types.TableLayout>('tablelayouts')
 
         return {
             db,
             scores,
-            tableTypes,
-            tableLayouts,
             user: decodedJwt
         }
     }

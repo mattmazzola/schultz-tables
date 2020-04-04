@@ -118,6 +118,7 @@ export interface KVPair<K,V> {
 }
 
 export interface IScoreRequest {
+    userSequence: IUserSelection[]
     expectedSequence: string[]
     randomizedSequence: string[]
     signedStartTime: string
@@ -125,10 +126,10 @@ export interface IScoreRequest {
     tableHeight: number
     tableWidth: number
     tableProperties: KVPair<string, string>[]
-    userSequence: IUserSelection[]
 }
 
 export interface IScoreRequestGraphql {
+    userSequence: IUserSelection<number>[]
     expectedSequence: string[]
     randomizedSequence: string[]
     signedStartTime: string
@@ -136,17 +137,19 @@ export interface IScoreRequestGraphql {
     tableHeight: number
     tableWidth: number
     tableProperties: KVPair<string, string>[]
-    userSequence: IUserSelection<number>[]
 }
 
 export interface IScoreResponse {
-    duration: string
-    durationMilliseconds: number
-    endTime: string
     id: string
-    sequence: IUserSelection[]
     startTime: string
-    tableLayoutId: string
+    endTime: string
+    durationMilliseconds: number
+    userSequence: IUserSelection[]
+    expectedSequence: string[]
+    randomizedSequence: string[]
+    tableProperties: KVPair<string, string>[]
+    tableWidth: number
+    tableHeight: number
     tableTypeId: string
     userId: string
 }

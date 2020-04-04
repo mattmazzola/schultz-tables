@@ -4,8 +4,6 @@ import dotent from 'dotenv'
 import jsonwebtoken from 'jsonwebtoken'
 import jwksRsa from 'jwks-rsa'
 
-import * as models from './models'
-
 const result = dotent.config()
 if (result.error) {
     console.error(result.error)

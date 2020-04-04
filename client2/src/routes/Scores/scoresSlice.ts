@@ -83,7 +83,7 @@ export const getScoresAsync = (token: string, tableTypeId: string): AppThunk => 
 
 export const getTableTypes = (token: string): AppThunk => async dispatch => {
     dispatch(setLoading(true))
-    const tableTypes = await client.getTableTypesThunkAsync(token)
+    const tableTypes: any = []
 
     dispatch(setTableTypes({ tableTypes }))
     dispatch(setLoading(false))

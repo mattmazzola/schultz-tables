@@ -42,10 +42,13 @@ const typeDefs = gql`
         userId: String!
         startTime: Float!
         endTime: Float!
-        duration: Int!
         durationMilliseconds: Int!
-        sequence: [Answer]!
-        tableLayoutId: String!
+        userSequence: [Answer]!
+        expectedSequence: [String]!,
+        randomizedSequence: [String]!,
+        tableWidth: Int!,
+        tableHeight: Int!,
+        tableProperties: [KvPair!]!
         tableTypeId: String!
     }
 
@@ -67,18 +70,6 @@ const typeDefs = gql`
         value: String!
     }
 
-    type ScoreDetails {
-        id: String!
-        userId: String!
-        startTime: Float!
-        endTime: Float!
-        duration: Int!
-        durationMilliseconds: Int!
-        sequence: [Answer]!
-        tableLayout: TableLayout!
-        tableType: TableType!
-    }
-
     type ScoresResponse {
         scores: [Score!]!
         users: [User!]!
@@ -86,7 +77,7 @@ const typeDefs = gql`
 
     extend type Query {
         scores(tableTypeId: String!, page: Int): ScoresResponse!
-        score(id: String!): ScoreDetails!
+        score(id: String!): Score!
         userScores(userId: String!): [Score!]!
     }
 

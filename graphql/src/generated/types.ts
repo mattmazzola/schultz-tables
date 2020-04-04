@@ -53,15 +53,11 @@ export interface Query {
 
   scores: ScoresResponse;
 
-  score: ScoreDetails;
+  score: Score;
 
   userScores: Score[];
 
   users: User[];
-
-  tableTypes: TableType[];
-
-  tableLayouts: TableLayout[];
 }
 
 export interface ScoresResponse {
@@ -79,13 +75,19 @@ export interface Score {
 
   endTime: number;
 
-  duration: number;
-
   durationMilliseconds: number;
 
-  sequence: (Maybe<Answer>)[];
+  userSequence: (Maybe<Answer>)[];
 
-  tableLayoutId: string;
+  expectedSequence: (Maybe<string>)[];
+
+  randomizedSequence: (Maybe<string>)[];
+
+  tableWidth: number;
+
+  tableHeight: number;
+
+  tableProperties: KvPair[];
 
   tableTypeId: string;
 }
@@ -108,60 +110,18 @@ export interface Cell {
   y: number;
 }
 
+export interface KvPair {
+  key: string;
+
+  value: string;
+}
+
 export interface User {
   id: string;
 
   email: string;
 
   name: string;
-}
-
-export interface ScoreDetails {
-  id: string;
-
-  userId: string;
-
-  startTime: number;
-
-  endTime: number;
-
-  duration: number;
-
-  durationMilliseconds: number;
-
-  sequence: (Maybe<Answer>)[];
-
-  tableLayout: TableLayout;
-
-  tableType: TableType;
-}
-
-export interface TableLayout {
-  id: string;
-
-  width: number;
-
-  height: number;
-
-  expectedSequence: string[];
-
-  randomizedSequence: string[];
-}
-
-export interface TableType {
-  id: string;
-
-  width: number;
-
-  height: number;
-
-  properties: KvPair[];
-}
-
-export interface KvPair {
-  key: string;
-
-  value: string;
 }
 
 export interface Mutation {
@@ -192,12 +152,6 @@ export interface UserScoresQueryArgs {
   userId: string;
 }
 export interface UsersQueryArgs {
-  ignored?: Maybe<string>;
-}
-export interface TableTypesQueryArgs {
-  ignored?: Maybe<string>;
-}
-export interface TableLayoutsQueryArgs {
   ignored?: Maybe<string>;
 }
 export interface StartMutationArgs {
@@ -266,15 +220,11 @@ export namespace QueryResolvers {
 
     scores?: ScoresResolver<ScoresResponse, TypeParent, Context>;
 
-    score?: ScoreResolver<ScoreDetails, TypeParent, Context>;
+    score?: ScoreResolver<Score, TypeParent, Context>;
 
     userScores?: UserScoresResolver<Score[], TypeParent, Context>;
 
     users?: UsersResolver<User[], TypeParent, Context>;
-
-    tableTypes?: TableTypesResolver<TableType[], TypeParent, Context>;
-
-    tableLayouts?: TableLayoutsResolver<TableLayout[], TypeParent, Context>;
   }
 
   export type _EmptyResolver<
@@ -294,7 +244,7 @@ export namespace QueryResolvers {
   }
 
   export type ScoreResolver<
-    R = ScoreDetails,
+    R = Score,
     Parent = {},
     Context = IContext
   > = Resolver<R, Parent, Context, ScoreArgs>;
@@ -317,24 +267,6 @@ export namespace QueryResolvers {
     Context = IContext
   > = Resolver<R, Parent, Context, UsersArgs>;
   export interface UsersArgs {
-    ignored?: Maybe<string>;
-  }
-
-  export type TableTypesResolver<
-    R = TableType[],
-    Parent = {},
-    Context = IContext
-  > = Resolver<R, Parent, Context, TableTypesArgs>;
-  export interface TableTypesArgs {
-    ignored?: Maybe<string>;
-  }
-
-  export type TableLayoutsResolver<
-    R = TableLayout[],
-    Parent = {},
-    Context = IContext
-  > = Resolver<R, Parent, Context, TableLayoutsArgs>;
-  export interface TableLayoutsArgs {
     ignored?: Maybe<string>;
   }
 }
@@ -368,17 +300,31 @@ export namespace ScoreResolvers {
 
     endTime?: EndTimeResolver<number, TypeParent, Context>;
 
-    duration?: DurationResolver<number, TypeParent, Context>;
-
     durationMilliseconds?: DurationMillisecondsResolver<
       number,
       TypeParent,
       Context
     >;
 
-    sequence?: SequenceResolver<(Maybe<Answer>)[], TypeParent, Context>;
+    userSequence?: UserSequenceResolver<(Maybe<Answer>)[], TypeParent, Context>;
 
-    tableLayoutId?: TableLayoutIdResolver<string, TypeParent, Context>;
+    expectedSequence?: ExpectedSequenceResolver<
+      (Maybe<string>)[],
+      TypeParent,
+      Context
+    >;
+
+    randomizedSequence?: RandomizedSequenceResolver<
+      (Maybe<string>)[],
+      TypeParent,
+      Context
+    >;
+
+    tableWidth?: TableWidthResolver<number, TypeParent, Context>;
+
+    tableHeight?: TableHeightResolver<number, TypeParent, Context>;
+
+    tableProperties?: TablePropertiesResolver<KvPair[], TypeParent, Context>;
 
     tableTypeId?: TableTypeIdResolver<string, TypeParent, Context>;
   }
@@ -403,23 +349,38 @@ export namespace ScoreResolvers {
     Parent = Score,
     Context = IContext
   > = Resolver<R, Parent, Context>;
-  export type DurationResolver<
-    R = number,
-    Parent = Score,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
   export type DurationMillisecondsResolver<
     R = number,
     Parent = Score,
     Context = IContext
   > = Resolver<R, Parent, Context>;
-  export type SequenceResolver<
+  export type UserSequenceResolver<
     R = (Maybe<Answer>)[],
     Parent = Score,
     Context = IContext
   > = Resolver<R, Parent, Context>;
-  export type TableLayoutIdResolver<
-    R = string,
+  export type ExpectedSequenceResolver<
+    R = (Maybe<string>)[],
+    Parent = Score,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+  export type RandomizedSequenceResolver<
+    R = (Maybe<string>)[],
+    Parent = Score,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+  export type TableWidthResolver<
+    R = number,
+    Parent = Score,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+  export type TableHeightResolver<
+    R = number,
+    Parent = Score,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+  export type TablePropertiesResolver<
+    R = KvPair[],
     Parent = Score,
     Context = IContext
   > = Resolver<R, Parent, Context>;
@@ -489,6 +450,25 @@ export namespace CellResolvers {
   > = Resolver<R, Parent, Context>;
 }
 
+export namespace KvPairResolvers {
+  export interface Resolvers<Context = IContext, TypeParent = KvPair> {
+    key?: KeyResolver<string, TypeParent, Context>;
+
+    value?: ValueResolver<string, TypeParent, Context>;
+  }
+
+  export type KeyResolver<
+    R = string,
+    Parent = KvPair,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+  export type ValueResolver<
+    R = string,
+    Parent = KvPair,
+    Context = IContext
+  > = Resolver<R, Parent, Context>;
+}
+
 export namespace UserResolvers {
   export interface Resolvers<Context = IContext, TypeParent = User> {
     id?: IdResolver<string, TypeParent, Context>;
@@ -511,174 +491,6 @@ export namespace UserResolvers {
   export type NameResolver<
     R = string,
     Parent = User,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-}
-
-export namespace ScoreDetailsResolvers {
-  export interface Resolvers<Context = IContext, TypeParent = ScoreDetails> {
-    id?: IdResolver<string, TypeParent, Context>;
-
-    userId?: UserIdResolver<string, TypeParent, Context>;
-
-    startTime?: StartTimeResolver<number, TypeParent, Context>;
-
-    endTime?: EndTimeResolver<number, TypeParent, Context>;
-
-    duration?: DurationResolver<number, TypeParent, Context>;
-
-    durationMilliseconds?: DurationMillisecondsResolver<
-      number,
-      TypeParent,
-      Context
-    >;
-
-    sequence?: SequenceResolver<(Maybe<Answer>)[], TypeParent, Context>;
-
-    tableLayout?: TableLayoutResolver<TableLayout, TypeParent, Context>;
-
-    tableType?: TableTypeResolver<TableType, TypeParent, Context>;
-  }
-
-  export type IdResolver<
-    R = string,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type UserIdResolver<
-    R = string,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type StartTimeResolver<
-    R = number,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type EndTimeResolver<
-    R = number,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type DurationResolver<
-    R = number,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type DurationMillisecondsResolver<
-    R = number,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type SequenceResolver<
-    R = (Maybe<Answer>)[],
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type TableLayoutResolver<
-    R = TableLayout,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type TableTypeResolver<
-    R = TableType,
-    Parent = ScoreDetails,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-}
-
-export namespace TableLayoutResolvers {
-  export interface Resolvers<Context = IContext, TypeParent = TableLayout> {
-    id?: IdResolver<string, TypeParent, Context>;
-
-    width?: WidthResolver<number, TypeParent, Context>;
-
-    height?: HeightResolver<number, TypeParent, Context>;
-
-    expectedSequence?: ExpectedSequenceResolver<string[], TypeParent, Context>;
-
-    randomizedSequence?: RandomizedSequenceResolver<
-      string[],
-      TypeParent,
-      Context
-    >;
-  }
-
-  export type IdResolver<
-    R = string,
-    Parent = TableLayout,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type WidthResolver<
-    R = number,
-    Parent = TableLayout,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type HeightResolver<
-    R = number,
-    Parent = TableLayout,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type ExpectedSequenceResolver<
-    R = string[],
-    Parent = TableLayout,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type RandomizedSequenceResolver<
-    R = string[],
-    Parent = TableLayout,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-}
-
-export namespace TableTypeResolvers {
-  export interface Resolvers<Context = IContext, TypeParent = TableType> {
-    id?: IdResolver<string, TypeParent, Context>;
-
-    width?: WidthResolver<number, TypeParent, Context>;
-
-    height?: HeightResolver<number, TypeParent, Context>;
-
-    properties?: PropertiesResolver<KvPair[], TypeParent, Context>;
-  }
-
-  export type IdResolver<
-    R = string,
-    Parent = TableType,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type WidthResolver<
-    R = number,
-    Parent = TableType,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type HeightResolver<
-    R = number,
-    Parent = TableType,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type PropertiesResolver<
-    R = KvPair[],
-    Parent = TableType,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-}
-
-export namespace KvPairResolvers {
-  export interface Resolvers<Context = IContext, TypeParent = KvPair> {
-    key?: KeyResolver<string, TypeParent, Context>;
-
-    value?: ValueResolver<string, TypeParent, Context>;
-  }
-
-  export type KeyResolver<
-    R = string,
-    Parent = KvPair,
-    Context = IContext
-  > = Resolver<R, Parent, Context>;
-  export type ValueResolver<
-    R = string,
-    Parent = KvPair,
     Context = IContext
   > = Resolver<R, Parent, Context>;
 }
@@ -767,11 +579,8 @@ export interface IResolvers<Context = IContext> {
   Score?: ScoreResolvers.Resolvers<Context>;
   Answer?: AnswerResolvers.Resolvers<Context>;
   Cell?: CellResolvers.Resolvers<Context>;
-  User?: UserResolvers.Resolvers<Context>;
-  ScoreDetails?: ScoreDetailsResolvers.Resolvers<Context>;
-  TableLayout?: TableLayoutResolvers.Resolvers<Context>;
-  TableType?: TableTypeResolvers.Resolvers<Context>;
   KvPair?: KvPairResolvers.Resolvers<Context>;
+  User?: UserResolvers.Resolvers<Context>;
   Mutation?: MutationResolvers.Resolvers<Context>;
   Start?: StartResolvers.Resolvers<Context>;
 }

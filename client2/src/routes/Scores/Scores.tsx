@@ -5,6 +5,7 @@ import * as Auth0 from "../../react-auth0-spa"
 import Score from '../../components/Score'
 import './Scores.css'
 import { getScoresAsync, selectScores, getTableTypes } from './scoresSlice'
+import moment from "moment"
 
 type Props = {
     tableTypes: models.ITableType[],
@@ -121,7 +122,12 @@ const Scores: React.FC<Props> = (props) => {
                         <div>
                             {scores.scores.map(s => {
                                 return (
-                                    <div key={s.id}>{s.startTime}</div>
+                                    <div key={s.id}>
+                                        <div>{moment(s.startTime).format('ll')}</div>
+                                        <div>{moment(s.endTime).format('ll')}</div>
+                                        <div>{s.durationMilliseconds}</div>
+                                        <div>{s.user ? s.user.name : s.userId}</div>
+                                    </div>
                                 )
                             })}
                             <button>Load More</button>
@@ -141,15 +147,15 @@ const ScoresContainer: React.FC = () => {
     React.useEffect(() => {
         async function fn() {
             const token = await getTokenSilently()
-            dispatch(getTableTypes(token))
+            dispatch(getScoresAsync(token, 'asdfasdf'))
         }
 
         fn()
     }, [])
 
-    const getScoresByType = async (tableTypeId: string) => {
+    const getScoresByType = async (tableTypeId: string, page: number = 1) => {
         const token = await getTokenSilently()
-        dispatch(getScoresAsync(token, tableTypeId))
+        dispatch(getScoresAsync(token, 'asdfasdf'))
     }
 
     return (

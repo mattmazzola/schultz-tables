@@ -41,6 +41,7 @@ export const slice = createSlice({
             const table = utilities.generateTable(tableConfigSelected, sequence)
             const defaultGameState = utilities.generateDefaultGameState()
 
+            state.gameTypeIdSelected = gameType.id
             state.table = table
             state.signedStartTime = signedStartTime
             state.isGameVisible = true

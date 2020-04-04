@@ -30,7 +30,6 @@
   "dependencies": {
     "@types/node": "^13.9.5",
     "@types/zen-observable": "^0.8.0",
-    "adal-node": "^0.1.28",
     "apollo-server": "^2.3.1",
     "auth0": "^2.24.0",
     "dotenv": "^6.2.0",
@@ -60,7 +59,6 @@
     "graphql-codegen-typescript-server": "^0.16.1",
     "kuduscript": "^1.0.17",
     "nodemon": "^1.18.9",
-    "ts-node": "^8.0.2",
     "typescript": "^3.8.3"
   },
   "engines": {

@@ -72,15 +72,14 @@ export async function addScore(token: string, userId: string, scoreReqeust: mode
                 randomizedSequence: ${JSON.stringify(scoreReqeust.randomizedSequence)},
                 userSequence: ${userSequence},
                 tableWidth: ${scoreReqeust.tableWidth},
-                tableHeight: ${scoreReqeust.tableWidth},
+                tableHeight: ${scoreReqeust.tableHeight},
                 tableProperties: ${tableProperties}
             }) {
                 id
                 startTime
                 endTime
-                duration
                 durationMilliseconds
-                sequence {
+                userSequence {
                     time
                     cell {
                         classes
@@ -90,8 +89,13 @@ export async function addScore(token: string, userId: string, scoreReqeust: mode
                     }
                     correct
                 }
+                tableProperties {
+                    key
+                    value
+                }
+                tableWidth
+                tableHeight
                 tableTypeId
-                tableLayoutId
             }
         }
     `, token)
@@ -111,65 +115,38 @@ export async function addScore(token: string, userId: string, scoreReqeust: mode
     console.log(`Score Added: `, score)
 }
 
-export async function getTableTypesThunkAsync(token: string): Promise<models.ITableType[]> {
-    const response = await graphql.makeGraphqlRequest(
-        null,
-        `{
-            tableTypes {
-                id
-                width
-                height
-                properties {
-                    key
-                    value
-                }
-            }
-        }`,
-        token)
-
-    if (!response.ok) {
-        console.log(`status text: `, response.statusText)
-        const text = await response.text()
-        throw new Error(text)
-    }
-
-    const json: models.IGraphQlResponse<{ tableTypes: models.ITableType[] }> = await response.json()
-    if (json.errors && json.errors.length >= 1) {
-        throw new Error(json.errors[0].message)
-    }
-
-    return json.data.tableTypes
-}
-
-
 export const getScoresThunkAsync = async (token: string, tableTypeId: string): Promise<models.IScoresResponse> => {
     const response = await graphql.makeGraphqlRequest(
         null,
         `{
             scores(tableTypeId: "8khL0PAzn1fLljSPPp6eGpcIHqbA6VPSHdkHGUeRb/s=") {
                 users {
-                id
-                email
-                name
+                    id
+                    email
+                    name
                 }
                 scores {
-                id
-                userId
-                startTime
-                endTime
-                duration
-                durationMilliseconds
-                sequence {
-                    cell {
-                    x
-                    y
-                    text
+                    id
+                    userId
+                    startTime
+                    endTime
+                    durationMilliseconds
+                    userSequence {
+                        cell {
+                            x
+                            y
+                            text
+                        }
+                        time
+                        correct
                     }
-                    time
-                    correct
-                }
-                tableTypeId
-                tableLayoutId
+                    tableWidth
+                    tableHeight
+                    tableProperties {
+                        key
+                        value
+                    }
+                    tableTypeId
                 }
             }
         }`,

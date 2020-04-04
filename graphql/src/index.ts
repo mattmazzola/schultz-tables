@@ -1,19 +1,7 @@
 import { ApolloServer } from 'apollo-server'
 import context, { getDb } from './context'
-import adal from 'adal-node'
 import schema from './schema'
 import { getCertificate } from './utilities'
-
-adal.Logging.setLoggingOptions({
-  level: 3,
-  log: (level, message, error) => {
-    console.log(message)
-    if (error) {
-      console.log(error)
-    }
-  }
-})
-
 
 {
   (async () => {
