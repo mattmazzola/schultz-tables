@@ -44,6 +44,11 @@ const Scores: React.FC<Props> = (props) => {
                                     onClick={() => {}}
                                 />
                             </div>
+                            <div className={styles.scoreRefreshButton}>
+                                <button disabled={scoresByType == null} onClick={() => onClickRefresh(gameType, 'fakeContinuationToken')}>
+                                    Refresh Top 50
+                                </button>
+                            </div>
                             <div>
                                 {(scoresByType?.scores ?? []).map(s => {
                                     return (
@@ -54,9 +59,6 @@ const Scores: React.FC<Props> = (props) => {
                                         </div>
                                     )
                                 })}
-                            </div>
-                            <div className={styles.scoreRefreshButton}>
-                                <button disabled={scoresByType == null} onClick={() => onClickRefresh(gameType, 'fakeContinuationToken')}>Refresh Top 50</button>
                             </div>
                         </div>
                     )
