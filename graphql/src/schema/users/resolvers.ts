@@ -1,21 +1,9 @@
-import dotent from 'dotenv'
 import * as types from '../../generated/types'
-import auth0 from "auth0"
-
-const result = dotent.config()
-if (result.error) {
-    console.error(result.error)
-}
-
-const managementClient = new auth0.ManagementClient({
-    domain: process.env.DOMAIN!,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-})
+import auth0ManagementClient from "../../services/auth0service"
 
 const Query: types.QueryResolvers.Resolvers = {
     users: async () => {
-        const users = await managementClient.getUsers()
+        const users = await auth0ManagementClient.getUsers()
 
         return users.map<types.User>(user => {
             return {

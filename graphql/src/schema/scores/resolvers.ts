@@ -3,6 +3,7 @@ import { ApolloError } from 'apollo-server'
 import uuid from 'uuid/v4'
 import * as types from '../../generated/types'
 import stringify from 'json-stable-stringify'
+import auth0ManagementClient from "../../services/auth0service"
 
 // const Query = {
 const Query: types.QueryResolvers.Resolvers = {
@@ -30,10 +31,10 @@ const Query: types.QueryResolvers.Resolvers = {
     scores: async (_, { tableTypeId, page = 1 }, context, info) => {
         const scores = await context.scores
             // .find({ $query: { tableTypeId }, $orderby: { durationMilliseconds: 1 } })
-            .find({ tableTypeId })
+            .find()
             .skip((page! - 1) * 50)
-            .limit(50)
-            .sort({ duration: 1 })
+            // .limit(50)
+            .sort({ startTime: 1 })
             .toArray()
 
         if (scores.length === 0) {
@@ -44,15 +45,15 @@ const Query: types.QueryResolvers.Resolvers = {
         }
 
         const userIds = [... new Set(scores.map(s => s.userId))] as string[]
-        // const tokenResponse = await utilities.acqureAadToken()
-        // const graphUsers = await utilities.getUsersByIds(userIds, tokenResponse.accessToken)
-        // const users = graphUsers.value.map<types.User>(gu => ({
-        //     id: gu.objectId,
-        //     email: gu.otherMails[0] || '',
-        //     name: gu.displayName
-        // }))
-
-        const users = []
+        const query = userIds.map(id => `user_id:${id}`).join(` OR `)
+        const rawUsers = await auth0ManagementClient.getUsers({ q: query })
+        const users = rawUsers.map<types.User>(user => {
+            return {
+                id: user.user_id ?? 'unknown',
+                email: user.email ?? 'unknown',
+                name: user.name ?? 'unknown',
+            }
+        })
 
         return {
             scores,
