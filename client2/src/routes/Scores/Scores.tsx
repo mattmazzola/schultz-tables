@@ -1,9 +1,11 @@
 import React from "react"
 import { useSelector, useDispatch } from 'react-redux'
 import * as models from "../../types/models"
+import * as options from '../../utilities/options'
 import * as Auth0 from "../../react-auth0-spa"
 import Score from '../../components/Score'
 import './Scores.css'
+import styles from './Scores.module.css'
 import { getScoresAsync, selectScores, getTableTypes } from './scoresSlice'
 import moment from "moment"
 
@@ -20,10 +22,13 @@ const Scores: React.FC<Props> = (props) => {
         // props.getScoresThunkAsync(tableTypeIdSelected)
     }
 
-    const onClickLoadMore = (continuationToken: string) => {
-        if (continuationToken !== null) {
-            console.log('onClick Load more', continuationToken)
+    const onClickLoadMore = (option: models.IOption<models.ITableConfig>, continuationToken: string) => {
+        if (!option || !continuationToken) {
+            console.error(`Error attempting to load more scores for type. A type and continuation token must be provided.`)
+            return
         }
+
+        console.log(`You loaded more scores for type ${option.name} ${option.id}. Continuation Token: ${continuationToken}`)
     }
 
     const onChangeTableType = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -37,104 +42,33 @@ const Scores: React.FC<Props> = (props) => {
 
     return (
         <>
-            <div className="score-you">
-                <div></div>
-                <div>
-                    4 x 4
-            </div>
-                <div>
-                    5 x 5
-            </div>
-                <div>
-                    5 x 5
-            </div>
-                <div>
-                    6 x 6
-            </div>
+            <h2>Scores by Table Type:</h2>
 
-                <div>1</div>
-                <div className="scores-grid__score">9.45 Matt Mazzola</div>
-                <div className="scores-grid__score">24.3 Matt Mazzola</div>
-                <div className="scores-grid__score">24.3 Matt Mazzola</div>
-                <div className="scores-grid__score">24.3 Matt Mazzola</div>
-            </div>
-
-            <div className="scores-grid">
-                <div>
-                    #
-            </div>
-                <div className="scores-grid__table-types">
-                    TableTypes:
-            </div>
-
-                <b></b>
-                <div>
-                    4 x 4
-            </div>
-                <div>
-                    5 x 5
-            </div>
-                <div>
-                    5 x 5
-            </div>
-                <div>
-                    6 x 6
-            </div>
-
-                <div>1</div>
-                <div className="scores-grid__container">
-                    <div className="score-column">
-                        <div className="score-column__score">24.3 Matt Mazzola</div>
-                        <div className="score-column__score">24.3 Matt Mazzola</div>
-                        <div className="score-column__score">24.3 Matt Mazzola</div>
-                    </div>
-                </div>
-
-                <div>2</div>
-                <div>3</div>
-                <div>3</div>
-                <div>3</div>
-                <div>3</div>
-                <div>3</div>
-
-                {/* <div className="scores-grid__score">9.45 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div>
-    
-            <div>2</div>
-            <div className="scores-grid__score">9.45 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div>
-            <div className="scores-grid__score">24.3 Matt Mazzola</div> */}
-            </div>
-
-            <select onChange={onChangeTableType}>
-                {props.tableTypes.map(tableType =>
-                    <option value={tableType.id}>{JSON.stringify(tableType)}</option>
-                )}
-            </select>
-
-            {Object.entries(props.scoresByType).map(([type, scores], i) => {
-                return (
-                    <div key={`${type}-${i}`}>
-                        <div>{type}</div>
-                        <div>
-                            {scores.scores.map(s => {
-                                return (
-                                    <div key={s.id}>
-                                        <div>{moment(s.startTime).format('ll')}</div>
-                                        <div>{moment(s.endTime).format('ll')}</div>
-                                        <div>{s.durationMilliseconds}</div>
-                                        <div>{s.user ? s.user.name : s.userId}</div>
-                                    </div>
-                                )
-                            })}
-                            <button>Load More</button>
+            <div className={styles.scoresColummns}>
+                {options.presetTables.map(option => {
+                    const scoresByType = props.scoresByType[option.id]
+                    return (
+                        <div key={option.id} className={styles.scoreColumn}>
+                            <div>{option.name}</div>
+                            <div>
+                                {(scoresByType?.scores ?? []).map(s => {
+                                    return (
+                                        <div key={s.id}>
+                                            <div>{moment(s.startTime).format('lll')}</div>
+                                            <div>{moment(s.endTime).format('lll')}</div>
+                                            <div>{s.durationMilliseconds}</div>
+                                            <div>{s.user ? s.user.name : s.userId}</div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <div>
+                                <button disabled={scoresByType?.continuationToken == null} onClick={() => scoresByType.continuationToken && onClickLoadMore(option, scoresByType.continuationToken)}>Load More</button>
+                            </div>
                         </div>
-                    </div>
-                )
-            })}
+                    )
+                })}
+            </div>
         </>
     )
 }
@@ -145,17 +79,21 @@ const ScoresContainer: React.FC = () => {
     const { getTokenSilently } = Auth0.useAuth0()
 
     React.useEffect(() => {
-        async function fn() {
+        async function fn(tableTypeId: string) {
             const token = await getTokenSilently()
-            dispatch(getScoresAsync(token, 'asdfasdf'))
+            dispatch(getScoresAsync(token, tableTypeId))
         }
 
-        fn()
+        options.presetTables.forEach(option => {
+            if (scoresState.scoresByType[option.id] === undefined) {
+                fn(option.id)
+            }
+        })
     }, [])
 
     const getScoresByType = async (tableTypeId: string, page: number = 1) => {
         const token = await getTokenSilently()
-        dispatch(getScoresAsync(token, 'asdfasdf'))
+        dispatch(getScoresAsync(token, tableTypeId))
     }
 
     return (

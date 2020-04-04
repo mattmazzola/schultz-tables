@@ -114,7 +114,7 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
         }
     },
     {
-        id: 'b8e2c4bb883f1d99c245f0122c9d47e8be85d16127c857d8827663cef23b16e9"',
+        id: 'b8e2c4bb883f1d99c245f0122c9d47e8be85d16127c857d8827663cef23b16e9',
         name: '5x5 Numbers - Shake diagonal',
         value: {
             width: 5,

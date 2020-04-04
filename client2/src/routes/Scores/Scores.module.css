@@ -1,0 +1,11 @@
+
+.scoresColummns {
+    display: grid;
+    grid-auto-flow: column;
+    grid-gap: 0.5 em;
+    overflow-x: auto;
+}
+
+.scoreColumn {
+    min-width: 200px;
+}

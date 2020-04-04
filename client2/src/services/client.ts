@@ -119,7 +119,7 @@ export const getScoresThunkAsync = async (token: string, tableTypeId: string): P
     const response = await graphql.makeGraphqlRequest(
         null,
         `{
-            scores(tableTypeId: "8khL0PAzn1fLljSPPp6eGpcIHqbA6VPSHdkHGUeRb/s=") {
+            scores(tableTypeId: "${tableTypeId}") {
                 users {
                     id
                     email
