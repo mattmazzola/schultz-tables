@@ -9,12 +9,16 @@ const Profile: React.FC = () => {
         return <div>Loading...</div>
     }
 
+    const onClickLogOut = () => {
+        logout({ returnTo: `https://schultztables.surge.sh` })
+    }
+
     return (
         <div className={styles.profile}>
             <img src={user.picture} alt="Profile Picture" className={styles.profilePicture} />
 
             <div>
-                <button onClick={() => logout()}  className={styles.profileLogOutButton}>Log out</button>
+                <button onClick={onClickLogOut}  className={styles.profileLogOutButton}>Log out</button>
             </div>
 
             <div>
