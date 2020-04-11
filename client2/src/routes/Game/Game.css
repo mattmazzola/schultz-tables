@@ -79,4 +79,9 @@
     grid-template-columns: repeat(2, minmax(215px, 1fr));
     grid-gap: 1em;
   }
-  
+
+  @media (max-width: 450px) {
+    .game-types {
+      grid-template-columns: auto;
+    }
+  }
