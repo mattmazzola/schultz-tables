@@ -96,7 +96,7 @@ export const startThunk = (token: string, gameType: models.IOption<models.ITable
     dispatch(start({ signedStartTime, gameType }))
 }
 
-export const selectIndex = (state: RootState) =>
+export const selectGame = (state: RootState) =>
     state.game
 
 export default slice.reducer

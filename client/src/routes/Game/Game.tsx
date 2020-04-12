@@ -33,7 +33,7 @@ const playBuzzerSound = () => {
 }
 
 const GameRoute: React.FC<Props> = (props) => {
-    const state = useSelector(GameSlice.selectIndex)
+    const state = useSelector(GameSlice.selectGame)
     const dispatch = useDispatch()
     const { getTokenSilently, user } = Auth0.useAuth0()
 
