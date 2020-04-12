@@ -34,6 +34,12 @@
     padding: 1rem;
 }
 
+.scoreName {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .scoreRefreshButton {
     text-align: center;
     padding: 1rem;

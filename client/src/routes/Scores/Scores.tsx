@@ -50,12 +50,33 @@ const Scores: React.FC<Props> = (props) => {
                                 </button>
                             </div>
                             <div>
-                                {(scoresByType?.scores ?? []).map(s => {
+                                {(scoresByType?.scores ?? []).map((s, i) => {
+                                    let rank: string = `${i + 1}th`
+                                    if (i === 0) {
+                                        rank = '1st 🥇'
+                                    }
+                                    else if (i === 1) {
+                                        rank = '2nd 🥈'
+                                    }
+                                    else if (i === 2) {
+                                        rank = `3rd 🥉`
+                                    }
+                                    else if (i === 3) {
+                                        rank = `4th 🌟`
+                                    }
+                                    else if (i === 4) {
+                                        rank = `5th ⭐`
+                                    }
+
+                                    const name = s.user
+                                        ? (s.user.nickname ?? s.user.name ?? s.user.email)
+                                        : s.userId
                                     return (
                                         <div key={s.id} className={styles.score}>
+                                            <div>🏁</div><div>{rank}</div>
                                             <div>⌚</div><div>{(s.durationMilliseconds / 1000).toFixed(2)} sec</div>
                                             <div>⏲</div><div>{moment(s.startTime).format('M/D hh:mm a')}</div>
-                                            <div>🧑</div><div>{s.user ? (s.user.nickname ?? s.user.name ?? s.user.email) : s.userId}</div>
+                                            <div>🧑</div><div className={styles.scoreName} title={name}>{name}</div>
                                         </div>
                                     )
                                 })}
