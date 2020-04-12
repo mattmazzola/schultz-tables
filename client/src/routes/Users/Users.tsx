@@ -19,8 +19,7 @@ const Users: React.FC<Props> = (props) => {
         : props.users.map(user =>
           <RRD.NavLink to={{ pathname: `/users`, state: { user } }} className="user" key={user.id}>
             <img src={user.picture} className="userImage" />
-            <span>{user.nickname ?? user.name}</span>
-            <span>{user.email} {user.emailVerified === true && '✔'} </span>
+            <span>{user.nickname ?? user.name} {user.emailVerified === true && '✔ Verified'}</span>
           </RRD.NavLink>
         )}
     </div>
