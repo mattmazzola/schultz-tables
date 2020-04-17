@@ -35,11 +35,6 @@ async function main() {
 
   app.use(cors());
 
-  app.use((req, res, next) => {
-    res.setHeader('x-request-id', 'OThkMTMwNWU3N2JlNWM2NDNiNzA1NWUyYTQ5Y2EyMTgwZmQxYjU1ZWU1MmQyYjBmMjc0MmNkMDFlYzNmZWJiYQ==');
-    if (next) next();
-  });
-
   app.use('/graphql', graphqlHttp({
     schema,
     graphiql: true,

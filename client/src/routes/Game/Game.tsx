@@ -96,6 +96,12 @@ const GameRoute: React.FC<Props> = (props) => {
         <div className="home-page" >
             {state.isGameVisible === false
                 && <>
+                    <div>
+                        <h2>What is it?</h2>
+                        <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
+                        <h2>How to play?</h2>
+                        <p>Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... Games differ by size, symbols, and visual effects.  Try to complete as fast as you can!</p>
+                    </div>
                     <h1>Pick a game type below:</h1>
                     <div className="game-types">
                         {state.gameTypes.map(gameType =>
