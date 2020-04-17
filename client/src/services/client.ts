@@ -59,7 +59,7 @@ export async function getUsers(token: string) {
 
 export async function addScore(token: string, userId: string, scoreRequest: models.IScoreRequest) {
     let tableProperties = JSON.stringify(scoreRequest.tableProperties)
-    tableProperties = tableProperties.replace(/\"([^(\")"]+)\":/g, "$1:")
+    tableProperties = tableProperties.replace(/"([^(\")"]+)\":/g, "$1:")
 
     let userSequence = JSON.stringify(scoreRequest.userSequence)
     userSequence = userSequence.replace(/\"([^(\")"]+)\":/g, "$1:")

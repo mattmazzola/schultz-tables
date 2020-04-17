@@ -92,6 +92,8 @@ const GameRoute: React.FC<Props> = (props) => {
         }
     }, [state.gameState.expectedSymbolIndex, state.gameState.isCompleted])
 
+    const isUsingMobileDevice = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
     return (
         <div className="home-page" >
             {state.isGameVisible === false
@@ -100,17 +102,33 @@ const GameRoute: React.FC<Props> = (props) => {
                         <h2>What is it?</h2>
                         <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
                         <h2>How to play?</h2>
-                        <p>Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... Games differ by size, symbols, and visual effects.  Try to complete as fast as you can!</p>
+                        <p>
+                            Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... <br />
+                            Games differ by size, symbols, and visual effects.<br />
+                            <b>Try to complete the table as fast as you can!</b>
+                        </p>
                     </div>
-                    <h1>Pick a game type below:</h1>
-                    <div className="game-types">
-                        {state.gameTypes.map(gameType =>
-                            <GameType
-                                key={gameType.id}
-                                gameType={gameType}
-                                onClick={() => onClickStart(gameType)}
-                            />)}
-                    </div>
+                    {isUsingMobileDevice
+                        ? <>
+                            <h2>Incompatible Device Detected.</h2>
+                            <p>
+                                You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
+                                User Agent: {navigator.userAgent}
+                            </p>
+                        </>
+                        : <>
+                            <h1>Pick a game type below:</h1>
+
+                            <div className="game-types">
+                                {state.gameTypes.map(gameType =>
+                                    <GameType
+                                        key={gameType.id}
+                                        gameType={gameType}
+                                        onClick={() => onClickStart(gameType)}
+                                    />)}
+                            </div>
+                        </>
+                    }
                 </>
             }
 
