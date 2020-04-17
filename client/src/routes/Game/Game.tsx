@@ -107,16 +107,18 @@ const GameRoute: React.FC<Props> = (props) => {
                             Games differ by size, symbols, and visual effects.<br />
                             <b>Try to complete the table as fast as you can!</b>
                         </p>
-                    </div>
-                    {isUsingMobileDevice
-                        ? <>
-                            <h2>Incompatible Device Detected.</h2>
-                            <p>
-                                You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
+                        {isUsingMobileDevice === true
+                            && <>
+                                <h2>Incompatible Device Detected.</h2>
+                                <p>
+                                    You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
                                 User Agent: {navigator.userAgent}
-                            </p>
-                        </>
-                        : <>
+                                </p>
+                            </>
+                        }
+                    </div>
+                    {isUsingMobileDevice === false
+                        && <>
                             <h1>Pick a game type below:</h1>
 
                             <div className="game-types">
