@@ -44,3 +44,25 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister()
+
+const {
+  appCodeName,
+  appName,
+  appVersion,
+  cookieEnabled,
+  language,
+  onLine,
+  platform,
+  userAgent,
+} = navigator
+
+console.table({
+  appCodeName,
+  appName,
+  appVersion,
+  cookieEnabled,
+  language,
+  onLine,
+  platform,
+  userAgent,
+})
