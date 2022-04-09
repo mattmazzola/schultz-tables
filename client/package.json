@@ -19,7 +19,7 @@
     "@types/recharts": "^1.8.9",
     "@types/zen-observable": "^0.8.0",
     "graphql": "^14.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
