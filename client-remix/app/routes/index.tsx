@@ -27,9 +27,6 @@ export default function Index() {
       {hasProfile
         ? <div>
             <div>Hi, {profile?.displayName}</div>
-          <Form method="post" action="/logout">
-            <button type="submit">Sign Out</button>
-          </Form>
         </div>
         : (
           <Form method="post" action="/auth">

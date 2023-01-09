@@ -1,0 +1,23 @@
+.profile {
+    display: grid;
+    grid-gap: 1rem;
+}
+
+.profilePicture {
+    max-width: 300px;
+    border-radius: 5px;
+    border: 2px solid var(--color-grey-dark-1);
+}
+
+.profileLogOutButton {
+    font-size: 2rem;
+    border-radius: 10px;
+    border: none;
+
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(172, 16, 16);
+    color: rgb(253, 253, 253);
+}
