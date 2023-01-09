@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { getSymbols, randomize } from '../utilities'
+import { randomSymbols } from "~/constants/randomSymbols"
 
 type Props = {
-    width?: number
+    index: number
 }
 
-const Game: React.FC<Props> = ({ width = 5 }) => {
-    const [symbols] = React.useState(() => randomize(getSymbols('number', width * width)))
+const Game: React.FC<Props> = ({ index, }) => {
+    const symbols = randomSymbols[index % randomSymbols.length]
 
     return (
         <div className="mock-table">

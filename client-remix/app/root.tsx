@@ -66,7 +66,7 @@ export default function App() {
             <b></b>
             <div className="app-header__background">
               <div className="app-header__background-clip">
-                {Array(70).fill(0).map((_, i) => <MockGame key={i} />)}
+                {Array(70).fill(0).map((_, i) => <MockGame key={i} index={i} />)}
               </div>
             </div>
           </header>
