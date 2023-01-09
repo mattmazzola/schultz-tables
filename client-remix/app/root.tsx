@@ -12,6 +12,7 @@ import {
 import rootStyles from "~/styles/root.css"
 import sharedStyles from "~/styles/shared.css"
 import gamePreviewStyles from "~/styles/gamePreview.css"
+import gameComponentStyles from "~/styles/gameComponent.css"
 import gameStyles from "~/styles/game.css"
 import scoreStyles from "~/styles/score.css"
 import scoreDetailsStyles from "~/styles/scoreDetails.css"
@@ -33,6 +34,7 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: rootStyles },
   { rel: 'stylesheet', href: sharedStyles },
   { rel: 'stylesheet', href: gamePreviewStyles },
+  { rel: 'stylesheet', href: gameComponentStyles },
   { rel: 'stylesheet', href: gameStyles },
   { rel: 'stylesheet', href: scoreStyles },
   { rel: 'stylesheet', href: scoreDetailsStyles },
