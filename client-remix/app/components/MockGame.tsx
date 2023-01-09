@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { getSymbols, randomize } from '../utilities'
 
-const Game: React.FC = () => {
-    const width = 5
+type Props = {
+    width?: number
+}
+
+const Game: React.FC<Props> = ({ width = 5 }) => {
     const [symbols] = React.useState(() => randomize(getSymbols('number', width * width)))
 
     return (
