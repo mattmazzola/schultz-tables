@@ -1,10 +1,13 @@
 html,
 body {
-    min-height: 100%;
+  min-height: 100%;
 }
 
 :root {
-  --color-white-off: #f1f1f1;
+  --main-column-min-width: 200px;
+  --color-gray-dark-0: hsla(0, 0%, 0%, 0.2);
+  --color-grey-dark-1: hsl(0, 0%, 20%);
+  --color-white-off: hsl(0, 0%, 95%);
 }
 
 body {
@@ -29,12 +32,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.material-icons {
-  font-family: 'Material Icons';
+/* https://developers.google.com/fonts/docs/material_symbols#static_font_with_google_fonts */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
-  /* Preferred icon size */
+  font-size: 24px;  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -42,16 +45,147 @@ code {
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-  /* Support for IE. */
-  font-feature-settings: 'liga';
 }
 
 button:hover {
   cursor: pointer;
+}
+
+.app-header {
+  background-color: var(--color-grey-dark-1);
+  color: white;
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr max-content 1fr;
+  border-bottom: 1px solid hsl(0deg, 0%, 15%);
+  box-shadow: 0px 0px 20px 0px hsla(0, 0%, 0%, 0.4);
+  padding-top: 4rem;
+}
+
+.app-header__content {
+  z-index: 2;
+}
+
+.app-header__background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-header__background-clip {
+  position: absolute;
+  transform: translateX(-50px) rotateZ(-14deg);
+  transform-origin: 0 0;
+
+  display: grid;
+  grid-template: repeat(5, max-content) / repeat(15, max-content);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+}
+
+.app-header .banner {
+  margin-bottom: 1em;
+  font-size: 2.5rem;
+  text-align: center;
+  text-shadow: 0px 2px 5px hsl(200deg 86% 55% / 30%);
+}
+
+.app-header .banner a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-content {
+  padding: 2em 0;
+  display: grid;
+  grid-template-columns: 1fr min-content 1fr;
+}
+
+.app-content>* {
+  grid-column: 2
+}
+
+nav a {
+  color: inherit;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+}
+
+nav .link {
+  display: grid;
+  grid-template-columns: [full-start] 20px [icon-start] 30px [icon-end] 20px [full-end];
+  grid-template-rows: 30px;
+}
+
+nav .icon {
+  grid-row: 1;
+  grid-column: icon;
+  text-align: center;
+}
+
+nav .label {
+  grid-row: 2;
+  grid-column: full;
+  text-align: center;
+}
+
+
+nav > a {
+  padding: 0.75em 0.5em;
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+}
+
+nav>a.active {
+  background-color: #00A7F9;
+  border-bottom-color: rgb(21, 133, 189);
+  box-shadow: 0 0 4px 0 black;
+  color: white;
+  z-index: 2;
+}
+
+nav>a:hover:not(.active) {
+  background-color: rgba(21, 133, 189, 0.8);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+main {
+  padding: 2em 0;
+  display: grid;
+  grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 90vw) [main-end] minmax(1em, 1fr) [full-end];
+}
+
+@media (min-width: 501px) and (max-width: 800px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 80vw) [main-end] minmax(0.25em, 1fr) [full-end];
+  }
+}
+
+@media (min-width: 801px) and (max-width: 1200px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 75vw) [main-end] minmax(0.5em, 1fr) [full-end];
+  }
+}
+
+@media (min-width: 1201px) {
+  main {
+    grid-template-columns: [full-start] minmax(1em, 1fr) [main-start] minmax(var(--main-column-min-width), 70vw) [main-end] minmax(0.75em, 1fr) [full-end];
+  }
+}
+
+main>* {
+  grid-column: main;
 }

@@ -22,16 +22,16 @@ export const randomize = <T>(xs: T[]): T[] => {
 }
 
 export const generateTableConfig = (): models.ITableConfig =>
-    ({
-        width: 5,
-        height: 5,
-        symbols: 'numbers',
-        font: 'Arial',
-        fontColor: 'black',
-        cellColor: 'white',
-        textEffect: 'none',
-        animation: 'none'
-    })
+({
+    width: 5,
+    height: 5,
+    symbols: 'numbers',
+    font: 'Arial',
+    fontColor: 'black',
+    cellColor: 'white',
+    textEffect: 'none',
+    animation: 'none'
+})
 
 const availableLetters: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('')
 export const getSymbols = (type: string, length: number) => {
@@ -116,16 +116,16 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
 }
 
 export const generateDefaultGameState = (): models.IGameState =>
-    ({
-        startTime: Date.now(),
-        duration: 0,
-        isStarted: false,
-        isCompleted: false,
-        isSoundEnabled: true,
-        playSoundOnCorrect: false,
-        expectedSymbolIndex: 0,
-        userSequence: [],
-    })
+({
+    startTime: Date.now(),
+    duration: 0,
+    isStarted: false,
+    isCompleted: false,
+    isSoundEnabled: true,
+    playSoundOnCorrect: false,
+    expectedSymbolIndex: 0,
+    userSequence: [],
+})
 
 export const getTimeDifference = (timeAms: number, timeBms: number) => {
     return Math.abs(timeAms - timeBms) * 1000

@@ -11,12 +11,13 @@ import {
 
 import rootStyles from "~/styles/root.css"
 import sharedStyles from "~/styles/shared.css"
+import MockGame from "~/components/MockGame"
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Schultz Tables",
   viewport: "width=device-width,initial-scale=1",
-  description: "Game to ractice using your peripheral vision!",
+  description: "Game to practice using your peripheral vision!",
   icon: "/favicon.ico",
 })
 
@@ -25,6 +26,7 @@ export const links: LinksFunction = () => [
   { rel: 'apple-touch-icon', href: 'logo.jpg' },
   { rel: 'stylesheet', href: rootStyles },
   { rel: 'stylesheet', href: sharedStyles },
+  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' },
 ]
 
 export default function App() {
@@ -40,23 +42,23 @@ export default function App() {
             <b></b>
             <div className="app-header__content">
               <div className="banner">
-                <NavLink to="/"><h2>Schultz Tables</h2></NavLink>
+                <NavLink to="/"><h1>Schultz Tables</h1></NavLink>
               </div>
               <nav>
                 <NavLink className="link" to="/">
-                  <div className="icon"><i className="material-icons">home</i></div>
+                  <div className="icon"><span className="material-symbols-outlined">home</span></div>
                   <div className="label">Home</div>
                 </NavLink>
                 <NavLink className="link" to="/scores">
-                  <div className="icon"><i className="material-icons">format_list_numbered</i></div>
+                  <div className="icon"><span className="material-symbols-outlined">score</span></div>
                   <div className="label">Scores</div>
                 </NavLink>
                 <NavLink className="link" to="/users">
-                  <div className="icon"><i className="material-icons">group</i></div>
+                  <div className="icon"><span className="material-symbols-outlined">group</span></div>
                   <div className="label">Users</div>
                 </NavLink>
                 <NavLink className="link" to="/profile">
-                  <div className="icon"><i className="material-icons">account_circle</i></div>
+                  <div className="icon"><span className="material-symbols-outlined">account_circle</span></div>
                   <div className="label">Profile</div>
                 </NavLink>
               </nav>
@@ -64,7 +66,7 @@ export default function App() {
             <b></b>
             <div className="app-header__background">
               <div className="app-header__background-clip">
-                Mock Game
+                {Array(70).fill(0).map((_, i) => <MockGame key={i} />)}
               </div>
             </div>
           </header>
