@@ -11,6 +11,10 @@ import {
 
 import rootStyles from "~/styles/root.css"
 import sharedStyles from "~/styles/shared.css"
+import gamePreviewStyles from "~/styles/gamePreview.css"
+import gameStyles from "~/styles/game.css"
+import scoreStyles from "~/styles/score.css"
+import scoreDetailsStyles from "~/styles/scoreDetails.css"
 import MockGame from "~/components/MockGame"
 
 export const meta: MetaFunction = () => ({
@@ -26,6 +30,10 @@ export const links: LinksFunction = () => [
   { rel: 'apple-touch-icon', href: 'logo.jpg' },
   { rel: 'stylesheet', href: rootStyles },
   { rel: 'stylesheet', href: sharedStyles },
+  { rel: 'stylesheet', href: gamePreviewStyles },
+  { rel: 'stylesheet', href: gameStyles },
+  { rel: 'stylesheet', href: scoreStyles },
+  { rel: 'stylesheet', href: scoreDetailsStyles },
   { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' },
 ]
 

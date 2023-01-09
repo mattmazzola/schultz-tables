@@ -1,4 +1,3 @@
-
 :root {
     --scoreLineColor: rgb(168, 168, 168)
 }
@@ -16,14 +15,12 @@
 }
 
 .scoreColumn {
-    min-width: 200px;
+    min-width: 280px;
     border-right: 1px solid var(--scoreLineColor);
     overflow: hidden;
 }
 
-.scoreColumn__header {
-    padding: 1rem;
-}
+.scoreColumn__header {}
 
 .score {
     margin-top: -1px;

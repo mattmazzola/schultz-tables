@@ -59,7 +59,7 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
     },
     {
         id: '0762d3c0179a908cfc55df1ce91b074651e524480ad60c0764fb10c8a4fee20b',
-        name: '5x5 Numbers & Letters',
+        name: '5x5 Numbers & Letters - Black on White',
         value: {
             width: 5,
             height: 5,
@@ -101,7 +101,7 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
     },
     {
         id: '2e7dc22ccdf1e3c97058a06527f798cd58c43861b3ee901a0b47840c32d6ed3b',
-        name: '5x5 Numbers - Shake horizontal',
+        name: '5x5 Numbers - Shake Horizontal',
         value: {
             width: 5,
             height: 5,
@@ -115,7 +115,7 @@ export const presetTables: models.IOption<models.ITableConfig>[] = [
     },
     {
         id: 'b8e2c4bb883f1d99c245f0122c9d47e8be85d16127c857d8827663cef23b16e9',
-        name: '5x5 Numbers - Shake diagonal',
+        name: '5x5 Numbers - Shake Diagonal',
         value: {
             width: 5,
             height: 5,

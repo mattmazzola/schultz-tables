@@ -1,0 +1,31 @@
+.score-loading {
+    padding: 1em;
+}
+
+.score-preview {
+    white-space: nowrap;
+    padding: 1em;
+    display: grid;
+    grid-template-columns: min-content min-content 1fr min-content;
+    grid-gap: 1em;
+    cursor: pointer;
+}
+
+.score-preview__icon {
+    line-height: 0;
+}
+
+.score-preview__start-time {
+    min-width: 10ch;
+    text-align: left;
+}
+
+.score-preview__duration {
+    min-width: 6ch;
+    text-align: right;
+    font-weight: bold;
+}
+
+.score:not(:last-of-type) {
+    border-bottom: 1px solid rgba(51, 51, 51, 0.25);
+}
