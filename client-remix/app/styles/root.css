@@ -37,7 +37,8 @@ code {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px;
+  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -140,7 +141,7 @@ nav .label {
 }
 
 
-nav > a {
+nav>a {
   padding: 0.75em 0.5em;
   font-size: 1rem;
   text-decoration: none;

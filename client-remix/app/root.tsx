@@ -71,7 +71,9 @@ export default function App() {
             </div>
           </header>
         </div>
-        <Outlet />
+        <main>
+          <Outlet />
+        </main>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
