@@ -21,21 +21,23 @@ export default function Profile() {
   const { profile } = useLoaderData<typeof loader>()
 
   return (
-    <div className="profile">
+    <>
       <h1>Profile</h1>
-      <img src={profile.photos?.at(0)?.value} alt="Profile Picture" className="profilePicture" />
-      <Form method="post" action="/logout">
-        <button type="submit" className="profileLogOutButton">Sign Out</button>
-      </Form>
+      <div className="profile">
+        <img src={profile.photos?.at(0)?.value} alt="Profile Picture" className="profilePicture" />
+        <Form method="post" action="/logout">
+          <button type="submit" className="profileLogOutButton">Sign Out</button>
+        </Form>
 
-      <div>
-        <h2>{profile?._json?.nickname ?? profile?.displayName ?? profile.name?.familyName}</h2>
-        <p>{profile.emails?.at(0)?.value}</p>
-      </div>
-      {/* <pre>
+        <div>
+          <h2>{profile?._json?.nickname ?? profile?.displayName ?? profile.name?.familyName}</h2>
+          <p>{profile.emails?.at(0)?.value}</p>
+        </div>
+        {/* <pre>
         <h3>ID Token:</h3>
         <code>{JSON.stringify(profile._json, null, 2)}</code>
       </pre> */}
-    </div>
+      </div>
+    </>
   )
 }

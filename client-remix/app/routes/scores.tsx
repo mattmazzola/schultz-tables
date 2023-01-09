@@ -32,7 +32,7 @@ export default function Scores() {
 
   return (
     <>
-      <h2 className="scoresHeader">Scores by Table Type:</h2>
+      <h1>Scores by Table Type:</h1>
       <div className="scoresColumns">
         {options.presetTables.map(gameType => {
           const scoresByType = scoreTypeToScores[gameType.id]
