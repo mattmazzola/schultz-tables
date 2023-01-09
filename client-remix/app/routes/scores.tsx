@@ -4,6 +4,7 @@ import { auth } from "~/services/auth.server"
 import { IScore, IScoresResponse } from "~/types/models"
 import * as options from '~/utilities/options'
 import scoresStyles from "~/styles/scores.css"
+import { managementClient } from "~/services/auth0management.server"
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: scoresStyles },
@@ -15,14 +16,18 @@ export const loader = async ({ request }: DataFunctionArgs) => {
   })
   const scoreTypeToScores: Record<string, IScoresResponse> = {}
 
+  const users = await managementClient.getUsers()
+
   return json({
     profile,
     scoreTypeToScores,
+    users
   })
 }
 
 export default function Scores() {
-  const { profile, scoreTypeToScores } = useLoaderData<typeof loader>()
+  const { profile, scoreTypeToScores, users } = useLoaderData<typeof loader>()
+  console.log({ users })
 
   return (
     <>
