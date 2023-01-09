@@ -5,6 +5,7 @@ import { IScore, IScoresResponse } from "~/types/models"
 import * as options from '~/utilities/options'
 import scoresStyles from "~/styles/scores.css"
 import { managementClient } from "~/services/auth0management.server"
+import { GameType } from "~/components/GameType"
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: scoresStyles },
@@ -38,11 +39,11 @@ export default function Scores() {
           return (
             <div key={gameType.id} className="scoreColumn">
               <div className="scoreColumn__header">
-                {/* <GameType
+                <GameType
                   key={gameType.id}
                   gameType={gameType}
                   onClick={() => { }}
-                /> */}
+                />
               </div>
               <div className="scoreRefreshButton">
                 <button disabled={scoresByType == null} >
