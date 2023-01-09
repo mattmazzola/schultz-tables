@@ -1,4 +1,4 @@
-import * as models from '../types/models'
+import * as models from '~/types/models'
 
 export const presetTables: models.IOption<models.ITableConfig>[] = [
     {

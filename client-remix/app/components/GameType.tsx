@@ -1,6 +1,6 @@
 import * as React from 'react'
-import * as models from '../types/models'
-import * as utilities from '../utilities'
+import * as models from '~/types/models'
+import * as utilities from '~/utilities'
 
 interface Props {
     gameType: models.IOption<models.ITableConfig>

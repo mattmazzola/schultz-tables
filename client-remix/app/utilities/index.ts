@@ -1,4 +1,4 @@
-import * as models from '../types/models'
+import * as models from '~/types/models'
 
 export async function delay(ms: number) {
     return new Promise((res, rej) => {
