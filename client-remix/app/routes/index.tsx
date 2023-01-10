@@ -100,8 +100,7 @@ export default function Index() {
                     You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
                     User Agent: {navigator.userAgent}
                   </p>
-                </>
-              }
+                </>}
             </div>
             {hasProfile
               ? <div>
@@ -130,18 +129,14 @@ export default function Index() {
                 </div>
               </>
             }
-          </>
-        }
-
-
+          </>}
 
         {state.isGameVisible
           && (
             <div className="game-container">
               TODO
             </div>
-          )
-        }
+          )}
       </div>
     </div>
   )
