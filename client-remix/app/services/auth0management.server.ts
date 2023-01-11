@@ -1,7 +1,9 @@
 import { ManagementClient } from 'auth0'
-import { AUTH0_DOMAIN, AUTH0_MANAGEMENT_TOKEN } from '~/constants/index.server'
+import { AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET } from '~/constants/index.server'
 
+// https://github.com/auth0/node-auth0/blob/master/EXAMPLES.md#automatic-management-api-token-retrieval
 export const managementClient = new ManagementClient({
-    token: AUTH0_MANAGEMENT_TOKEN,
     domain: AUTH0_DOMAIN,
+    clientId: AUTH0_CLIENT_ID,
+    clientSecret: AUTH0_CLIENT_SECRET,
 })
