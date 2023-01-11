@@ -45,25 +45,6 @@ export const loader = async ({ request }: DataFunctionArgs) => {
   })
 }
 
-const playBuzzerSound = () => {
-  const audio = new AudioContext()
-  const gainNode = audio.createGain()
-  gainNode.gain.value = 0.5
-
-  const oscillator = audio.createOscillator()
-  oscillator.type = 'sine'
-  oscillator.frequency.value = 600
-  oscillator
-    .connect(gainNode)
-    .connect(audio.destination)
-
-  oscillator.start(0)
-
-  setTimeout(() => {
-    oscillator.stop()
-  }, 150)
-}
-
 export default function Index() {
   const { profile, error, state } = useLoaderData<typeof loader>()
 
@@ -80,14 +61,14 @@ export default function Index() {
   }
 
   return (
-    <div>
+    <>
       <div className="home-page" >
         {state.isGameVisible === false
           && <>
             <div>
-              <h2>What is it?</h2>
+              <h1>What is it?</h1>
               <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
-              <h2>How to play?</h2>
+              <h1>How to play?</h1>
               <p>
                 Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... <br />
                 Games differ by size, symbols, and visual effects.<br />
@@ -142,6 +123,7 @@ export default function Index() {
             </div>
           )}
       </div>
-    </div>
+    </>
+
   )
 }

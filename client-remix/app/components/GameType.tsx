@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { gameTypeIdToSequence } from '~/constants/randomSymbols'
 import * as models from '~/types/models'
 import * as utilities from '~/utilities'
 
@@ -8,8 +9,9 @@ interface Props {
 }
 
 export const GameType: React.FC<Props> = ({ gameType, onClick }) => {
-    const sequence = utilities.generateSymbols(gameType.value)
+    const sequence = gameTypeIdToSequence[gameType.id]
     const table = utilities.generateTable(gameType.value, sequence)
+    console.log({ name: gameType.name, tableCells: table.cells })
     const useMargin = table.classes.length > 0
 
     return <div
@@ -19,7 +21,7 @@ export const GameType: React.FC<Props> = ({ gameType, onClick }) => {
         onClick={onClick}
     >
         <div className="game-type__title">{gameType.name.split(' - ').at(0)}<br />{gameType.name.split(' - ').at(1)}</div>
-        <div className={`game-type-grid ${table.classes.join(' ')}`} style={{ gridTemplate: `repeat(${table.width}, 1fr) / repeat(${table.height}, 1fr)`, margin: useMargin ? '1em' : '' }}>
+        <div className={`game-type-grid ${table.classes.join(' ')}`} style={{ gridTemplate: `repeat(${table.width}, 1fr) / repeat(${table.height}, 1fr)`, margin: useMargin ? '1em' : '0' }}>
             {table.cells.map((cell, i) =>
                 <div key={i} className={`game-type-grid__cell ${cell.classes.join(' ')}`}>
                     {cell.text}

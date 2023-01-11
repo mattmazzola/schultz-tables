@@ -21,6 +21,12 @@ export const randomize = <T>(xs: T[]): T[] => {
     return randomized
 }
 
+export const pickRandom = <T>(xs: T[]): T => {
+    const randomIndex = Math.floor(Math.random() * xs.length)
+
+    return xs[randomIndex]
+}
+
 export const generateTableConfig = (): models.ITableConfig =>
 ({
     width: 5,
@@ -85,7 +91,7 @@ export const generateTable = (tableConfig: models.ITableConfig, sequence: models
         }
 
         if (tableConfig.cellColor === 'rainbow') {
-            const randomColorClass = rainbowClasses[Math.floor(Math.random() * rainbowClasses.length)]
+            const randomColorClass = pickRandom(rainbowClasses)
             cellClasses.push(randomColorClass)
         }
 
