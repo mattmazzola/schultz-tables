@@ -87,7 +87,7 @@ const AppComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 <NavLink to="/"><h1>Schultz Tables</h1></NavLink>
               </div>
               <nav>
-                <NavLink className="link" to="/">
+                <NavLink className="link" to="/games">
                   <div className="icon"><span className="material-symbols-outlined">home</span></div>
                   <div className="label">Home</div>
                 </NavLink>
