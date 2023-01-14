@@ -1,5 +1,6 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node"
+import type { ErrorBoundaryComponent, LinksFunction, MetaFunction } from "@remix-run/node"
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
@@ -7,6 +8,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react"
 
 import rootStyles from "~/styles/root.css"
@@ -18,6 +20,7 @@ import scoreStyles from "~/styles/score.css"
 import scoreDetailsStyles from "~/styles/scoreDetails.css"
 import usersStyles from "~/styles/users.css"
 import MockGame from "~/components/MockGame"
+import React from "react"
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -41,7 +44,35 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: usersStyles },
 ]
 
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  return (
+    <AppComponent>
+      <p>Something went wrong!</p>
+      <pre>
+        <code>{error.message}</code>
+      </pre>
+    </AppComponent>
+  )
+}
+
+export function CatchBoundary() {
+  const caught = useCatch()
+  return (
+    <AppComponent>
+      {caught.status} {caught.statusText}
+    </AppComponent>
+  )
+}
+
 export default function App() {
+  return (
+    <AppComponent>
+      <Outlet />
+    </AppComponent>
+  )
+}
+
+const AppComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="en">
       <head>
@@ -84,7 +115,7 @@ export default function App() {
           </header>
         </div>
         <main>
-          <Outlet />
+          {children}
         </main>
         <ScrollRestoration />
         <Scripts />
