@@ -115,7 +115,9 @@ const AppComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           </header>
         </div>
         <main>
-          {children}
+          <div>
+            {children}
+          </div>
         </main>
         <ScrollRestoration />
         <Scripts />

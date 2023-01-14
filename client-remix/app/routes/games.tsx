@@ -1,5 +1,5 @@
 import { DataFunctionArgs, json } from "@remix-run/node"
-import { Form, Link, useLoaderData } from "@remix-run/react"
+import { Form, Link, Outlet, useLoaderData } from "@remix-run/react"
 import { auth, getSession } from "~/services/auth.server"
 import * as models from '~/types/models'
 import * as options from '~/utilities/options'
@@ -101,7 +101,7 @@ export default function Index() {
                   {state.gameTypes.map(gameType =>
                     <Link
                       key={gameType.id}
-                      to={`/${gameType.id}`}
+                      to={`/games/${gameType.id}`}
                     >
                       <GameType
                         gameType={gameType}
@@ -112,12 +112,7 @@ export default function Index() {
             }
           </>}
 
-        {state.isGameVisible
-          && (
-            <div className="game-container">
-              TODO
-            </div>
-          )}
+        <Outlet />
       </div>
     </>
 
