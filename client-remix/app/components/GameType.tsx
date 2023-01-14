@@ -20,7 +20,7 @@ export const GameType: React.FC<Props> = ({ gameType }) => {
         <div className="game-type__title">{gameType.name.split(' - ').at(0)}<br />{gameType.name.split(' - ').at(1)}</div>
         <div className={`game-type-grid ${table.classes.join(' ')}`} style={{ gridTemplate: `repeat(${table.width}, 1fr) / repeat(${table.height}, 1fr)`, margin: useMargin ? '1em' : '0' }}>
             {table.cells.map((cell, i) =>
-                <div key={i} className={`game-type-grid__cell ${cell.classes.join(' ')}`}>
+                <div key={i} suppressHydrationWarning={true} className={`game-type-grid__cell ${cell.classes.join(' ')}`}>
                     {cell.text}
                 </div>
             )}

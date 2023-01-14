@@ -4,6 +4,8 @@ import * as options from '~/utilities/options'
 import * as utilities from '~/utilities'
 import Game from "~/components/Game"
 import { ICell } from "~/types/models"
+import { useReducer } from "react"
+import { GameEvent, gameReducer, State } from "~/reducers/gameReducer"
 
 export const loader = ({ params }: DataFunctionArgs) => {
     const gameTypeId = params['gameTypeId']
@@ -48,16 +50,36 @@ const playBuzzerSound = () => {
 }
 
 export default function GameRoute() {
-    const { gameType, table, gameState, } = useLoaderData<typeof loader>()
+    const { gameType, table, gameState: loaderGameState } = useLoaderData<typeof loader>()
     const navigate = useNavigate()
+    const initialState: State = {
+        signedStartTime: null,
+        table,
+        gameState: loaderGameState
+    }
+
+    const [reducerState, dispatchGameEvent] = useReducer(gameReducer, initialState)
 
     const onClickCloseGame = () => {
         navigate(`/games`)
     }
 
     const onClickCell = (cell: ICell) => {
-        playBuzzerSound()
-        console.log({ cell })
+        let isCompleted = reducerState.gameState.isCompleted
+        if (isCompleted) {
+            return
+        }
+
+        const expectedSymbol = reducerState.table.expectedSequence[reducerState.gameState.expectedSymbolIndex]
+        const correct = cell.text === expectedSymbol
+        if (!correct) {
+            playBuzzerSound()
+        }
+
+        dispatchGameEvent({
+            type: GameEvent.CLICK_CELL,
+            cell
+        })
     }
 
     return (
@@ -68,7 +90,7 @@ export default function GameRoute() {
                     width={table.width}
                     height={table.height}
                     table={table}
-                    gameState={gameState}
+                    gameState={reducerState.gameState}
                     onClickClose={onClickCloseGame}
                     onClickCell={onClickCell}
                 />
