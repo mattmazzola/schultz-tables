@@ -84,15 +84,15 @@ export default function Index() {
               ? <div>
                 <div>Loggin as {profile?.displayName}</div>
               </div>
-              : (
-                <Form method="post" action="/auth">
-                  {error ? <div>{error.message}</div> : null}
-                  <p>
-                    <button type="submit" className="login orangeButton">Sign In</button>
-                  </p>
-                  <div>You must sign in before you play the game!</div>
-                </Form>
-              )}
+              : <>
+                {error ? <div>{error.message}</div> : null}
+                <div className="center">
+                  <Form method="post" action="/auth">
+                    <button type="submit" className="logInButton">Sign In</button>
+                  </Form>
+                </div>
+                <div>You must sign in before you play the game!</div>
+              </>}
             {isUsingMobileDevice === false
               && <>
                 <h1>Pick a game type below:</h1>

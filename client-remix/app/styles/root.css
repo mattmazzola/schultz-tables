@@ -190,3 +190,15 @@ main {
 main>* {
   grid-column: main;
 }
+
+.logInButton {
+  border-radius: 10px;
+  border: none;
+  
+  padding: 1rem 1.5rem;
+  font-size: 2rem;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(28, 202, 130);
+  color: rgb(253, 253, 253);
+}
