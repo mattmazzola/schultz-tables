@@ -1,4 +1,4 @@
-param name string = '${resourceGroup().name}-containerapp-client'
+param name string = '${resourceGroup().name}-client'
 param location string = resourceGroup().location
 param managedEnvironmentResourceId string
 
