@@ -1,6 +1,6 @@
+import produce from "immer"
 import * as React from 'react'
 import * as models from '../types/models'
-import produce from "immer"
 
 interface Position {
     top: number

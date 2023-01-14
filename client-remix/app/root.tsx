@@ -1,6 +1,5 @@
 import type { ErrorBoundaryComponent, LinksFunction, MetaFunction } from "@remix-run/node"
 import {
-  Link,
   Links,
   LiveReload,
   Meta,
@@ -8,19 +7,19 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
+  useCatch
 } from "@remix-run/react"
 
-import rootStyles from "~/styles/root.css"
-import sharedStyles from "~/styles/shared.css"
-import gamePreviewStyles from "~/styles/gamePreview.css"
-import gameComponentStyles from "~/styles/gameComponent.css"
+import React from "react"
+import MockGame from "~/components/MockGame"
 import gameStyles from "~/styles/game.css"
+import gameComponentStyles from "~/styles/gameComponent.css"
+import gamePreviewStyles from "~/styles/gamePreview.css"
+import rootStyles from "~/styles/root.css"
 import scoreStyles from "~/styles/score.css"
 import scoreDetailsStyles from "~/styles/scoreDetails.css"
+import sharedStyles from "~/styles/shared.css"
 import usersStyles from "~/styles/users.css"
-import MockGame from "~/components/MockGame"
-import React from "react"
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

@@ -1,11 +1,11 @@
 import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import { auth } from "~/services/auth.server"
-import { IScore, IScoresResponse } from "~/types/models"
-import * as options from '~/utilities/options'
-import scoresStyles from "~/styles/scores.css"
-import { managementClient } from "~/services/auth0management.server"
 import { GameType } from "~/components/GameType"
+import { auth } from "~/services/auth.server"
+import { managementClient } from "~/services/auth0management.server"
+import scoresStyles from "~/styles/scores.css"
+import { IScoresResponse } from "~/types/models"
+import * as options from '~/utilities/options'
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: scoresStyles },

@@ -1,11 +1,11 @@
 import { DataFunctionArgs, json } from "@remix-run/node"
-import { Form, Link, Outlet, useLoaderData } from "@remix-run/react"
+import { Form, Link, useLoaderData } from "@remix-run/react"
+import React from "react"
+import { GameType } from "~/components/GameType"
 import { auth, getSession } from "~/services/auth.server"
 import * as models from '~/types/models'
-import * as options from '~/utilities/options'
 import * as utilities from '~/utilities'
-import { GameType } from "~/components/GameType"
-import React from "react"
+import * as options from '~/utilities/options'
 
 type State = {
     isGameVisible: boolean

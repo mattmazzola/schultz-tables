@@ -1,11 +1,11 @@
 import { DataFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useNavigate, useParams } from "@remix-run/react"
-import * as options from '~/utilities/options'
-import * as utilities from '~/utilities'
-import Game from "~/components/Game"
-import { ICell } from "~/types/models"
+import { useLoaderData, useNavigate } from "@remix-run/react"
 import { useReducer } from "react"
+import Game from "~/components/Game"
 import { GameEvent, gameReducer, State } from "~/reducers/gameReducer"
+import { ICell } from "~/types/models"
+import * as utilities from '~/utilities'
+import * as options from '~/utilities/options'
 
 export const loader = ({ params }: DataFunctionArgs) => {
     const gameTypeId = params['gameTypeId']
