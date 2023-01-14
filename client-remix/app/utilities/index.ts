@@ -154,3 +154,26 @@ export async function sha256(message: string) {
     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('')
     return hashHex
 }
+
+export function getFormData(data: object): Record<string, string> {
+    const formData: Record<string, string> = {}
+
+    Object.entries(data)
+        .reduce((acc, [key, value]) => {
+            if (Array.isArray(value)) {
+                for (let [itemIndex, itemValue] of value.entries()) {
+                    const itemKey = `${key}${itemIndex}`
+                    acc[itemKey] = itemValue ?? ''
+                }
+            }
+            else if (typeof value === 'object' || typeof value === 'boolean') {
+                acc[key] = JSON.stringify(value) ?? ''
+            } else {
+                acc[key] = value ?? null
+            }
+
+            return acc
+        }, formData)
+
+    return formData
+}

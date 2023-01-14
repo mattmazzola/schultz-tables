@@ -138,7 +138,7 @@ const Game: React.FC<Props> = (props) => {
                 <div>
                     {props.gameState.isCompleted ? `Finished ${props.gameState.duration / 1000}` : ''}
                 </div>
-                <button className={`button-close ${props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => props.onClickClose()}><i className="icon-close material-icons">clear</i></button>
+                <button className={`button-close ${props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => props.onClickClose()}><span className="icon-close material-icons">clear</span></button>
             </header>
             <div className="game__table" ref={elementRef}>
                 <div className={`table ${props.table.classes.join(' ')}`} style={tableStyle}>

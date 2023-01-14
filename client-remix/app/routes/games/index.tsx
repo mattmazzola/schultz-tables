@@ -8,8 +8,6 @@ import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
 
 type State = {
-    isGameVisible: boolean
-    isGameOptionsVisible: boolean
     gameTypes: models.IOption<models.ITableConfig>[]
     gameTypeIdSelected: string
     signedStartTime: string | null
@@ -22,8 +20,6 @@ const sequence = utilities.generateSymbols(tableConfig)
 const table = utilities.generateTable(tableConfig, sequence)
 
 const initialState: State = {
-    isGameVisible: false,
-    isGameOptionsVisible: false,
     gameTypes: options.presetTables,
     gameTypeIdSelected: options.presetTables[0].id,
     signedStartTime: null,
@@ -60,56 +56,52 @@ export default function Index() {
     return (
         <>
             <div className="home-page" >
-                {state.isGameVisible === false
-                    && <>
-                        <div>
-                            <h1>What is it?</h1>
-                            <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
-                            <h1>How to play?</h1>
+                <div>
+                    <h1>What is it?</h1>
+                    <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
+                    <h1>How to play?</h1>
+                    <p>
+                        Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... <br />
+                        Games differ by size, symbols, and visual effects.<br />
+                        <b>Try to complete the table as fast as you can!</b>
+                    </p>
+                    {isUsingMobileDevice === true
+                        && <>
+                            <h2>Incompatible Device Detected.</h2>
                             <p>
-                                Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... <br />
-                                Games differ by size, symbols, and visual effects.<br />
-                                <b>Try to complete the table as fast as you can!</b>
+                                You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
+                                User Agent: {navigator.userAgent}
                             </p>
-                            {isUsingMobileDevice === true
-                                && <>
-                                    <h2>Incompatible Device Detected.</h2>
-                                    <p>
-                                        You might be using a mobile device with small screen. This would not push peripheral vision boundaries and would be cheating. Try using a different device with larger screen.<br />
-                                        User Agent: {navigator.userAgent}
-                                    </p>
-                                </>}
+                        </>}
+                </div>
+                {hasProfile
+                    ? <div>
+                        <div>Loggin as {profile?.displayName}</div>
+                    </div>
+                    : <>
+                        {error ? <div>{error.message}</div> : null}
+                        <div className="center">
+                            <Form method="post" action="/auth">
+                                <button type="submit" className="logInButton">Sign In</button>
+                            </Form>
                         </div>
-                        {hasProfile
-                            ? <div>
-                                <div>Loggin as {profile?.displayName}</div>
-                            </div>
-                            : <>
-                                {error ? <div>{error.message}</div> : null}
-                                <div className="center">
-                                    <Form method="post" action="/auth">
-                                        <button type="submit" className="logInButton">Sign In</button>
-                                    </Form>
-                                </div>
-                                <div>You must sign in before you play the game!</div>
-                            </>}
-                        {isUsingMobileDevice === false
-                            && <>
-                                <h1>Pick a game type below:</h1>
+                        <div>You must sign in before you play the game!</div>
+                    </>}
+                {isUsingMobileDevice === false
+                    && <>
+                        <h1>Pick a game type below:</h1>
 
-                                <div className="game-types">
-                                    {state.gameTypes.map(gameType =>
-                                        <Link
-                                            key={gameType.id}
-                                            to={`/games/${gameType.id}`}
-                                        >
-                                            <GameType
-                                                gameType={gameType}
-                                            />
-                                        </Link>)}
-                                </div>
-                            </>
-                        }
+                        <div className="game-types">
+                            {state.gameTypes.map(gameType =>
+                                <Link
+                                    key={gameType.id}
+                                    to={`/games/${gameType.id}`}
+                                >
+                                    <GameType
+                                        gameType={gameType}
+                                    />
+                                </Link>)}
+                        </div>
                     </>}
             </div>
         </>

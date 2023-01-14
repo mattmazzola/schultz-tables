@@ -208,6 +208,12 @@
     background: none;
     border: none;
     border-radius: 4px;
+    aspect-ratio: 1 / 1;
+    height: 100%;
+}
+
+.button-close:hover {
+    background: #00A7F9;
 }
 
 .button-close--completed {

@@ -1,9 +1,9 @@
-import { DataFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useNavigate } from "@remix-run/react"
+import { DataFunctionArgs, redirect } from "@remix-run/node"
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useReducer } from "react"
 import Game from "~/components/Game"
-import { GameEvent, gameReducer, State } from "~/reducers/gameReducer"
-import { ICell } from "~/types/models"
+import { GameEvent, gameReducer, getObjectFromState, State } from "~/reducers/gameReducer"
+import { ICell, IGameState, ITable } from "~/types/models"
 import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
 
@@ -28,6 +28,27 @@ export const loader = ({ params }: DataFunctionArgs) => {
             isStarted: true
         }
     }
+}
+
+enum FormNames {
+    GameSubmission = 'GameSubmission'
+}
+
+export const action = async ({ request }: DataFunctionArgs) => {
+    const rawFormData = await request.formData()
+    const formData = Object.fromEntries(rawFormData)
+    
+    if (formData.name) {
+        const table: ITable = JSON.parse(formData.table as string)
+        const gameState: IGameState = JSON.parse(formData.gameState as string)
+        if (gameState.isCompleted) {
+            console.log({ table, gameState })
+        }
+
+        return redirect('/games')
+    }
+
+    return null
 }
 
 const playBuzzerSound = () => {
@@ -58,10 +79,17 @@ export default function GameRoute() {
         gameState: loaderGameState
     }
 
+    const gameStateFetcher = useFetcher()
+
     const [reducerState, dispatchGameEvent] = useReducer(gameReducer, initialState)
 
     const onClickCloseGame = () => {
-        navigate(`/games`)
+        const data = {
+            name: FormNames.GameSubmission,
+            ...getObjectFromState(reducerState),
+        }
+
+        gameStateFetcher.submit(data, { method: 'post' })
     }
 
     const onClickCell = (cell: ICell) => {

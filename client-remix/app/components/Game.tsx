@@ -27,12 +27,12 @@ interface State {
 
 const initialState: State = {
     position: {
-        top: 0,
-        left: 0,
+        top: 0.5,
+        left: 0.5,
         right: 0,
         bottom: 0,
-        width: `100px`,
-        height: `100px`
+        width: `200px`,
+        height: `200px`
     },
     chosenSequence: []
 }
@@ -135,7 +135,7 @@ const Game: React.FC<Props> = (props) => {
         <div className="game">
             <header className="game__header">
                 <div>
-                    {props.gameState.isCompleted ? `Finished ${props.gameState.duration / 1000}` : ''}
+                    {props.gameState.isCompleted ? `Finished ${props.gameState.duration / 1000}` : 'Play!'}
                 </div>
                 <button className={`button-close ${props.gameState.isCompleted ? 'button-close--completed' : ''}`} type="button" onClick={() => props.onClickClose()}><span className="material-symbols-outlined">clear</span></button>
             </header>

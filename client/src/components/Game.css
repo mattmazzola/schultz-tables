@@ -1,5 +1,5 @@
 .game {
-  background: rgba(51,51,51,1);
+  background: rgba(51, 51, 51, 1);
   display: grid;
   grid-template: min-content 1fr min-content / auto;
   grid-gap: 2em;
@@ -14,6 +14,7 @@
     padding: 1em;
   }
 }
+
 @media (max-height: 440px) {
   .game {
     grid-gap: 1em;
@@ -32,6 +33,7 @@
     font-size: 1.5rem;
   }
 }
+
 @media (max-height: 440px) {
   .game__header {
     font-size: 1.5rem;
@@ -50,6 +52,7 @@
     font-size: 1rem;
   }
 }
+
 @media (max-height: 450px) {
   .game__footer {
     font-size: 1rem;
@@ -68,7 +71,7 @@
   display: grid;
   grid-template: repeat(5, 1fr)/repeat(5, 1fr);
   grid-gap: 1px;
-  color: rgba(51,51,51,1);
+  color: rgba(51, 51, 51, 1);
 }
 
 .table--animation-linear-diagonal {
@@ -79,9 +82,11 @@
   0% {
     transform: translate(-20px, -20px);
   }
+
   50% {
-     transform: translate(20px, 20px);
+    transform: translate(20px, 20px);
   }
+
   100% {
     transform: translate(-20px, -20px);
   }
@@ -95,9 +100,11 @@
   0% {
     transform: translate(-20px, 0);
   }
+
   50% {
-     transform: translate(20px, 0);
+    transform: translate(20px, 0);
   }
+
   100% {
     transform: translate(-20px, 0);
   }
@@ -111,16 +118,18 @@
   0% {
     transform: rotate(-10deg);
   }
+
   50% {
-     transform: rotate(10deg);
+    transform: rotate(10deg);
   }
+
   100% {
     transform: rotate(-10deg);
   }
 }
 
 .table__cell {
-  border: 1px solid rgba(51,51,51,1);
+  border: 1px solid rgba(51, 51, 51, 1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,11 +138,13 @@
   background: white;
   font-size: 4rem;
 }
+
 @media (max-width: 450px) {
   .table__cell {
     font-size: 2rem;
   }
 }
+
 @media (max-height: 450px) {
   .table__cell {
     font-size: 1.5rem;
@@ -142,29 +153,35 @@
 
 .cell--text-effect-shadow {
   color: rgba(228, 212, 212, 0.9);
-  text-shadow: 0px 0px 0.2em rgba(0,0,0,0.9);
+  text-shadow: 0px 0px 0.2em rgba(0, 0, 0, 0.9);
 }
 
 .cell--color-red {
   background-color: red;
 }
+
 .cell--color-orange {
   background-color: orange;
 }
+
 .cell--color-yellow {
   background-color: yellow;
 }
+
 .cell--color-green {
   background-color: green;
 }
+
 .cell--color-blue {
   color: white;
   background-color: blue;
 }
+
 .cell--color-indigo {
   background-color: indigo;
   color: white;
 }
+
 .cell--color-violet {
   color: white;
   background-color: violet;
@@ -190,6 +207,12 @@
   background: none;
   border: none;
   border-radius: 4px;
+  aspect-ratio: 1/1;
+  height: 100%;
+}
+
+.button-close:hover {
+  background: #00A7F9;
 }
 
 .button-close--completed {
@@ -207,6 +230,7 @@
     font-size: 2rem;
   }
 }
+
 @media (max-height: 450px) {
   .button-close .icon-close {
     font-size: 2rem;

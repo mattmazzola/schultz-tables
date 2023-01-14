@@ -1,6 +1,7 @@
 import produce from "immer"
 import { Reducer } from "react"
 import { ICell, IGameState, ITable, IUserSelection } from "~/types/models"
+import { getFormData } from "~/utilities"
 
 export type State = {
     signedStartTime: string | null
@@ -55,3 +56,8 @@ export const gameReducer: Reducer<State, GameActions> = produce((state, action) 
             return state
     }
 })
+
+
+export function getObjectFromState(state: State): { [k: string]: string } {
+    return getFormData(state)
+}
