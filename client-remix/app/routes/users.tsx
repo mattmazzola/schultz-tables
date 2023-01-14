@@ -1,5 +1,6 @@
 import { DataFunctionArgs, json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
+import React from "react"
 import { auth } from "~/services/auth.server"
 import { managementClient } from "~/services/auth0management.server"
 
@@ -25,9 +26,9 @@ export default function Users() {
         <div>#</div><div>Name</div><div>Email</div><div>Id</div>
         {users.map((user, i) => {
           return (
-            <>
+            <React.Fragment key={user.user_id}>
               <div>{i + 1}</div><div>{user.nickname}</div><div>{user.email}</div><div>{user.user_id}</div>
-            </>
+            </React.Fragment>
           )
         })}
       </div>
