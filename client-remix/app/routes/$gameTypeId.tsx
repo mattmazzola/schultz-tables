@@ -1,8 +1,9 @@
 import { DataFunctionArgs } from "@remix-run/node"
-import { useLoaderData, useParams } from "@remix-run/react"
+import { useLoaderData, useNavigate, useParams } from "@remix-run/react"
 import * as options from '~/utilities/options'
 import * as utilities from '~/utilities'
 import Game from "~/components/Game"
+import { ICell } from "~/types/models"
 
 export const loader = ({ params }: DataFunctionArgs) => {
     const gameTypeId = params['gameTypeId']
@@ -48,12 +49,15 @@ const playBuzzerSound = () => {
 
 export default function GameRoute() {
     const { gameType, table, gameState, } = useLoaderData<typeof loader>()
+    const navigate = useNavigate()
 
     const onClickCloseGame = () => {
-
+        navigate(`/games`)
     }
-    const onClickCell = () => {
 
+    const onClickCell = (cell: ICell) => {
+        playBuzzerSound()
+        console.log({ cell })
     }
 
     return (

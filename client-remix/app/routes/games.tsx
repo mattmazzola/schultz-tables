@@ -51,14 +51,11 @@ export default function Index() {
   const hasProfile = profile !== null && typeof profile === 'object'
 
   const [isUsingMobileDevice, setIsUsingMobileDevice] = React.useState(false)
+  // Must be in useEffect because window.navigator is not on server
   React.useEffect(() => {
     const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(window.navigator.userAgent)
     setIsUsingMobileDevice(isMobile)
   }, [])
-
-  const onClickStart = async (gameType: models.IOption<models.ITableConfig>) => {
-    console.log({ gameType })
-  }
 
   return (
     <>
@@ -108,7 +105,6 @@ export default function Index() {
                     >
                       <GameType
                         gameType={gameType}
-                        onClick={() => onClickStart(gameType)}
                       />
                     </Link>)}
                 </div>

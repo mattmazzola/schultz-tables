@@ -137,6 +137,7 @@
     cursor: pointer;
     background: white;
     font-size: 4rem;
+    user-select: none;
 }
 
 @media (max-width: 450px) {

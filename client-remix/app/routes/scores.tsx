@@ -27,8 +27,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 }
 
 export default function Scores() {
-  const { profile, scoreTypeToScores, users } = useLoaderData<typeof loader>()
-  console.log({ users })
+  const { scoreTypeToScores } = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -42,7 +41,6 @@ export default function Scores() {
                 <GameType
                   key={gameType.id}
                   gameType={gameType}
-                  onClick={() => { }}
                 />
               </div>
               <div className="scoreRefreshButton">

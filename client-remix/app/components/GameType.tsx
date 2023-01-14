@@ -5,20 +5,17 @@ import * as utilities from '~/utilities'
 
 interface Props {
     gameType: models.IOption<models.ITableConfig>
-    onClick: () => void
 }
 
-export const GameType: React.FC<Props> = ({ gameType, onClick }) => {
+export const GameType: React.FC<Props> = ({ gameType }) => {
     const sequence = gameTypeIdToSequence[gameType.id]
     const table = utilities.generateTable(gameType.value, sequence)
-    console.log({ name: gameType.name, tableCells: table.cells })
     const useMargin = table.classes.length > 0
 
     return <div
         role="button"
         key={gameType.id}
         className="game-type"
-        onClick={onClick}
     >
         <div className="game-type__title">{gameType.name.split(' - ').at(0)}<br />{gameType.name.split(' - ').at(1)}</div>
         <div className={`game-type-grid ${table.classes.join(' ')}`} style={{ gridTemplate: `repeat(${table.width}, 1fr) / repeat(${table.height}, 1fr)`, margin: useMargin ? '1em' : '0' }}>
