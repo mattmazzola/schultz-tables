@@ -3,6 +3,8 @@ import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
 import { useReducer } from "react"
 import Game from "~/components/Game"
 import { GameEvent, gameReducer, getObjectFromState, State } from "~/reducers/gameReducer"
+import { auth } from "~/services/auth.server"
+import { db } from "~/services/db.server"
 import { ICell, IGameState, ITable } from "~/types/models"
 import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
@@ -35,6 +37,9 @@ enum FormNames {
 }
 
 export const action = async ({ request }: DataFunctionArgs) => {
+    const profile = await auth.isAuthenticated(request, {
+        failureRedirect: "/"
+    })
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
     
@@ -43,6 +48,27 @@ export const action = async ({ request }: DataFunctionArgs) => {
         const gameState: IGameState = JSON.parse(formData.gameState as string)
         if (gameState.isCompleted) {
             console.log({ table, gameState })
+            const score = await db.score.create({
+                data: {
+                    durationMilliseconds: gameState.duration,
+                    startTime: new Date(gameState.startTime),
+                    userId: profile.id!,
+                    sequence: {
+                        create: {
+                        }
+                    },
+                    tableLayout: {
+                        create: {
+                        }
+                    },
+                    tableType: {
+                        create: {
+                        }
+                    },
+                }
+            })
+
+            console.log({ score })
         }
 
         return redirect('/games')

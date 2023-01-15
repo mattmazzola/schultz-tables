@@ -12,29 +12,30 @@ datasource db {
 }
 
 model Score {
-  id                   Int           @id @default(autoincrement())
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#cuid
+  id                   String           @id @default(cuid())
   durationMilliseconds Int
   userId               String
   startTime            DateTime
   sequence             UserSelection @relation(fields: [sequenceId], references: [id])
-  sequenceId           Int
+  sequenceId           String
   tableLayout          TableLayout   @relation(fields: [tableLayoutId], references: [id])
-  tableLayoutId        Int
+  tableLayoutId        String
   tableType            TableType     @relation(fields: [tableTypeId], references: [id])
-  tableTypeId          Int
+  tableTypeId          String
 }
 
 model UserSelection {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(cuid())
   Score Score[]
 }
 
 model TableLayout {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(cuid())
   Score Score[]
 }
 
 model TableType {
-  id    Int     @id @default(autoincrement())
+  id    String     @id @default(cuid())
   Score Score[]
 }

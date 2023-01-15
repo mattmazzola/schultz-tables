@@ -33,8 +33,8 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 }
 
 export default function Scores() {
-  const { scoreTypeToScores } = useLoaderData<typeof loader>()
-
+  const { scoreTypeToScores, scores } = useLoaderData<typeof loader>()
+  
   return (
     <>
       <h1>Scores by Table Type:</h1>
@@ -92,6 +92,15 @@ export default function Scores() {
           )
         })}
       </div>
+      {scores.map(score => {
+        return (
+          <pre key={score.id}>
+            <code>
+              {JSON.stringify(score, null, 4)}
+            </code>
+          </pre>
+        )
+      })}
     </>
   )
 }
