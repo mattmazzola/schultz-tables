@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "sqlserver"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Score {
+  id                   Int           @id @default(autoincrement())
+  durationMilliseconds Int
+  userId               String
+  startTime            DateTime
+  sequence             UserSelection @relation(fields: [sequenceId], references: [id])
+  sequenceId           Int
+  tableLayout          TableLayout   @relation(fields: [tableLayoutId], references: [id])
+  tableLayoutId        Int
+  tableType            TableType     @relation(fields: [tableTypeId], references: [id])
+  tableTypeId          Int
+}
+
+model UserSelection {
+  id    Int     @id @default(autoincrement())
+  Score Score[]
+}
+
+model TableLayout {
+  id    Int     @id @default(autoincrement())
+  Score Score[]
+}
+
+model TableType {
+  id    Int     @id @default(autoincrement())
+  Score Score[]
+}

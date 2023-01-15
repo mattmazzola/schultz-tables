@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react"
 import { GameType } from "~/components/GameType"
 import { auth } from "~/services/auth.server"
 import { managementClient } from "~/services/auth0management.server"
+import { db } from "~/services/db.server"
 import scoresStyles from "~/styles/scores.css"
 import { IScoresResponse } from "~/types/models"
 import * as options from '~/utilities/options'
@@ -15,6 +16,10 @@ export const loader = async ({ request }: DataFunctionArgs) => {
   const profile = await auth.isAuthenticated(request, {
     failureRedirect: "/"
   })
+
+  const scores = await db.score.findMany({
+    take: 5,
+  })
   const scoreTypeToScores: Record<string, IScoresResponse> = {}
 
   const users = await managementClient.getUsers()
@@ -22,7 +27,8 @@ export const loader = async ({ request }: DataFunctionArgs) => {
   return json({
     profile,
     scoreTypeToScores,
-    users
+    users,
+    scores
   })
 }
 
