@@ -1,5 +1,5 @@
 import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
-import { useLoaderData } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import { GameType } from "~/components/GameType"
 import { convertDbScoreToScore } from "~/helpers"
 import { auth } from "~/services/auth.server"
@@ -104,7 +104,7 @@ export default function Scores() {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}</div>
-                        <div>🧑</div><div className="scoreName" title={name}>{name}</div>
+                        <div>🧑</div><Link to={`/users/${s.userId}`}>{name}</Link>
                       </div>
                     )
                   })}
