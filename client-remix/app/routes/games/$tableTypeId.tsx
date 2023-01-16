@@ -11,18 +11,16 @@ import * as options from '~/utilities/options'
 
 export const loader = ({ params }: DataFunctionArgs) => {
     const { tableTypeId } = params
-    const gameType = options.presetTables.find(t => t.id === tableTypeId)
-    if (!gameType) {
-        throw new Error(`You attempted to find game type by id: ${tableTypeId}. However that type was not found. Please select a different type.`)
+    const tableTypeOption = options.presetTables.find(t => t.id === tableTypeId)
+    if (!tableTypeOption) {
+        throw new Error(`You attempted to find game type by id: ${tableTypeId}. However, that type was not found. Please select a different type.`)
     }
 
-    const tableConfigSelected = gameType.value
-    const sequence = utilities.generateSymbols(tableConfigSelected)
-    const table = utilities.generateTable(tableConfigSelected, sequence)
+    const sequence = utilities.generateSymbols(tableTypeOption.value)
+    const table = utilities.generateTable(tableTypeOption.value, sequence)
     const defaultGameState = utilities.generateDefaultGameState()
 
     return {
-        gameType,
         table,
         gameState: {
             ...defaultGameState,
@@ -86,7 +84,7 @@ const playBuzzerSound = () => {
 }
 
 export default function GameRoute() {
-    const { gameType, table, gameState: loaderGameState } = useLoaderData<typeof loader>()
+    const { table, gameState: loaderGameState } = useLoaderData<typeof loader>()
     const initialState: State = {
         signedStartTime: null,
         table,
