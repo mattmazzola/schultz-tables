@@ -75,7 +75,7 @@ export default function Index() {
                 </>}
             {hasProfile
                 ? <>
-                    <h1>Current User: <Link to={`/users/${profile.id}`}>{profile?.displayName}</Link></h1>
+                    <h3>Current User: <Link to={`/users/${profile.id}`}>{profile?.displayName}</Link></h3>
                 </>
                 : <>
                     {error ? <div>{error.message}</div> : null}
