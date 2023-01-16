@@ -10,18 +10,18 @@ interface Props {
 
 const ScoreDetails: React.FC<Props> = (props) => {
     const { scoreDetails } = props
-    console.log({ scoreDetails })
+    const gameStartTime = new Date(scoreDetails.startTime).valueOf()
     const { tableLayout, tableType } = scoreDetails
     const data = scoreDetails.sequence
         .filter(s => s.correct)
-        .map<any>(s => (
-            { name: s.cell.text, time: getTimeDifference(s.time, new Date(scoreDetails.startTime).valueOf()) }
-        ))
+        .map(s => ({
+            name: s.cell.text,
+            time: getTimeDifference(s.time, gameStartTime)
+        }))
 
     const horizontalTicks = tableLayout.expectedSequence
     const maxYAxis = Math.ceil(scoreDetails.durationMilliseconds / 1000) + 1
-    const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i)
-    console.log({ maxYAxis, verticalTicks })
+    const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i * 1000)
     const tableForPreview: ITable = {
         classes: [],
         width: tableLayout.width,
@@ -87,7 +87,6 @@ const ScoreDetails: React.FC<Props> = (props) => {
                         </div>
 
                         {scoreDetails.sequence.map((o, i, seq) => {
-                            const gameStartTime = new Date(scoreDetails.startTime).valueOf()
                             const totalDuration = getTimeDifference(o.time, gameStartTime)
                             const previousActionTime = i === 0
                                 ? gameStartTime
@@ -111,11 +110,18 @@ const ScoreDetails: React.FC<Props> = (props) => {
                 </dd>
                 <dt className="no-chart-mobile">Timeline:</dt>
                 <dd className="no-chart-mobile">
-                    <LineChart className="score-details__line-chart" width={500} height={400} data={data} >
+                    <LineChart
+                        id={`score-${scoreDetails.id}`}
+                        className="score-details__line-chart"
+                        width={500}
+                        height={500}
+                        data={data}
+                        margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                    >
                         <Line type="monotone" dataKey="time" stroke="#8884d8" />
-                        <XAxis dataKey="name" ticks={horizontalTicks} interval={0} />
-                        <YAxis dataKey="time" domain={[0, maxYAxis]} ticks={verticalTicks.reverse()} />
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis padding={{ right: 20 }} dataKey="name" ticks={horizontalTicks} interval={0} />
+                        <YAxis padding={{ top: 20 }} ticks={verticalTicks} tickFormatter={t => `${t / 1000}`} interval={0} />
                         <Tooltip />
                     </LineChart>
                 </dd>

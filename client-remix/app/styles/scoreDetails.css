@@ -54,10 +54,6 @@
     color: red;
 }
 
-.score-details__line-chart {
-    margin-left: -40px;
-}
-
 @media (max-width: 450px) {
     .no-chart-mobile {
         display: none;
