@@ -1,70 +1,68 @@
 $sharedResourceGroupName = "shared"
 $sharedRgString = 'klgoyi'
-$resourceGroupName = "schultztables"
-$shultzRgString = '?'
 $resourceGroupLocation = "westus3"
+$schultzTablesResourceGroupName = "schultztables"
 
 Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 Write-Step "Create Resource Group"
-az group create -l $resourceGroupLocation -g $resourceGroupName --query name -o tsv
+az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
 
 # Write-Step "Provision Resources"
 # az deployment group create `
-#   -g $resourceGroupName `
+#   -g $schultzTablesResourceGroupName `
 #   -f ./bicep/main.bicep `
 #   --query "properties.provisioningState" `
 #   -o tsv
 
-Write-Step "Get ENV Vars from file"
 $envFilePath = $(Resolve-Path "$PSScriptRoot/../../.env").Path
+Write-Step "Get ENV Vars from: $envFilePath"
 $auth0ReturnToUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_RETURN_TO_URL'
 $auth0CallbackUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CALLBACK_URL'
 $auth0ClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CLIENT_ID'
 $auth0ClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CLIENT_SECRET'
 $auth0Domain = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_DOMAIN'
 $auth0LogoutUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_LOGOUT_URL'
+$auth0ManagementClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_MANAGEMENT_APP_CLIENT_ID'
+$auth0ManagementClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_MANAGEMENT_APP_CLIENT_SECRET'
 $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOKIE_SECRET'
+$databaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'DATABASE_URL'
+$shadowDatabaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'SHADOW_DATABASE_URL'
 
 Write-Step "Fetch params from Azure"
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
 $sharedResourceNames
 
-$dbAccountUrl = $(az cosmosdb show -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "documentEndpoint" -o tsv)
-$dbKey = $(az cosmosdb keys list -g $sharedResourceGroupName --name $sharedResourceNames.cosmosDatabase --query "primaryMasterKey" -o tsv)
 $containerAppsEnvResourceId = $(az containerapp env show -g $sharedResourceGroupName -n $sharedResourceNames.containerAppsEnv --query "id" -o tsv)
 $acrJson = $(az acr credential show -n $sharedResourceNames.containerRegistry --query "{ username:username, password:passwords[0].value }" | ConvertFrom-Json)
 $registryUrl = $(az acr show -g $sharedResourceGroupName -n $sharedResourceNames.containerRegistry --query "loginServer" -o tsv)
 $registryUsername = $acrJson.username
 $registryPassword = $acrJson.password
 
-$serviceContainerName = "$resourceGroupName-service"
-$serviceImageTag = $(Get-Date -Format "yyyyMMddhhmm")
-$serviceImageName = "${registryUrl}/${serviceContainerName}:${serviceImageTag}"
-
-$clientContainerName = "$resourceGroupName-client"
+$clientContainerName = "$schultzTablesResourceGroupName-client"
 $clientImageTag = $(Get-Date -Format "yyyyMMddhhmm")
 $clientImageName = "${registryUrl}/${clientContainerName}:${clientImageTag}"
 
 $data = [ordered]@{
-  "auth0ReturnToUrl"           = $auth0ReturnToUrl
-  "auth0CallbackUrl"           = $auth0CallbackUrl
-  "auth0ClientId"              = $auth0ClientId
-  "auth0ClientSecret"          = "$($auth0ClientSecret.Substring(0, 5))..."
-  "auth0Domain"                = $auth0Domain
-  "auth0LogoutUrl"             = $auth0LogoutUrl
-  "cookieSecret"               = "$($cookieSecret.Substring(0, 5))..."
+  "auth0ReturnToUrl"            = $auth0ReturnToUrl
+  "auth0CallbackUrl"            = $auth0CallbackUrl
+  "auth0ClientId"               = $auth0ClientId
+  "auth0ClientSecret"           = "$($auth0ClientSecret.Substring(0, 5))..."
+  "auth0Domain"                 = $auth0Domain
+  "auth0LogoutUrl"              = $auth0LogoutUrl
 
-  "dbAccountUrl"               = $dbAccountUrl
-  "dbKey"                      = "$($dbKey.Substring(0, 5))..."
+  "auth0ManagementClientId"     = $auth0ManagementClientId
+  "auth0ManagementClientSecret" = "$($auth0ManagementClientSecret.Substring(0, 5))..."
+  "cookieSecret"                = "$($cookieSecret.Substring(0, 5))..."
+  "databaseUrlSecret"           = "$($databaseUrlSecret).Substring(0, 5)..."
+  "shadowDatabaseUrlSecret"     = "$($shadowDatabaseUrlSecret).Substring(0, 5)..."
 
-  "serviceImageName"           = $serviceImageName
-  "clientImageName"            = $clientImageName
+  "clientImageName"             = $clientImageName
 
-  "containerAppsEnvResourceId" = $containerAppsEnvResourceId
-  "registryUrl"                = $registryUrl
-  "registryUsername"           = $registryUsername
-  "registryPassword"           = "$($registryPassword.Substring(0, 5))..."
+  "containerAppsEnvResourceId"  = $containerAppsEnvResourceId
+  "registryUrl"                 = $registryUrl
+  "registryUsername"            = $registryUsername
+  "registryPassword"            = "$($registryPassword.Substring(0, 5))..."
 }
 
 Write-Hash "Data" $data
@@ -94,8 +92,8 @@ Write-Hash "Data" $data
 # $apiUrl = "https://$serviceFqdn"
 # Write-Output $apiUrl
 
-# Write-Step "Build and Push $clientImageName Image"
-# az acr build -r $registryUrl -t $clientImageName ./client-remix
+Write-Step "Build and Push $clientImageName Image"
+az acr build -r $registryUrl -t $clientImageName ./client-remix
 
 # Write-Step "Deploy $clientImageName Container App"
 # $clientBicepContainerDeploymentFilePath = "$PSScriptRoot/../../bicep/modules/clientContainerApp.bicep"

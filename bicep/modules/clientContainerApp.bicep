@@ -1,10 +1,10 @@
 param name string = '${resourceGroup().name}-client'
 param location string = resourceGroup().location
+
 param managedEnvironmentResourceId string
 
 param imageName string
 param containerName string
-param apiUrl string
 
 param auth0ReturnToUrl string
 param auth0CallbackUrl string
@@ -13,6 +13,11 @@ param auth0ClientId string
 param auth0ClientSecret string
 param auth0Domain string
 param auth0Logout string
+
+param auth0managementClientId string
+@secure()
+param auth0managementClientSecret string
+
 @secure()
 param cookieSecret string
 
@@ -23,7 +28,10 @@ param registryPassword string
 
 var registryPasswordName = 'container-registry-password'
 var auth0clientSecretName = 'auth0-client-secret'
+var auth0managementClientSecretName = 'auth0-management-client-secret'
 var cookieSecretName = 'cookie-secret'
+var databaseUrlSecretName = 'database-url'
+var shadowDatabaseUrlSecretName = 'shadow-database-url'
 
 resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
   name: name
@@ -53,11 +61,15 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
           value: auth0ClientSecret
         }
         {
+          name: auth0managementClientSecretName
+          value: auth0managementClientSecret
+        }
+        {
           name: cookieSecretName
           value: cookieSecret
         }
       ]
-    }
+    }   
     template: {
       containers: [
         {
@@ -69,10 +81,6 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
             memory: '1.0Gi'
           }
           env: [
-            {
-              name: 'API_URL'
-              value: apiUrl
-            }
             {
               name: 'AUTH0_RETURN_TO_URL'
               value: auth0ReturnToUrl
@@ -98,8 +106,24 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
               value: auth0Logout
             }
             {
+              name: 'AUTH0_MANAGEMENT_APP_CLIENT_ID'
+              value: auth0managementClientId
+            }
+            {
+              name: 'AUTH0_MANAGEMENT_APP_CLIENT_SECRET'
+              secretRef: auth0managementClientSecretName
+            }
+            {
               name: 'COOKIE_SECRET'
               secretRef: cookieSecretName
+            }
+            {
+              name: 'DATABASE_URL'
+              secretRef: databaseUrlSecretName
+            }
+            {
+              name: 'SHADOW_DATABASE_URL   '
+              secretRef: shadowDatabaseUrlSecretName
             }
           ]
           probes: [
