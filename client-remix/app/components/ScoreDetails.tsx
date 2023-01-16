@@ -56,14 +56,14 @@ const ScoreDetails: React.FC<Props> = (props) => {
                     </dl>
                 </dd>
                 <dt><span className="material-symbols-outlined">access_time</span> Start Time:</dt>
-                <dd>{new Date(scoreDetails.startTime).toLocaleDateString('en-us', {
+                <dd suppressHydrationWarning>{new Date(scoreDetails.startTime).toLocaleDateString('en-us', {
                     hour: '2-digit',
                     hour12: true,
                     minute: "2-digit",
                     second: '2-digit',
                 })}</dd>
                 <dt><span className="material-symbols-outlined">access_time</span> End Time:</dt>
-                <dd>{new Date(scoreDetails.endTime).toLocaleDateString('en-us', {
+                <dd suppressHydrationWarning>{new Date(scoreDetails.endTime).toLocaleDateString('en-us', {
                     hour: '2-digit',
                     hour12: true,
                     minute: "2-digit",
