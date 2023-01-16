@@ -46,38 +46,13 @@ export interface IGameState {
     userSequence: IUserSelection[]
 }
 
-export interface ITable {
-    classes: string[]
-    width: number
-    height: number
-    expectedSequence: string[]
-    cells: ICell[]
-}
-
 export interface IOption<T> {
     id: string,
     name: string,
     value: T
 }
 
-export interface IMongoError {
-    extensions: any
-    locations: any
-    message: string
-    path: string[]
-}
-export interface IGraphQlResponse<T> {
-    data: T
-    errors: IMongoError[]
-}
-
 export type IUser = User<AppMetadata, UserMetadata>
-
-export interface IScoresResponse {
-    scores: IScore[]
-    users: IUser[]
-    continuationToken: string | null
-}
 
 export interface IScore {
     durationMilliseconds: number,
@@ -90,24 +65,26 @@ export interface IScore {
     tableLayout: ITableLayout
     tableType: ITableType
 }
-
-export interface IScoreGraphql extends IScore {
-    tableLayoutId: string
-    tableTypeId: string
+ 
+interface ITableBase {
+    width: number
+    height: number
 }
 
-export interface ITableLayout {
+export interface ITable extends ITableBase {
+    classes: string[]
+    expectedSequence: string[]
+    cells: ICell[]
+}
+
+export interface ITableLayout extends ITableBase {
     id: string
-    height: number
-    width: number
     expectedSequence: string[]
     randomizedSequence: string[]
 }
 
-export interface ITableType {
+export interface ITableType extends ITableBase {
     id: string
-    width: number
-    height: number
     properties: KVPair<string, string>[]
 }
 
@@ -127,21 +104,9 @@ export interface IScoreRequest {
     tableProperties: KVPair<string, string>[]
 }
 
-export interface IScoreRequestGraphql {
-    userSequence: IUserSelection<number>[]
-    expectedSequence: string[]
-    randomizedSequence: string[]
-    signedStartTime: string
-    startTime: number
-    tableHeight: number
-    tableWidth: number
-    tableProperties: KVPair<string, string>[]
-}
-
 export interface IScoreResponse {
     id: string
     startTime: string
-    endTime: string
     durationMilliseconds: number
     userSequence: IUserSelection[]
     expectedSequence: string[]

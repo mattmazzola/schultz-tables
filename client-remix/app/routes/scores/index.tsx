@@ -24,8 +24,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
             durationMilliseconds: 'asc'
         }
     })
-    const tableTypeIds = options.presetTables.map(t => t.id)
-    const scoreTypeToScores = groupScoresByType(dbScores, tableTypeIds, users)
+    const scoreTypeToScores = groupScoresByType(dbScores, users)
 
     return json({
         profile,

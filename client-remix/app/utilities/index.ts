@@ -134,7 +134,7 @@ export const generateDefaultGameState = (): models.IGameState =>
 })
 
 export const getTimeDifference = (timeAms: number, timeBms: number) => {
-    return Math.abs(timeAms - timeBms) * 1000
+    return Math.abs(timeAms - timeBms)
 }
 
 export const getUserTableTypeKey = (userId: string, tableTypeId: string) =>

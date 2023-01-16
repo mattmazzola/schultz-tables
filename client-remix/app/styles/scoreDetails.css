@@ -41,16 +41,16 @@
     text-align: right;
 }
 
-.score-details .material-icons {
+.score-details .material-symbols-outlined {
     vertical-align: sub;
-    line-height: 0
+    font-size: 2rem;
 }
 
-.material-icons.correct {
+.material-symbols-outlined.correct {
     color: green;
 }
 
-.material-icons.incorrect {
+.material-symbols-outlined.incorrect {
     color: red;
 }
 

@@ -1,10 +1,11 @@
 import { Score } from "@prisma/client"
 import { IScore, IUser } from "~/types/models"
 
-export function convertDbScoreToScore(dbScore: Score): IScore {
+export function convertDbScoreToScore(dbScore: Score, users?: IUser[]): IScore {
+    const user = users?.find(u => u.user_id === dbScore.userId)
     const score: IScore = {
         ...dbScore,
-        user: undefined,
+        user,
         startTime: dbScore.startTime.toISOString(),
         sequence: JSON.parse(dbScore.userSequence),
         tableLayout: JSON.parse(dbScore.tableLayout),
@@ -15,15 +16,12 @@ export function convertDbScoreToScore(dbScore: Score): IScore {
     return score
 }
 
-export function groupScoresByType(dbScores: Score[], tableTypeIds: string[], users?: IUser[]): Record<string, IScore[]> {
+export function groupScoresByType(dbScores: Score[], users?: IUser[]): Record<string, IScore[]> {
     const scoreTypeToScores: Record<string, IScore[]> = {}
 
     for (const dbScore of dbScores) {
         // Deserialized the serialized properties
-        const score = convertDbScoreToScore(dbScore)
-        // Add user
-        const user = users?.find(u => u.user_id === score.userId)
-        score.user = user
+        const score = convertDbScoreToScore(dbScore, users)
 
         // Group by tableTypeId
         const tableTypeId = score.tableType.id

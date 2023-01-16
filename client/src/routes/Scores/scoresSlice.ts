@@ -54,16 +54,11 @@ export const slice = createSlice({
             scoresByType.scores = response.scores
             scoresByType.users = response.users
             scoresByType.continuationToken = response.continuationToken
-        },
-        setTableTypes: (state, action: PayloadAction<{ tableTypes: models.ITableType[] }>) => {
-            const { tableTypes } = action.payload
-
-            state.tableTypes = tableTypes
         }
     },
 })
 
-const { setLoading, setScoresForType, setTableTypes } = slice.actions
+const { setLoading, setScoresForType } = slice.actions
 export { setLoading }
 
 // The function below is called a thunk and allows us to perform async logic. It
