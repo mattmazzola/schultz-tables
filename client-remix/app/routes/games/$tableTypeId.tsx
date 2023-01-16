@@ -53,7 +53,7 @@ export const action = async ({ request, params }: DataFunctionArgs) => {
                     userId: profile.id!,
                     userSequence: JSON.stringify(gameState.userSequence),
                     tableLayout: JSON.stringify(table),
-                    tableType: JSON.stringify({ id: tableTypeId, ...table }),
+                    tableTypeId: tableTypeId!,
                 }
             })
         }

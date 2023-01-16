@@ -11,11 +11,6 @@ export interface ITableConfig {
     animation: string
 }
 
-export interface ISequence {
-    expectedSequence: string[]
-    randomizedSequence: string[]
-}
-
 export interface ICell {
     x: number
     y: number
@@ -41,7 +36,6 @@ export interface IGameState {
     isStarted: boolean
     isCompleted: boolean
     isSoundEnabled: boolean
-    playSoundOnCorrect: boolean
     expectedSymbolIndex: number
     userSequence: IUserSelection[]
 }
@@ -62,61 +56,65 @@ export interface IScore {
     startTime: string
     endTime: string
     sequence: IUserSelection[]
-    tableLayout: ITableLayout
-    tableType: ITableType
+    tableLayout: ITable
+    tableTypeId: string
 }
- 
-interface ITableBase {
+
+type ITableDimensions = {
     width: number
     height: number
 }
 
-export interface ITable extends ITableBase {
-    classes: string[]
-    expectedSequence: string[]
-    cells: ICell[]
-}
-
-export interface ITableLayout extends ITableBase {
-    id: string
+export type ISequence = {
     expectedSequence: string[]
     randomizedSequence: string[]
 }
 
-export interface ITableType extends ITableBase {
+export type ITable
+    = ITableDimensions
+    & Omit<ISequence, 'randomizedSequence'>
+    & {
+        classes: string[]
+        cells: ICell[]
+    }
+
+export type IEntity = {
     id: string
-    properties: KVPair<string, string>[]
 }
+
+export type ITableLayout
+    = ITableDimensions
+    & ISequence
+    & IEntity
+
+export type ITableType
+    = IEntity
+    & {
+        properties: KVPair<string, string>[]
+    }
 
 export interface KVPair<K, V> {
     key: K
     value: V
 }
 
-export interface IScoreRequest {
-    userSequence: IUserSelection[]
-    expectedSequence: string[]
-    randomizedSequence: string[]
-    signedStartTime: string
-    startTime: number
-    tableHeight: number
-    tableWidth: number
-    tableProperties: KVPair<string, string>[]
-}
+export type IScoreRequest
+    = ISequence
+    & {
+        userSequence: IUserSelection[]
+        signedStartTime: string
+        startTime: number
+        tableHeight: number
+        tableWidth: number
+        tableProperties: KVPair<string, string>[]
+    }
 
-export interface IScoreResponse {
-    id: string
-    startTime: string
-    durationMilliseconds: number
-    userSequence: IUserSelection[]
-    expectedSequence: string[]
-    randomizedSequence: string[]
-    tableProperties: KVPair<string, string>[]
-    tableWidth: number
-    tableHeight: number
-    tableTypeId: string
-    userId: string
-}
+export type IScoreResponse
+    = IEntity
+    & IScoreRequest
+    & {
+        userId: string
+    }
 
 export interface ITableProperty {
     className: string

@@ -1,6 +1,6 @@
 import React from 'react'
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts'
-import { ICell, IScore, ITable } from '~/types/models'
+import { IScore, ITable } from '~/types/models'
 import { getTimeDifference } from '../utilities'
 import GamePreview from './GamePreview'
 
@@ -11,7 +11,7 @@ interface Props {
 const ScoreDetails: React.FC<Props> = (props) => {
     const { scoreDetails } = props
     const gameStartTime = new Date(scoreDetails.startTime).valueOf()
-    const { tableLayout, tableType } = scoreDetails
+    const { tableLayout, tableTypeId } = scoreDetails
     const data = scoreDetails.sequence
         .filter(s => s.correct)
         .map(s => ({
@@ -27,16 +27,8 @@ const ScoreDetails: React.FC<Props> = (props) => {
         width: tableLayout.width,
         height: tableLayout.height,
         expectedSequence: tableLayout.expectedSequence,
-        cells: (tableLayout.randomizedSequence ?? []).reduce<ICell[]>((cells, symbol, i, seq) => {
-            return [
-                ...cells,
-                {
-                    classes: [],
-                    text: symbol,
-                    x: i,
-                    y: i
-                }]
-        }, [])
+        // TODO: Add cells when correct storage of table layout
+        cells: []
     }
 
     return (
@@ -47,7 +39,7 @@ const ScoreDetails: React.FC<Props> = (props) => {
                 <dt><span className="material-symbols-outlined">format_list_bulleted</span> Properties:</dt>
                 <dd>
                     <dl>
-                        {(tableType.properties ?? []).map(({ key, value }) =>
+                        {([]).map(({ key, value }) =>
                             <React.Fragment key={key}>
                                 <dt>{key}:</dt>
                                 <dd>{value}</dd>

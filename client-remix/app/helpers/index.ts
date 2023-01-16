@@ -9,7 +9,6 @@ export function convertDbScoreToScore(dbScore: Score, users?: IUser[]): IScore {
         startTime: dbScore.startTime.toISOString(),
         sequence: JSON.parse(dbScore.userSequence),
         tableLayout: JSON.parse(dbScore.tableLayout),
-        tableType: JSON.parse(dbScore.tableType),
         endTime: (new Date(dbScore.startTime.valueOf() + dbScore.durationMilliseconds)).toISOString()
     }
 
@@ -24,9 +23,8 @@ export function groupScoresByType(dbScores: Score[], users?: IUser[]): Record<st
         const score = convertDbScoreToScore(dbScore, users)
 
         // Group by tableTypeId
-        const tableTypeId = score.tableType.id
-        scoreTypeToScores[tableTypeId] ??= []
-        scoreTypeToScores[tableTypeId].push(score)
+        scoreTypeToScores[score.tableTypeId] ??= []
+        scoreTypeToScores[score.tableTypeId].push(score)
     }
 
     return scoreTypeToScores

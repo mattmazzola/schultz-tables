@@ -128,7 +128,6 @@ export const generateDefaultGameState = (): models.IGameState =>
     isStarted: false,
     isCompleted: false,
     isSoundEnabled: true,
-    playSoundOnCorrect: false,
     expectedSymbolIndex: 0,
     userSequence: [],
 })
