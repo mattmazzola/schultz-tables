@@ -80,11 +80,12 @@ export default function Scores() {
                                         const name = s.user
                                             ? (s.user.nickname ?? s.user.name ?? s.user.email)
                                             : s.userId
+                                        const accuracy = (s.table.expectedSequence.length / s.userSequence.length) * 100
                                         return (
                                             <div key={s.id} className="score">
                                                 <div>🏁</div><div>{rank}</div>
                                                 <div>⌚</div><div>{(s.durationMilliseconds / 1000).toFixed(2)} sec</div>
-                                                <div>🎯</div><div>{((s.tableLayout.expectedSequence.length / s.sequence.length) * 100).toFixed(2)}%</div>
+                                                <div>🎯</div><div>{accuracy.toFixed(2)}%</div>
                                                 <div>🗓️</div><div suppressHydrationWarning={true}>{new Date(s.startTime).toLocaleDateString('en-us', {
                                                     month: "2-digit",
                                                     day: "2-digit",

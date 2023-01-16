@@ -14,11 +14,11 @@ datasource db {
 model Score {
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#cuid
   id                   String   @id @default(cuid())
-  durationMilliseconds Int
   userId               String
   startTime            DateTime
+  durationMilliseconds Int
+  tableTypeId          String
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#microsoft-sql-server
   userSequence         String   @db.NVarChar(4000)
-  tableLayout          String   @db.NVarChar(4000)
-  tableTypeId          String
+  table                String   @db.NVarChar(4000)
 }

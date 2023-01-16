@@ -27,7 +27,7 @@ export default function Score() {
     return (
         <>
             <h1><Link to="/scores">Scores</Link> &gt; Score: {scoreId}</h1>
-            <ScoreDetails scoreDetails={score as any} />
+            <ScoreDetails score={score as any} />
         </>
     )
 }

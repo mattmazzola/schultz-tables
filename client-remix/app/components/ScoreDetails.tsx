@@ -4,29 +4,28 @@ import { IScore, ITable } from '~/types/models'
 import { getTimeDifference } from '../utilities'
 import GamePreview from './GamePreview'
 
-interface Props {
-    scoreDetails: IScore
+type Props = {
+    score: IScore
 }
 
 const ScoreDetails: React.FC<Props> = (props) => {
-    const { scoreDetails } = props
+    const { score: scoreDetails } = props
     const gameStartTime = new Date(scoreDetails.startTime).valueOf()
-    const { tableLayout, tableTypeId } = scoreDetails
-    const data = scoreDetails.sequence
+    const data = scoreDetails.userSequence
         .filter(s => s.correct)
         .map(s => ({
             name: s.cell.text,
             time: getTimeDifference(s.time, gameStartTime)
         }))
 
-    const horizontalTicks = tableLayout.expectedSequence
+    const horizontalTicks = scoreDetails.table.expectedSequence
     const maxYAxis = Math.ceil(scoreDetails.durationMilliseconds / 1000) + 1
     const verticalTicks = Array(maxYAxis).fill(0).map((_, i) => i * 1000)
     const tableForPreview: ITable = {
         classes: [],
-        width: tableLayout.width,
-        height: tableLayout.height,
-        expectedSequence: tableLayout.expectedSequence,
+        width: scoreDetails.table.width,
+        height: scoreDetails.table.height,
+        expectedSequence: scoreDetails.table.expectedSequence,
         // TODO: Add cells when correct storage of table layout
         cells: []
     }
@@ -35,7 +34,7 @@ const ScoreDetails: React.FC<Props> = (props) => {
         <div className="score-details">
             <dl>
                 <dt><span className="material-symbols-outlined">border_all</span> Size:</dt>
-                <dd>{tableLayout.width}w &times; {tableLayout.height}h</dd>
+                <dd>{scoreDetails.table.width}w &times; {scoreDetails.table.height}h</dd>
                 <dt><span className="material-symbols-outlined">format_list_bulleted</span> Properties:</dt>
                 <dd>
                     <dl>
@@ -78,7 +77,7 @@ const ScoreDetails: React.FC<Props> = (props) => {
                             <span className="material-symbols-outlined">access_time</span>
                         </div>
 
-                        {scoreDetails.sequence.map((o, i, seq) => {
+                        {scoreDetails.userSequence.map((o, i, seq) => {
                             const totalDuration = getTimeDifference(o.time, gameStartTime)
                             const previousActionTime = i === 0
                                 ? gameStartTime

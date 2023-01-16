@@ -48,12 +48,12 @@ export const action = async ({ request, params }: DataFunctionArgs) => {
         if (gameState.isCompleted) {
             await db.score.create({
                 data: {
-                    durationMilliseconds: gameState.duration,
-                    startTime: new Date(gameState.startTime),
                     userId: profile.id!,
-                    userSequence: JSON.stringify(gameState.userSequence),
-                    tableLayout: JSON.stringify(table),
+                    startTime: new Date(gameState.startTime),
+                    durationMilliseconds: gameState.duration,
                     tableTypeId: tableTypeId!,
+                    userSequence: JSON.stringify(gameState.userSequence),
+                    table: JSON.stringify(table),
                 }
             })
         }

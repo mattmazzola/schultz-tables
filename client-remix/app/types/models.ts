@@ -49,15 +49,15 @@ export interface IOption<T> {
 export type IUser = User<AppMetadata, UserMetadata>
 
 export interface IScore {
-    durationMilliseconds: number,
     id: string
     userId: string
     user: IUser | undefined
     startTime: string
     endTime: string
-    sequence: IUserSelection[]
-    tableLayout: ITable
+    durationMilliseconds: number
     tableTypeId: string
+    userSequence: IUserSelection[]
+    table: ITable
 }
 
 type ITableDimensions = {
@@ -97,24 +97,6 @@ export interface KVPair<K, V> {
     key: K
     value: V
 }
-
-export type IScoreRequest
-    = ISequence
-    & {
-        userSequence: IUserSelection[]
-        signedStartTime: string
-        startTime: number
-        tableHeight: number
-        tableWidth: number
-        tableProperties: KVPair<string, string>[]
-    }
-
-export type IScoreResponse
-    = IEntity
-    & IScoreRequest
-    & {
-        userId: string
-    }
 
 export interface ITableProperty {
     className: string

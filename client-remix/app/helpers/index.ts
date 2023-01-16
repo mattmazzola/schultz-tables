@@ -7,8 +7,8 @@ export function convertDbScoreToScore(dbScore: Score, users?: IUser[]): IScore {
         ...dbScore,
         user,
         startTime: dbScore.startTime.toISOString(),
-        sequence: JSON.parse(dbScore.userSequence),
-        tableLayout: JSON.parse(dbScore.tableLayout),
+        userSequence: JSON.parse(dbScore.userSequence),
+        table: JSON.parse(dbScore.table),
         endTime: (new Date(dbScore.startTime.valueOf() + dbScore.durationMilliseconds)).toISOString()
     }
 
