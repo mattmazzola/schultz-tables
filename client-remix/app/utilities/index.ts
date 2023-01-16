@@ -177,3 +177,16 @@ export function getFormData(data: object): Record<string, string> {
 
     return formData
 }
+
+// export function exclude<T extends object>(x: T, properties: (keyof T)[]) {
+
+
+//     for (const [key, value] of Object.entries(x)) {
+//         const typedKey: keyof T = key as any
+//         if ((properties as string[]).includes(typedKey as string)) {
+//             o[typedKey] = value
+//         }
+//     }
+
+//     return o
+// }

@@ -1,11 +1,12 @@
 import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { GameType } from "~/components/GameType"
+import { convertDbScoreToScore } from "~/helpers"
 import { auth } from "~/services/auth.server"
 import { managementClient } from "~/services/auth0management.server"
 import { db } from "~/services/db.server"
 import scoresStyles from "~/styles/scores.css"
-import { IScoresResponse } from "~/types/models"
+import { IScore } from "~/types/models"
 import * as options from '~/utilities/options'
 
 export const links: LinksFunction = () => [
@@ -17,30 +18,45 @@ export const loader = async ({ request }: DataFunctionArgs) => {
     failureRedirect: "/"
   })
 
-  const scores = await db.score.findMany({
-    take: 5,
-  })
-  const scoreTypeToScores: Record<string, IScoresResponse> = {}
-
+  const scoreTypeToScores: Record<string, IScore[]> = {}
   const users = await managementClient.getUsers()
+  const dbScores = await db.score.findMany({
+    take: 100,
+    orderBy: {
+      durationMilliseconds: 'asc'
+    }
+  })
+
+  for (const dbScore of dbScores) {
+    // Deserialized the serialized properties
+    const score = convertDbScoreToScore(dbScore)
+    // Add user
+    const user = users.find(u => u.user_id === score.userId)
+    score.user = user
+
+    // Group by tableTypeId
+    const tableTypeId = score.tableType.id
+    scoreTypeToScores[tableTypeId] ??= []
+    scoreTypeToScores[tableTypeId].push(score)
+  }
 
   return json({
     profile,
     scoreTypeToScores,
     users,
-    scores
   })
 }
 
 export default function Scores() {
-  const { scoreTypeToScores, scores } = useLoaderData<typeof loader>()
-  
+  const { scoreTypeToScores } = useLoaderData<typeof loader>()
+
   return (
     <>
       <h1>Scores by Table Type:</h1>
       <div className="scoresColumns">
         {options.presetTables.map(gameType => {
-          const scoresByType = scoreTypeToScores[gameType.id]
+          const scoresByType = scoreTypeToScores[gameType.id] ?? []
+
           return (
             <div key={gameType.id} className="scoreColumn">
               <div className="scoreColumn__header">
@@ -55,9 +71,9 @@ export default function Scores() {
                 </button>
               </div>
               <div>
-                {(scoresByType?.scores ?? []).length === 0
+                {scoresByType.length === 0
                   ? <div className="score">0 Scores</div>
-                  : (scoresByType?.scores ?? []).map((s, i) => {
+                  : scoresByType.map((s, i) => {
                     let rank: string = `${i + 1}th`
                     if (i === 0) {
                       rank = '1st 🥇'
@@ -82,7 +98,12 @@ export default function Scores() {
                       <div key={s.id} className="score">
                         <div>🏁</div><div>{rank}</div>
                         <div>⌚</div><div>{(s.durationMilliseconds / 1000).toFixed(2)} sec</div>
-                        <div>⏲</div><div>{s.startTime}</div>
+                        <div>⏲</div><div>{new Date(s.startTime).toLocaleDateString('en-us', {
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}</div>
                         <div>🧑</div><div className="scoreName" title={name}>{name}</div>
                       </div>
                     )
@@ -92,15 +113,6 @@ export default function Scores() {
           )
         })}
       </div>
-      {scores.map(score => {
-        return (
-          <pre key={score.id}>
-            <code>
-              {JSON.stringify(score, null, 4)}
-            </code>
-          </pre>
-        )
-      })}
     </>
   )
 }

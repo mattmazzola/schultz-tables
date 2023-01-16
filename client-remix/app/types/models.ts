@@ -1,3 +1,5 @@
+import { AppMetadata, User, UserMetadata } from "auth0"
+
 export interface ITableConfig {
     symbols: string
     width: number
@@ -69,14 +71,7 @@ export interface IGraphQlResponse<T> {
     errors: IMongoError[]
 }
 
-export interface IUser {
-    id: string
-    name: string
-    email: string
-    emailVerified: boolean
-    nickname: string
-    picture: string
-}
+export type IUser = User<AppMetadata, UserMetadata>
 
 export interface IScoresResponse {
     scores: IScore[]
@@ -156,10 +151,6 @@ export interface IScoreResponse {
     tableHeight: number
     tableTypeId: string
     userId: string
-}
-
-export interface IStartScoreResponse {
-    value: string
 }
 
 export interface ITableProperty {

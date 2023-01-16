@@ -1,5 +1,5 @@
 import { DataFunctionArgs, redirect } from "@remix-run/node"
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react"
+import { useFetcher, useLoaderData } from "@remix-run/react"
 import { useReducer } from "react"
 import Game from "~/components/Game"
 import { GameEvent, gameReducer, getObjectFromState, State } from "~/reducers/gameReducer"
@@ -10,10 +10,10 @@ import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
 
 export const loader = ({ params }: DataFunctionArgs) => {
-    const gameTypeId = params['gameTypeId']
-    const gameType = options.presetTables.find(t => t.id === gameTypeId)
+    const tableTypeId = params['tableTypeId']
+    const gameType = options.presetTables.find(t => t.id === tableTypeId)
     if (!gameType) {
-        throw new Error(`You attempted to find game type by id: ${gameTypeId}. However that type was not found. Please select a different type.`)
+        throw new Error(`You attempted to find game type by id: ${tableTypeId}. However that type was not found. Please select a different type.`)
     }
 
     const tableConfigSelected = gameType.value
@@ -36,7 +36,8 @@ enum FormNames {
     GameSubmission = 'GameSubmission'
 }
 
-export const action = async ({ request }: DataFunctionArgs) => {
+export const action = async ({ request, params }: DataFunctionArgs) => {
+    const tableTypeId = params['tableTypeId']
     const profile = await auth.isAuthenticated(request, {
         failureRedirect: "/"
     })
@@ -47,23 +48,16 @@ export const action = async ({ request }: DataFunctionArgs) => {
         const table: ITable = JSON.parse(formData.table as string)
         const gameState: IGameState = JSON.parse(formData.gameState as string)
         if (gameState.isCompleted) {
-            console.log({ table, gameState })
-            const stringifiedUserSequence = JSON.stringify(gameState.userSequence)
-            console.log({ stringifiedUserSequenceLength: stringifiedUserSequence.length })
-
-            const score = await db.score.create({
+            await db.score.create({
                 data: {
                     durationMilliseconds: gameState.duration,
                     startTime: new Date(gameState.startTime),
                     userId: profile.id!,
-                    // TODO: How to store full sequence
-                    userSequence: stringifiedUserSequence,
+                    userSequence: JSON.stringify(gameState.userSequence),
                     tableLayout: JSON.stringify(table),
-                    tableType: JSON.stringify(table),
+                    tableType: JSON.stringify({ id: tableTypeId, ...table }),
                 }
             })
-
-            console.log({ score })
         }
 
         return redirect('/games')
@@ -93,7 +87,6 @@ const playBuzzerSound = () => {
 
 export default function GameRoute() {
     const { gameType, table, gameState: loaderGameState } = useLoaderData<typeof loader>()
-    const navigate = useNavigate()
     const initialState: State = {
         signedStartTime: null,
         table,
@@ -132,18 +125,15 @@ export default function GameRoute() {
     }
 
     return (
-        <>
-            <h1>Game Type: {gameType.id}</h1>
-            <div className="game-container">
-                <Game
-                    width={table.width}
-                    height={table.height}
-                    table={table}
-                    gameState={reducerState.gameState}
-                    onClickClose={onClickCloseGame}
-                    onClickCell={onClickCell}
-                />
-            </div>
-        </>
+        <div className="game-container">
+            <Game
+                width={table.width}
+                height={table.height}
+                table={table}
+                gameState={reducerState.gameState}
+                onClickClose={onClickCloseGame}
+                onClickCell={onClickCell}
+            />
+        </div>
     )
 }

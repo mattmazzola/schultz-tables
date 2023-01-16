@@ -1,0 +1,3 @@
+CREATE DATABASE schultztables
+CREATE DATABASE schultztablesshadow
+GO
