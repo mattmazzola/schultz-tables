@@ -43,6 +43,15 @@
     padding: 1rem;
 }
 
+.viewButton {
+    padding: 0.25rem 1rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(240, 156, 101);
+    color: rgb(53, 50, 50);
+}
+
 .scoreRefreshButton button {
     padding: 0.5rem 1rem;
     font-size: 1.2rem;

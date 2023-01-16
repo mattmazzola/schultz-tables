@@ -17,6 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 22px;
+  line-height: 1.5;
   background-color: var(--color-white-off);
   display: flex;
   flex-direction: column;
@@ -189,6 +190,10 @@ main {
 
 main>* {
   grid-column: main;
+}
+
+main>*>h1 {
+  margin-bottom: 1rem;
 }
 
 .logInButton {

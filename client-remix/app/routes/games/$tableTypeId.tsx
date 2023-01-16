@@ -10,7 +10,7 @@ import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
 
 export const loader = ({ params }: DataFunctionArgs) => {
-    const tableTypeId = params['tableTypeId']
+    const { tableTypeId } = params
     const gameType = options.presetTables.find(t => t.id === tableTypeId)
     if (!gameType) {
         throw new Error(`You attempted to find game type by id: ${tableTypeId}. However that type was not found. Please select a different type.`)
@@ -37,7 +37,7 @@ enum FormNames {
 }
 
 export const action = async ({ request, params }: DataFunctionArgs) => {
-    const tableTypeId = params['tableTypeId']
+    const { tableTypeId } = params
     const profile = await auth.isAuthenticated(request, {
         failureRedirect: "/"
     })

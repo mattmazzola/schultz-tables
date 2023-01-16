@@ -98,13 +98,15 @@ export default function Scores() {
                       <div key={s.id} className="score">
                         <div>🏁</div><div>{rank}</div>
                         <div>⌚</div><div>{(s.durationMilliseconds / 1000).toFixed(2)} sec</div>
-                        <div>⏲</div><div>{new Date(s.startTime).toLocaleDateString('en-us', {
+                        <div>🎯</div><div>{((s.tableLayout.expectedSequence.length / s.sequence.length) * 100).toFixed(2)}%</div>
+                        <div>🗓️</div><div suppressHydrationWarning={true}>{new Date(s.startTime).toLocaleDateString('en-us', {
                           month: "2-digit",
                           day: "2-digit",
                           hour: "2-digit",
                           minute: "2-digit",
                         })}</div>
                         <div>🧑</div><Link to={`/users/${s.userId}`}>{name}</Link>
+                        <div>📃</div><Link to={`/scores/${s.id}`}><button type="button" className="viewButton">View Details</button></Link>
                       </div>
                     )
                   })}
