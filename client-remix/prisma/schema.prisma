@@ -13,29 +13,12 @@ datasource db {
 
 model Score {
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#cuid
-  id                   String           @id @default(cuid())
+  id                   String   @id @default(cuid())
   durationMilliseconds Int
   userId               String
   startTime            DateTime
-  sequence             UserSelection @relation(fields: [sequenceId], references: [id])
-  sequenceId           String
-  tableLayout          TableLayout   @relation(fields: [tableLayoutId], references: [id])
-  tableLayoutId        String
-  tableType            TableType     @relation(fields: [tableTypeId], references: [id])
-  tableTypeId          String
-}
-
-model UserSelection {
-  id    String     @id @default(cuid())
-  Score Score[]
-}
-
-model TableLayout {
-  id    String     @id @default(cuid())
-  Score Score[]
-}
-
-model TableType {
-  id    String     @id @default(cuid())
-  Score Score[]
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#microsoft-sql-server
+  userSequence         String   @db.NVarChar(4000)
+  tableLayout          String   @db.NVarChar(4000)
+  tableType            String   @db.NVarChar(4000)
 }

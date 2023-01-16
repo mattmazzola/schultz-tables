@@ -42,29 +42,24 @@ export const action = async ({ request }: DataFunctionArgs) => {
     })
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
-    
+
     if (formData.name) {
         const table: ITable = JSON.parse(formData.table as string)
         const gameState: IGameState = JSON.parse(formData.gameState as string)
         if (gameState.isCompleted) {
             console.log({ table, gameState })
+            const stringifiedUserSequence = JSON.stringify(gameState.userSequence)
+            console.log({ stringifiedUserSequenceLength: stringifiedUserSequence.length })
+
             const score = await db.score.create({
                 data: {
                     durationMilliseconds: gameState.duration,
                     startTime: new Date(gameState.startTime),
                     userId: profile.id!,
-                    sequence: {
-                        create: {
-                        }
-                    },
-                    tableLayout: {
-                        create: {
-                        }
-                    },
-                    tableType: {
-                        create: {
-                        }
-                    },
+                    // TODO: How to store full sequence
+                    userSequence: stringifiedUserSequence,
+                    tableLayout: JSON.stringify(table),
+                    tableType: JSON.stringify(table),
                 }
             })
 
