@@ -24,7 +24,6 @@ $shadowDatabaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variabl
 
 Write-Step "Fetch params from Azure"
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
-$sharedResourceNames
 
 $containerAppsEnvResourceId = $(az containerapp env show -g $sharedResourceGroupName -n $sharedResourceNames.containerAppsEnv --query "id" -o tsv)
 $acrJson = $(az acr credential show -n $sharedResourceNames.containerRegistry --query "{ username:username, password:passwords[0].value }" | ConvertFrom-Json)
