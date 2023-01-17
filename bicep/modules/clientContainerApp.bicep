@@ -12,11 +12,16 @@ param auth0ClientId string
 @secure()
 param auth0ClientSecret string
 param auth0Domain string
-param auth0Logout string
+param auth0LogoutUrl string
 
 param auth0managementClientId string
 @secure()
 param auth0managementClientSecret string
+
+@secure()
+param databaseUrl string
+@secure()
+param shadowDatabaseUrl string
 
 @secure()
 param cookieSecret string
@@ -68,6 +73,14 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
           name: cookieSecretName
           value: cookieSecret
         }
+        {
+          name: databaseUrlSecretName
+          value: databaseUrl
+        }
+        {
+          name: shadowDatabaseUrlSecretName
+          value: shadowDatabaseUrl
+        }
       ]
     }   
     template: {
@@ -103,7 +116,7 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
             }
             {
               name: 'AUTH0_LOGOUT_URL'
-              value: auth0Logout
+              value: auth0LogoutUrl
             }
             {
               name: 'AUTH0_MANAGEMENT_APP_CLIENT_ID'
@@ -122,7 +135,7 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
               secretRef: databaseUrlSecretName
             }
             {
-              name: 'SHADOW_DATABASE_URL   '
+              name: 'SHADOW_DATABASE_URL'
               secretRef: shadowDatabaseUrlSecretName
             }
           ]
