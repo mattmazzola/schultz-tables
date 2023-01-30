@@ -3,12 +3,22 @@ $sharedRgString = 'klgoyi'
 $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
+echo "PScriptRoot: $PScriptRoot"
+$repoRoot = If ('' -eq $PScriptRoot) {
+  "$PSScriptRoot/../.."
+}
+else {
+  "."
+}
+
+echo "Repo Root: $repoRoot"
+
 Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 Write-Step "Create Resource Group"
 az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
 
-$envFilePath = $(Resolve-Path "$PSScriptRoot/../../.env").Path
+$envFilePath = $(Resolve-Path "$repoRoot/.env").Path
 Write-Step "Get ENV Vars from: $envFilePath"
 $auth0ReturnToUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_RETURN_TO_URL'
 $auth0CallbackUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_CALLBACK_URL'
@@ -63,7 +73,7 @@ Write-Step "Build and Push $clientImageName Image"
 az acr build -r $registryUrl -t $clientImageName ./client-remix
 
 Write-Step "Deploy $clientImageName Container App"
-$clientBicepContainerDeploymentFilePath = "$PSScriptRoot/../../bicep/modules/clientContainerApp.bicep"
+$clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
 $clientFqdn = $(az deployment group create `
     -g $schultzTablesResourceGroupName `
     -f $clientBicepContainerDeploymentFilePath `
