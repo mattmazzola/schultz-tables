@@ -139,15 +139,6 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
               secretRef: shadowDatabaseUrlSecretName
             }
           ]
-          probes: [
-            {
-              type: 'Liveness'
-              httpGet: {
-                path: '/'
-                port: 80
-              }
-            }
-          ] 
         }
       ]
       scale: {
