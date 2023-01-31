@@ -6,8 +6,7 @@ $schultzTablesResourceGroupName = "schultztables"
 echo "PScriptRoot: $PScriptRoot"
 $repoRoot = If ('' -eq $PScriptRoot) {
   "$PSScriptRoot/../.."
-}
-else {
+} Else {
   "."
 }
 
@@ -69,8 +68,16 @@ $data = [ordered]@{
 
 Write-Hash "Data" $data
 
+Write-Step "Provision Resources"
+$mainBicepFile = "$repoRoot/bicep/main.bicep"
+az deployment group create `
+  -g $sharedResourceGroupName `
+  -f $mainBicepFile `
+  --query "properties.provisioningState" `
+  -o tsv
+
 Write-Step "Build and Push $clientImageName Image"
-az acr build -r $registryUrl -t $clientImageName ./client-remix
+az acr build -r $registryUrl -t $clientImageName "$repoRoot/client-remix"
 
 Write-Step "Deploy $clientImageName Container App"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
