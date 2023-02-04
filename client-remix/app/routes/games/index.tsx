@@ -56,11 +56,12 @@ export default function Index() {
     return (
         <>
             <h1>What is it?</h1>
-            <p>Game to develop use of peripheral vision. Use soft focus to become aware of larger area.</p>
+            <p>Schultz Tables is a game to develop the use of peripheral vision. Use soft focus to become aware of larger area.</p>
             <h1>How to play?</h1>
             <p>
-                Click the symbols in sequence. Numbers 1,2,3... or Letters A,B,C... <br />
-                Games differ by size, symbols, and visual effects.<br />
+                Symbols are randomly placed in a grid or table. You must click the symbols in sequence.<br />
+                Numbers 1,2,3... or Letters A,B,C...<br />
+                Tables differ by size, symbols, and visual effects.<br />
                 <b>Try to complete the table as fast as you can!</b>
             </p>
             <h2>Restrictions / Recommended Setup</h2>
