@@ -41,6 +41,8 @@ resource sqlShadowDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' 
     minCapacity: any('0.5')
   }
   sku: {
+    // View all possible SKU names
+    // az sql db list-editions -l westus3 -o table
     name: 'GP_S_Gen5_2'
   }
 }
