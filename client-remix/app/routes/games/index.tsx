@@ -65,12 +65,12 @@ export default function Index() {
                 <b>Try to complete the table as fast as you can!</b>
             </p>
             <h2>Restrictions / Recommended Setup</h2>
-            <p>Please play the game on a large desktop monitor with your eyes at 2 ft. from the screen. The smaller the screenm, such as a mobile device, the more of the board you can fit under the focus area of your eye and in this case you are forced to train peripheral vision.</p>
+            <p>Please play the game on a large desktop monitor with your eyes at least 2 ft. from the screen. The smaller the screen, such as a mobile device, the more of the board you can see within the focus area of your eye. This means you do not have to use your peripheral vision and have an advantage.</p>
             {isUsingMobileDevice === true
                 && <>
                     <h2>⚠️ Incompatible Device Detected!</h2>
                     <p>
-                        You might be using a mobile device with small screen. This would not push peripheral vision boundaries and is a type of cheating since it offers advantage. Try using a different device with larger screen.<br />
+                        You might be using a mobile device with small screen. Smaller screens give an unfair advantage and is considered a type of cheating. Try using a different device with larger screen.<br />
                         User Agent: {navigator.userAgent}
                     </p>
                 </>}
