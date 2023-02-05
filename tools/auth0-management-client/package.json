@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/auth0": "^2.20.2",
-    "auth0": "^2.24.0",
+    "auth0": "^2.27.1",
     "dotenv": "^8.2.0",
     "typescript": "^3.8.3"
   }
