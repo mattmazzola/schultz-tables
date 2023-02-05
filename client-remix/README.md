@@ -33,8 +33,6 @@ docker exec -it sql1 "bash"
 ```
 CREATE DATABASE schultztables
 GO
-CREATE DATABASE schultztablesshadow
-GO
 ```
 
 ```

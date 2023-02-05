@@ -20,8 +20,6 @@ param auth0managementClientSecret string
 
 @secure()
 param databaseUrl string
-@secure()
-param shadowDatabaseUrl string
 
 @secure()
 param cookieSecret string
@@ -36,7 +34,6 @@ var auth0clientSecretName = 'auth0-client-secret'
 var auth0managementClientSecretName = 'auth0-management-client-secret'
 var cookieSecretName = 'cookie-secret'
 var databaseUrlSecretName = 'database-url'
-var shadowDatabaseUrlSecretName = 'shadow-database-url'
 
 resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
   name: name
@@ -77,12 +74,8 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
           name: databaseUrlSecretName
           value: databaseUrl
         }
-        {
-          name: shadowDatabaseUrlSecretName
-          value: shadowDatabaseUrl
-        }
       ]
-    }   
+    }
     template: {
       containers: [
         {
@@ -133,10 +126,6 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
             {
               name: 'DATABASE_URL'
               secretRef: databaseUrlSecretName
-            }
-            {
-              name: 'SHADOW_DATABASE_URL'
-              secretRef: shadowDatabaseUrlSecretName
             }
           ]
         }

@@ -11,7 +11,6 @@ param projectName string = 'schultz-tables'
 @minLength(1)
 @maxLength(128)
 param dbName string = '${resourceGroup().name}-${uniqueRgString}-sql-db-${projectName}'
-var shadowDbName = '${dbName}-shadow'
 
 param location string = resourceGroup().location
 
@@ -28,21 +27,6 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
     minCapacity: any('0.5')
   }
   sku: {
-    name: 'GP_S_Gen5_1'
-  }
-}
-
-resource sqlShadowDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
-  parent: sqlServer
-  location: location
-  name: shadowDbName
-  properties: {
-    autoPauseDelay: 60
-    minCapacity: any('0.5')
-  }
-  sku: {
-    // View all possible SKU names
-    // az sql db list-editions -l westus3 -o table
     name: 'GP_S_Gen5_1'
   }
 }

@@ -29,7 +29,6 @@ $auth0ManagementClientId = Get-EnvVarFromFile -envFilePath $envFilePath -variabl
 $auth0ManagementClientSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_MANAGEMENT_APP_CLIENT_SECRET'
 $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOKIE_SECRET'
 $databaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'DATABASE_URL'
-$shadowDatabaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'SHADOW_DATABASE_URL'
 
 Write-Step "Fetch params from Azure"
 $sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
@@ -56,7 +55,6 @@ $data = [ordered]@{
 
   "cookieSecret"                = "$($cookieSecret.Substring(0, 5))..."
   "databaseUrlSecret"           = "$($databaseUrlSecret.Substring(0, 5))..."
-  "shadowDatabaseUrlSecret"     = "$($shadowDatabaseUrlSecret.Substring(0, 5))..."
 
   "clientImageName"             = $clientImageName
 
@@ -99,7 +97,6 @@ $clientFqdn = $(az deployment group create `
     auth0managementClientId=$auth0managementClientId `
     auth0managementClientSecret=$auth0managementClientSecret `
     databaseUrl=$databaseUrlSecret `
-    shadowDatabaseUrl=$shadowDatabaseUrlSecret `
     cookieSecret=$cookieSecret `
     --query "properties.outputs.fqdn.value" `
     -o tsv)
