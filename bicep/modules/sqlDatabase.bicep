@@ -25,6 +25,7 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   properties: {
     autoPauseDelay: 60
     minCapacity: any('0.5')
+    maxSizeBytes: int('5368709120')
   }
   sku: {
     name: 'GP_S_Gen5_1'
