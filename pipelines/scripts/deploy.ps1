@@ -1,18 +1,29 @@
-$sharedResourceGroupName = "shared"
-$sharedRgString = 'klgoyi'
-$resourceGroupLocation = "westus3"
-$schultzTablesResourceGroupName = "schultztables"
+Param([switch]$WhatIf = $True)
 
 echo "PScriptRoot: $PScriptRoot"
 $repoRoot = If ('' -eq $PScriptRoot) {
   "$PSScriptRoot/../.."
-} Else {
+}
+Else {
   "."
 }
 
 echo "Repo Root: $repoRoot"
 
 Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
+
+$inputs = @{
+  "WhatIf" = $WhatIf
+}
+
+Write-Hash "Inputs" $inputs
+
+$sharedResourceGroupName = "shared"
+$sharedRgString = 'klgoyi'
+$resourceGroupLocation = "westus3"
+$schultzTablesResourceGroupName = "schultztables"
+
+$sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
 
 Write-Step "Create Resource Group"
 az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
@@ -31,17 +42,11 @@ $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOK
 $databaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'DATABASE_URL'
 
 Write-Step "Fetch params from Azure"
-$sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
-
-$containerAppsEnvResourceId = $(az containerapp env show -g $sharedResourceGroupName -n $sharedResourceNames.containerAppsEnv --query "id" -o tsv)
-$acrJson = $(az acr credential show -n $sharedResourceNames.containerRegistry --query "{ username:username, password:passwords[0].value }" | ConvertFrom-Json)
-$registryUrl = $(az acr show -g $sharedResourceGroupName -n $sharedResourceNames.containerRegistry --query "loginServer" -o tsv)
-$registryUsername = $acrJson.username
-$registryPassword = $acrJson.password
+$sharedResourceVars = Get-SharedResourceDeploymentVars $sharedResourceGroupName $sharedRgString
 
 $clientContainerName = "$schultzTablesResourceGroupName-client"
 $clientImageTag = $(Get-Date -Format "yyyyMMddhhmm")
-$clientImageName = "${registryUrl}/${clientContainerName}:${clientImageTag}"
+$clientImageName = "$($sharedResourceVars.registryUrl)/${clientContainerName}:${clientImageTag}"
 
 $data = [ordered]@{
   "auth0ReturnToUrl"            = $auth0ReturnToUrl
@@ -58,34 +63,51 @@ $data = [ordered]@{
 
   "clientImageName"             = $clientImageName
 
-  "containerAppsEnvResourceId"  = $containerAppsEnvResourceId
-  "registryUrl"                 = $registryUrl
-  "registryUsername"            = $registryUsername
-  "registryPassword"            = "$($registryPassword.Substring(0, 5))..."
+  "containerAppsEnvResourceId"  = $($sharedResourceVars.containerAppsEnvResourceId)
+  "registryUrl"                 = $($sharedResourceVars.registryUrl)
+  "registryUsername"            = $($sharedResourceVars.registryUsername)
+  "registryPassword"            = "$($($sharedResourceVars.registryPassword).Substring(0, 5))..."
 }
 
 Write-Hash "Data" $data
 
-Write-Step "Provision Resources"
+Write-Step "Provision Additional $sharedResourceGroupName Resources (What-If: $($WhatIf))"
 $mainBicepFile = "$repoRoot/bicep/main.bicep"
-az deployment group create `
-  -g $sharedResourceGroupName `
-  -f $mainBicepFile `
-  --query "properties.provisioningState" `
-  -o tsv
+
+if ($WhatIf -eq $True) {
+  az deployment group create `
+    -g $sharedResourceGroupName `
+    -f $mainBicepFile `
+    --what-if
+}
+else {
+  az deployment group create `
+    -g $sharedResourceGroupName `
+    -f $mainBicepFile `
+    --query "properties.provisioningState" `
+    -o tsv
+}
+
+Write-Step "Provision $schultzTablesResourceGroupName Resources (What-If: $($WhatIf))"
 
 Write-Step "Build and Push $clientImageName Image"
-az acr build -r $registryUrl -t $clientImageName "$repoRoot/client-remix"
+docker build -t $clientImageName "$repoRoot/client-remix"
 
-Write-Step "Deploy $clientImageName Container App"
+if ($WhatIf -eq $False) {
+  docker push $clientImageName
+}
+
+Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
-$clientFqdn = $(az deployment group create `
+
+if ($WhatIf -eq $True) {
+  az deployment group create `
     -g $schultzTablesResourceGroupName `
     -f $clientBicepContainerDeploymentFilePath `
-    -p managedEnvironmentResourceId=$containerAppsEnvResourceId `
-    registryUrl=$registryUrl `
-    registryUsername=$registryUsername `
-    registryPassword=$registryPassword `
+    -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
+    registryUrl=$($sharedResourceVars.registryUrl) `
+    registryUsername=$($sharedResourceVars.registryUsername) `
+    registryPassword=$($sharedResourceVars.registryUsername) `
     imageName=$clientImageName `
     containerName=$clientContainerName `
     auth0ReturnToUrl=$auth0ReturnToUrl `
@@ -98,8 +120,32 @@ $clientFqdn = $(az deployment group create `
     auth0managementClientSecret=$auth0managementClientSecret `
     databaseUrl=$databaseUrlSecret `
     cookieSecret=$cookieSecret `
-    --query "properties.outputs.fqdn.value" `
-    -o tsv)
+    --what-if
+}
+else {
+  $clientFqdn = $(az deployment group create `
+      -g $schultzTablesResourceGroupName `
+      -f $clientBicepContainerDeploymentFilePath `
+      -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
+      registryUrl=$($sharedResourceVars.registryUrl) `
+      registryUsername=$($sharedResourceVars.registryUsername) `
+      registryPassword=$($sharedResourceVars.registryUsername) `
+      imageName=$clientImageName `
+      containerName=$clientContainerName `
+      auth0ReturnToUrl=$auth0ReturnToUrl `
+      auth0CallbackUrl=$auth0CallbackUrl `
+      auth0ClientId=$auth0ClientId `
+      auth0ClientSecret=$auth0ClientSecret `
+      auth0Domain=$auth0Domain `
+      auth0LogoutUrl=$auth0LogoutUrl `
+      auth0managementClientId=$auth0managementClientId `
+      auth0managementClientSecret=$auth0managementClientSecret `
+      databaseUrl=$databaseUrlSecret `
+      cookieSecret=$cookieSecret `
+      --query "properties.outputs.fqdn.value" `
+      -o tsv)
 
-$clientUrl = "https://$clientFqdn"
-Write-Output $clientUrl
+
+  $clientUrl = "https://$clientFqdn"
+  Write-Output $clientUrl
+}
