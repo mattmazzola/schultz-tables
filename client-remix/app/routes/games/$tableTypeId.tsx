@@ -1,15 +1,15 @@
-import { DataFunctionArgs, redirect } from "@remix-run/node"
+import { getAuth } from "@clerk/remix/ssr.server"
+import { ActionArgs, LoaderArgs, redirect } from "@remix-run/node"
 import { useFetcher, useLoaderData } from "@remix-run/react"
 import { useReducer } from "react"
 import Game from "~/components/Game"
-import { GameEvent, gameReducer, getObjectFromState, State } from "~/reducers/gameReducer"
-import { auth } from "~/services/auth.server"
+import { GameEvent, State, gameReducer, getObjectFromState } from "~/reducers/gameReducer"
 import { db } from "~/services/db.server"
 import { ICell, IGameState, ITable } from "~/types/models"
 import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
 
-export const loader = ({ params }: DataFunctionArgs) => {
+export const loader = ({ params }: LoaderArgs) => {
     const { tableTypeId } = params
     const tableTypeOption = options.presetTables.find(t => t.id === tableTypeId)
     if (!tableTypeOption) {
@@ -34,11 +34,10 @@ enum FormNames {
     GameSubmission = 'GameSubmission'
 }
 
-export const action = async ({ request, params }: DataFunctionArgs) => {
+export const action = async (args: ActionArgs) => {
+    const { request, params } = args
     const { tableTypeId } = params
-    const profile = await auth.isAuthenticated(request, {
-        failureRedirect: "/"
-    })
+    const { userId } = await getAuth(args);
     const rawFormData = await request.formData()
     const formData = Object.fromEntries(rawFormData)
 
@@ -48,7 +47,7 @@ export const action = async ({ request, params }: DataFunctionArgs) => {
         if (gameState.isCompleted) {
             await db.score.create({
                 data: {
-                    userId: profile.id!,
+                    userId: userId!,
                     startTime: new Date(gameState.startTime),
                     durationMilliseconds: gameState.duration,
                     tableTypeId: tableTypeId!,

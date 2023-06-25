@@ -8,20 +8,18 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
+    "@clerk/remix": "^2.6.13",
     "@prisma/client": "^4.8.1",
     "@remix-run/node": "^1.9.0",
     "@remix-run/react": "^1.9.0",
     "@remix-run/serve": "^1.9.0",
-    "@types/auth0": "^2.35.8",
     "@types/recharts": "^1.8.24",
-    "auth0": "^3.0.1",
     "immer": "^9.0.17",
     "isbot": "^3.6.5",
     "prisma": "^4.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "recharts": "^2.3.2",
-    "remix-auth-auth0": "^1.5.1"
+    "recharts": "^2.3.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.9.0",

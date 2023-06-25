@@ -1,4 +1,4 @@
-import { AppMetadata, User, UserMetadata } from "auth0"
+import { User } from "@clerk/remix/api.server"
 
 export interface ITableConfig {
     symbols: string
@@ -46,12 +46,11 @@ export interface IOption<T> {
     value: T
 }
 
-export type IUser = User<AppMetadata, UserMetadata>
 
 export interface IScore {
     id: string
     userId: string
-    user: IUser | undefined
+    user: User | undefined
     startTime: string
     endTime: string
     durationMilliseconds: number

@@ -1,8 +1,9 @@
+import { User } from "@clerk/remix/api.server"
 import { Score } from "@prisma/client"
-import { IScore, IUser } from "~/types/models"
+import { IScore } from "~/types/models"
 
-export function convertDbScoreToScore(dbScore: Score, users?: IUser[]): IScore {
-    const user = users?.find(u => u.user_id === dbScore.userId)
+export function convertDbScoreToScore(dbScore: Score, users?: User[]): IScore {
+    const user = users?.find(u => u.id === dbScore.userId)
     const score: IScore = {
         ...dbScore,
         user,
@@ -15,7 +16,7 @@ export function convertDbScoreToScore(dbScore: Score, users?: IUser[]): IScore {
     return score
 }
 
-export function groupScoresByType(dbScores: Score[], users?: IUser[]): Record<string, IScore[]> {
+export function groupScoresByType(dbScores: Score[], users?: User[]): Record<string, IScore[]> {
     const scoreTypeToScores: Record<string, IScore[]> = {}
 
     for (const dbScore of dbScores) {

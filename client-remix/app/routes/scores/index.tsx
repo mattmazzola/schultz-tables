@@ -1,9 +1,8 @@
+import { createClerkClient } from "@clerk/remix/api.server"
 import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
 import { GameType } from "~/components/GameType"
 import { groupScoresByType } from "~/helpers"
-import { auth } from "~/services/auth.server"
-import { managementClient } from "~/services/auth0management.server"
 import { db } from "~/services/db.server"
 import scoresStyles from "~/styles/scores.css"
 import * as options from '~/utilities/options'
@@ -13,11 +12,12 @@ export const links: LinksFunction = () => [
 ]
 
 export const loader = async ({ request }: DataFunctionArgs) => {
-    const profile = await auth.isAuthenticated(request, {
-        failureRedirect: "/"
-    })
 
-    const users = await managementClient.getUsers()
+    const clerkClient = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY
+    })
+    const users = await clerkClient.users.getUserList()
+    // const users = await managementClient.getUsers()
     const dbScores = await db.score.findMany({
         take: 100,
         orderBy: {
@@ -27,7 +27,6 @@ export const loader = async ({ request }: DataFunctionArgs) => {
     const scoreTypeToScores = groupScoresByType(dbScores, users)
 
     return json({
-        profile,
         scoreTypeToScores,
         users,
     })
@@ -78,7 +77,7 @@ export default function Scores() {
                                         }
 
                                         const name = s.user
-                                            ? (s.user.nickname ?? s.user.name ?? s.user.email)
+                                            ? (s.user.username ?? `${s.user.firstName} ${s.user.lastName}` ?? s.user.emailAddresses.at(0)?.emailAddress)
                                             : s.userId
                                         const accuracy = (s.table.expectedSequence.length / s.userSequence.length) * 100
                                         return (

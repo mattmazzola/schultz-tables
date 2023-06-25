@@ -1,8 +1,8 @@
+import { SignedIn, SignedOut, useUser } from "@clerk/remix"
 import { DataFunctionArgs, json } from "@remix-run/node"
-import { Form, Link, useLoaderData } from "@remix-run/react"
+import { Link, useLoaderData } from "@remix-run/react"
 import React from "react"
 import { GameType } from "~/components/GameType"
-import { auth, getSession } from "~/services/auth.server"
 import * as models from '~/types/models'
 import * as utilities from '~/utilities'
 import * as options from '~/utilities/options'
@@ -27,25 +27,15 @@ const initialState: State = {
     gameState: utilities.generateDefaultGameState()
 }
 
-type LoaderError = { message: string } | null
-
 export const loader = async ({ request }: DataFunctionArgs) => {
-    const profile = await auth.isAuthenticated(request)
-    const session = await getSession(request.headers.get("Cookie"))
-    const error = session.get(auth.sessionErrorKey) as LoaderError
-
     return json({
-        profile,
-        error,
         state: initialState,
     })
 }
 
 export default function Index() {
-    const { profile, error, state } = useLoaderData<typeof loader>()
-
-    const hasProfile = profile !== null && typeof profile === 'object'
-
+    const { state } = useLoaderData<typeof loader>()
+    const { user } = useUser()
     const [isUsingMobileDevice, setIsUsingMobileDevice] = React.useState(false)
     // Must be in useEffect because window.navigator is not on server
     React.useEffect(() => {
@@ -74,19 +64,16 @@ export default function Index() {
                         User Agent: {navigator.userAgent}
                     </p>
                 </>}
-            {hasProfile
-                ? <>
-                    <h3>Current User: <Link to={`/users/${profile.id}`}>{profile?.displayName}</Link></h3>
-                </>
-                : <>
-                    {error ? <div>{error.message}</div> : null}
+            <SignedIn>
+                    <h3>Current User: <Link to={`/users/${user?.id}`}>{user?.username ?? user?.emailAddresses.map(e => e.emailAddress).join(', ') ?? user?.id ?? 'Unknown User!'}</Link></h3>
+            </SignedIn>
+            <SignedOut>
+
                     <div className="center">
-                        <Form method="post" action="/auth">
-                            <button type="submit" className="logInButton">Sign In</button>
-                        </Form>
+                          <Link to="/sign-in" className="logInButton">Sign In</Link>
                     </div>
                     <div>You must sign in before you play the game!</div>
-                </>}
+            </SignedOut>
             <div className="home-page">
                 {isUsingMobileDevice === false
                     && <>

@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LinksFunction, MetaFunction } from "@remix-run/node"
+import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -10,6 +10,8 @@ import {
   useCatch
 } from "@remix-run/react"
 
+import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix"
+import { rootAuthLoader } from "@clerk/remix/ssr.server"
 import React from "react"
 import MockGame from "~/components/MockGame"
 import gameStyles from "~/styles/game.css"
@@ -54,7 +56,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   )
 }
 
-export function CatchBoundary() {
+const CustomCatchBoundary = () => {
   const caught = useCatch()
   return (
     <AppComponent>
@@ -63,13 +65,23 @@ export function CatchBoundary() {
   )
 }
 
-export default function App() {
+export const CatchBoundary = ClerkCatchBoundary(CustomCatchBoundary)
+
+export const loader: LoaderFunction = (args) => {
+  return rootAuthLoader(args, {
+    loadUser: true,
+  })
+}
+
+const App = () => {
   return (
     <AppComponent>
       <Outlet />
     </AppComponent>
   )
 }
+
+export default ClerkApp(App)
 
 const AppComponent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (

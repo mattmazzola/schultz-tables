@@ -1,20 +1,22 @@
-import { DataFunctionArgs, json } from "@remix-run/node"
+import { createClerkClient } from '@clerk/remix/api.server'
+import { DataFunctionArgs, json, redirect } from "@remix-run/node"
 import { Link, useLoaderData } from "@remix-run/react"
-import { auth } from "~/services/auth.server"
-import { managementClient } from "~/services/auth0management.server"
-import { db } from "~/services/db.server"
+import { db } from '~/services/db.server'
 
 export const loader = async ({ request, params }: DataFunctionArgs) => {
     const { userId } = params
-    await auth.isAuthenticated(request, {
-        failureRedirect: "/"
+
+    if (!userId) {
+      return redirect('/')
+    }
+
+    const clerkClient = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY
     })
-
-    const user = await managementClient.getUser({ id: userId! })
-
+    const user = await clerkClient.users.getUser(userId)
     const userScores = await db.score.findMany({
         where: {
-            userId
+            userId: user.id
         }
     })
 
@@ -31,7 +33,7 @@ export default function Users() {
         <>
             <h1><Link to="/users">Users</Link> &gt; User</h1>
             <div className="user">
-                <img src={user.picture} className="userImage" /><div>{user.nickname}</div><div>{user.email}</div><div>{user.user_id}</div>
+                <img src={user.imageUrl} className="userImage" /><div>{user.username}</div><div>{user.emailAddresses.at(0)?.emailAddress}</div><div>{user.id}</div>
             </div>
             {userScores.map(score => {
                 return (

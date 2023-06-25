@@ -1,37 +1,34 @@
-import { DataFunctionArgs, json, LinksFunction } from "@remix-run/node"
-import { Form, useLoaderData } from "@remix-run/react"
-import { auth } from "~/services/auth.server"
+import { UserButton, useUser } from "@clerk/remix"
+import { getAuth } from "@clerk/remix/ssr.server"
+import { LinksFunction, LoaderArgs, redirect } from "@remix-run/node"
 import profileStyles from "~/styles/profile.css"
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: profileStyles },
 ]
 
-export const loader = async ({ request }: DataFunctionArgs) => {
-  const profile = await auth.isAuthenticated(request, {
-    failureRedirect: "/"
-  })
+export const loader = async (args: LoaderArgs) => {
+  const { userId } = await getAuth(args)
+  if (typeof userId !== 'string') {
+    return redirect('/')
+  }
 
-  return json({
-    profile,
-  })
+  return null
 }
 
 export default function Profile() {
-  const { profile } = useLoaderData<typeof loader>()
+  const { user } = useUser()
 
   return (
     <>
       <h1>Profile</h1>
       <div className="profile">
-        <img src={profile.photos?.at(0)?.value} alt="Profile Picture" className="profilePicture" />
-        <Form method="post" action="/logout">
-          <button type="submit" className="profileLogOutButton">Sign Out</button>
-        </Form>
+        <img src={user?.imageUrl} alt="Profile Picture" className="profilePicture" />
+        <UserButton afterSignOutUrl="/" />
 
         <div>
-          <h2>{profile?._json?.nickname ?? profile?.displayName ?? profile.name?.familyName}</h2>
-          <p>{profile.emails?.at(0)?.value}</p>
+          <h2>{user?.username ?? user?.id}</h2>
+          <p>{user?.emailAddresses.map(e => e.emailAddress).join(', ')}</p>
         </div>
         {/* <pre>
         <h3>ID Token:</h3>
