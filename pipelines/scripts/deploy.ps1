@@ -79,11 +79,15 @@ else {
 
 Write-Step "Provision $schultzTablesResourceGroupName Resources (What-If: $($WhatIf))"
 
-Write-Step "Build and Push $clientImageName Image"
+Write-Step "Build $clientImageName Image (What-If: $($WhatIf))"
 docker build -t $clientImageName "$repoRoot/client-remix"
 
 if ($WhatIf -eq $False) {
+  Write-Step "Push $clientImageName Image (What-If: $($WhatIf))"
   docker push $clientImageName
+}
+else {
+  Write-Step "Skipping Push $clientImageName Image (What-If: $($WhatIf))"
 }
 
 Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
