@@ -22,7 +22,6 @@ $sharedRgString = 'klgoyi'
 $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
-$sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
 
 Write-Step "Create Resource Group"
 az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
@@ -35,6 +34,7 @@ $cookieSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'COOK
 $databaseUrlSecret = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'DATABASE_URL'
 
 Write-Step "Fetch params from Azure"
+$sharedResourceNames = Get-ResourceNames $sharedResourceGroupName $sharedRgString
 $sharedResourceVars = Get-SharedResourceDeploymentVars $sharedResourceGroupName $sharedRgString
 
 $clientContainerName = "$schultzTablesResourceGroupName-client"
