@@ -9,10 +9,10 @@
     border: 2px solid var(--color-grey-dark-1);
 }
 
-.profileLogOutButton {
+.profileLogOutButton button {
     border-radius: 10px;
     border: none;
-    
+
     padding: 1rem 1.5rem;
     font-size: 2rem;
     border: none;

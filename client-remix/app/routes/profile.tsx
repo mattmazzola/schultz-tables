@@ -1,4 +1,4 @@
-import { UserButton, useUser } from "@clerk/remix"
+import { SignOutButton, UserButton, useUser } from "@clerk/remix"
 import { getAuth } from "@clerk/remix/ssr.server"
 import { LinksFunction, LoaderArgs, redirect } from "@remix-run/node"
 import profileStyles from "~/styles/profile.css"
@@ -24,12 +24,15 @@ export default function Profile() {
       <h1>Profile</h1>
       <div className="profile">
         <img src={user?.imageUrl} alt="Profile Picture" className="profilePicture" />
-        <UserButton afterSignOutUrl="/" />
-
         <div>
-          <h2>{user?.username ?? user?.id}</h2>
-          <p>{user?.emailAddresses.map(e => e.emailAddress).join(', ')}</p>
+          <h2>Username: {user?.username ?? user?.id}</h2>
+          <p>Email: {user?.emailAddresses.map(e => e.emailAddress).join(', ')}</p>
         </div>
+        <div className="profileLogOutButton">
+          <SignOutButton />
+        </div>
+        <h2>Manage Account (Click):</h2>
+        <UserButton afterSignOutUrl="/" />
         {/* <pre>
         <h3>ID Token:</h3>
         <code>{JSON.stringify(profile._json, null, 2)}</code>

@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node"
+import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -12,6 +12,8 @@ import {
 
 import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix"
 import { rootAuthLoader } from "@clerk/remix/ssr.server"
+import { cssBundleHref } from "@remix-run/css-bundle"
+import type { V2_MetaFunction } from "@remix-run/node"
 import React from "react"
 import MockGame from "~/components/MockGame"
 import gameStyles from "~/styles/game.css"
@@ -23,16 +25,18 @@ import scoreDetailsStyles from "~/styles/scoreDetails.css"
 import sharedStyles from "~/styles/shared.css"
 import usersStyles from "~/styles/users.css"
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Schultz Tables",
-  viewport: "width=device-width,initial-scale=1",
-  description: "Game to practice using your peripheral vision!",
-  icon: "/favicon.ico",
-})
+export const meta: V2_MetaFunction = () => {
+  return [
+    { charset: "utf-8" },
+    { viewport: "width=device-width,initial-scale=1" },
+    { title: "Schultz Tables" },
+    { name: "description", content: "Game to practice using your peripheral vision!" },
+  ]
+}
 
 export const links: LinksFunction = () => [
-  { rel: 'manifest', href: 'manifest.json' },
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  { rel: 'manifest', href: '/manifest.json' },
   { rel: 'apple-touch-icon', href: 'logo.jpg' },
   { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' },
   { rel: 'stylesheet', href: rootStyles },
@@ -45,7 +49,7 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: usersStyles },
 ]
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: any) => {
   return (
     <AppComponent>
       <p>Something went wrong!</p>
