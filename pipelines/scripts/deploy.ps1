@@ -1,10 +1,9 @@
 Param([switch]$WhatIf = $True)
 
 echo "PScriptRoot: $PScriptRoot"
-$repoRoot = If ('' -eq $PScriptRoot) {
+$repoRoot = if ('' -eq $PScriptRoot) {
   "$PSScriptRoot/../.."
-}
-Else {
+} else {
   "."
 }
 
@@ -68,8 +67,7 @@ if ($WhatIf -eq $True) {
     -g $sharedResourceGroupName `
     -f $mainBicepFile `
     --what-if
-}
-else {
+} else {
   az deployment group create `
     -g $sharedResourceGroupName `
     -f $mainBicepFile `
@@ -89,7 +87,6 @@ if ($WhatIf -eq $False) {
 else {
   Write-Step "Skipping Push $clientImageName Image (What-If: $($WhatIf))"
 }
-
 
 Write-Step "Get Top Image from ACR to Verify Push (What-If: $($WhatIf))"
 az acr repository show-tags --name $($sharedResourceVars.registryUrl) --repository $clientContainerName --orderby time_desc --top 1 -o tsv
@@ -129,7 +126,6 @@ else {
       cookieSecret=$cookieSecret `
       --query "properties.outputs.fqdn.value" `
       -o tsv)
-
 
   $clientUrl = "https://$clientFqdn"
   Write-Output $clientUrl
