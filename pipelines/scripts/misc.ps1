@@ -15,7 +15,7 @@ Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
 
 Write-Step "Get ENV Vars from file"
 $envFilePath = $(Resolve-Path "$repoRoot/.env").Path
-$auth0ReturnToUrl = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'AUTH0_RETURN_TO_URL'
-$auth0ReturnToUrl
+$clerkPublishableKey = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'CLERK_PUBLISHABLE_KEY'
+$clerkPublishableKey
 
 $imageTag = $(az acr repository show-tags -n $sharedResourceNames.containerRegistry --repository "$schultzTablesResourceGroupName-client" --top 1 --orderby time_desc -o tsv)
