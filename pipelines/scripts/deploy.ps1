@@ -90,6 +90,10 @@ else {
   Write-Step "Skipping Push $clientImageName Image (What-If: $($WhatIf))"
 }
 
+
+Write-Step "Get Top Image from ACR to Verify Push (What-If: $($WhatIf))"
+az acr repository show-tags --name $($sharedResourceVars.registryUrl) --repository $clientContainerName --orderby time_desc --top 1 -o tsv
+
 Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
 
