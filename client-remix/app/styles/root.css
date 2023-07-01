@@ -121,6 +121,7 @@ nav a {
 nav {
   display: flex;
   justify-content: center;
+  align-items: end;
 }
 
 nav .link {
@@ -199,7 +200,7 @@ main>*>h1 {
 .logInButton {
   border-radius: 10px;
   border: none;
-  
+
   padding: 1rem 1.5rem;
   font-size: 2rem;
   border: none;

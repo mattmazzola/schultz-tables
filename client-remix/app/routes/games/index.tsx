@@ -45,6 +45,11 @@ export default function Index() {
 
     return (
         <>
+            <SignedIn>
+                <div className="center">
+                    <h3>Current User: <Link to={`/users/${user?.id}`}>{user?.username ?? user?.emailAddresses.map(e => e.emailAddress).join(', ') ?? user?.id ?? 'Unknown User!'}</Link></h3>
+                </div>
+            </SignedIn>
             <h1>What is it?</h1>
             <p>Schultz Tables is a game to develop the use of peripheral vision. Use soft focus to become aware of larger area.</p>
             <h1>How to play?</h1>
@@ -64,15 +69,11 @@ export default function Index() {
                         User Agent: {navigator.userAgent}
                     </p>
                 </>}
-            <SignedIn>
-                    <h3>Current User: <Link to={`/users/${user?.id}`}>{user?.username ?? user?.emailAddresses.map(e => e.emailAddress).join(', ') ?? user?.id ?? 'Unknown User!'}</Link></h3>
-            </SignedIn>
             <SignedOut>
-
-                    <div className="center">
-                          <Link to="/sign-in" className="logInButton">Sign In</Link>
-                    </div>
+                <div className="center">
+                    <Link to="/sign-in" className="logInButton">Sign In</Link>
                     <div>You must sign in before you play the game!</div>
+                </div>
             </SignedOut>
             <div className="home-page">
                 {isUsingMobileDevice === false
