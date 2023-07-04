@@ -23,7 +23,7 @@ $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
 
-Write-Step "Create Resource Group"
+Write-Step "Create Resource Group $schultzTablesResourceGroupName"
 az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
 
 $envFilePath = $(Resolve-Path "$repoRoot/.env").Path
@@ -60,17 +60,17 @@ $data = [ordered]@{
 Write-Hash "Data" $data
 
 Write-Step "Provision Additional $sharedResourceGroupName Resources (What-If: $($WhatIf))"
-$mainBicepFile = "$repoRoot/bicep/main.bicep"
+$mainBicepFilePath = "$repoRoot/bicep/main.bicep"
 
 if ($WhatIf -eq $True) {
   az deployment group create `
     -g $sharedResourceGroupName `
-    -f $mainBicepFile `
+    -f $mainBicepFilePath `
     --what-if
 } else {
   az deployment group create `
     -g $sharedResourceGroupName `
-    -f $mainBicepFile `
+    -f $mainBicepFilePath `
     --query "properties.provisioningState" `
     -o tsv
 }
@@ -88,8 +88,8 @@ else {
   Write-Step "Skipping Push $clientImageName Image (What-If: $($WhatIf))"
 }
 
-Write-Step "Get Top Image from ACR to Verify Push (What-If: $($WhatIf))"
-az acr repository show-tags --name $($sharedResourceVars.registryUrl) --repository $clientContainerName --orderby time_desc --top 1 -o tsv
+Write-Step "Get Top Image from $($sharedResourceVars.registryUrl) respository $clientContainerName to Verify Push (What-If: $($WhatIf))"
+az acr repository show-tags --name $($sharedResourceVars.registryUrl)  --repository $clientContainerName --orderby time_desc --top 1 -o tsv
 
 Write-Step "Deploy $clientImageName Container App (What-If: $($WhatIf))"
 $clientBicepContainerDeploymentFilePath = "$repoRoot/bicep/modules/clientContainerApp.bicep"
@@ -101,7 +101,7 @@ if ($WhatIf -eq $True) {
     -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
     registryUrl=$($sharedResourceVars.registryUrl) `
     registryUsername=$($sharedResourceVars.registryUsername) `
-    registryPassword=$($sharedResourceVars.registryUsername) `
+    registryPassword=$($sharedResourceVars.registryPassword) `
     imageName=$clientImageName `
     containerName=$clientContainerName `
     clerkPublishableKey=$clerkPublishableKey `
@@ -117,7 +117,7 @@ else {
       -p managedEnvironmentResourceId=$($sharedResourceVars.containerAppsEnvResourceId) `
       registryUrl=$($sharedResourceVars.registryUrl) `
       registryUsername=$($sharedResourceVars.registryUsername) `
-      registryPassword=$($sharedResourceVars.registryUsername) `
+      registryPassword=$($sharedResourceVars.registryPassword) `
       imageName=$clientImageName `
       containerName=$clientContainerName `
       clerkPublishableKey=$clerkPublishableKey `
