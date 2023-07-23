@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction } from "@remix-run/node"
+import type { LinksFunction, LoaderFunction } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -7,13 +7,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch
+  isRouteErrorResponse,
+  useRouteError
 } from "@remix-run/react"
 
-import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix"
+import { ClerkApp, V2_ClerkErrorBoundary } from "@clerk/remix"
 import { rootAuthLoader } from "@clerk/remix/ssr.server"
 import { cssBundleHref } from "@remix-run/css-bundle"
 import type { V2_MetaFunction } from "@remix-run/node"
+import { V2_ErrorBoundaryComponent } from "@remix-run/react/dist/routeModules"
 import React from "react"
 import MockGame from "~/components/MockGame"
 import gameStyles from "~/styles/game.css"
@@ -49,27 +51,26 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: usersStyles },
 ]
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: any) => {
+const CustomErrorBoundary: V2_ErrorBoundaryComponent = () => {
+  const error = useRouteError()
+
+  if (isRouteErrorResponse(error)) {
+    <AppComponent>
+      {error.status} {error.statusText}
+    </AppComponent>
+  }
+
   return (
     <AppComponent>
       <p>Something went wrong!</p>
       <pre>
-        <code>{error.message}</code>
+        <code>{(error as any)?.message}</code>
       </pre>
     </AppComponent>
   )
 }
 
-const CustomCatchBoundary = () => {
-  const caught = useCatch()
-  return (
-    <AppComponent>
-      {caught.status} {caught.statusText}
-    </AppComponent>
-  )
-}
-
-export const CatchBoundary = ClerkCatchBoundary(CustomCatchBoundary)
+export const ErrorBoundary = V2_ClerkErrorBoundary(CustomErrorBoundary)
 
 export const loader: LoaderFunction = (args) => {
   return rootAuthLoader(args, {

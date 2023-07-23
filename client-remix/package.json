@@ -8,7 +8,7 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@clerk/remix": "^2.6.13",
+    "@clerk/remix": "^2.9.0",
     "@prisma/client": "^4.8.1",
     "@remix-run/css-bundle": "^1.17.1",
     "@remix-run/node": "^1.17.1",

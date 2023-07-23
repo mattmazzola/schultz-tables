@@ -22,10 +22,6 @@ $sharedRgString = 'klgoyi'
 $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
-
-Write-Step "Create Resource Group $schultzTablesResourceGroupName"
-az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
-
 $envFilePath = $(Resolve-Path "$repoRoot/.env").Path
 Write-Step "Get ENV Vars from: $envFilePath"
 $clerkPublishableKey = Get-EnvVarFromFile -envFilePath $envFilePath -variableName 'CLERK_PUBLISHABLE_KEY'
@@ -74,6 +70,9 @@ if ($WhatIf -eq $True) {
     --query "properties.provisioningState" `
     -o tsv
 }
+
+Write-Step "Create Resource Group $schultzTablesResourceGroupName"
+az group create -l $resourceGroupLocation -g $schultzTablesResourceGroupName --query name -o tsv
 
 Write-Step "Provision $schultzTablesResourceGroupName Resources (What-If: $($WhatIf))"
 
