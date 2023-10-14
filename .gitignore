@@ -4,3 +4,6 @@ build/
 *.log
 *.env
 *.env*.local
+
+# Azure Developer CLI Resources
+.azure

@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: schultz-tables
+metadata:
+    template: azd-init@1.4.2
+
+infra:
+  path: bicep
+
+hooks:
+  provision:
+    sh: pwsh
+    run: ./pipelines/scripts/provisionShared.ps1
+
+services:
+  client-remix:
+    resourceName: client
+    project: client-remix
+    language: ts
+    host: containerapp
+    # mode: ./modules/clientContainerApp.bicep
+    hooks:
+    #   package:
+    #     sh: pwsh
+    #     run: ./pipelines/scripts/packageSchultzTablesClient.ps1
+      preprovision:
+        sh: pwsh
+        run: ./pipelines/scripts/provisionSchultzTablesClient.ps1
+        interactive: true
