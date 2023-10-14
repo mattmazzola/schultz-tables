@@ -58,7 +58,4 @@ COPY --from=build /myapp/prisma /myapp/prisma
 RUN chmod +x ./start.sh
 USER node
 
-ENTRYPOINT [ "npm", "run", "start" ]
-
-# TODO: Find why start.sh script does not have permissions?
-# ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT [ "sh", "./start.sh" ]
