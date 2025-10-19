@@ -36,7 +36,7 @@ GO
 ```
 
 ```
-npx prism db push
+npx prisma db push
 ```
 
 ## Use Prisma to execute command against DB
