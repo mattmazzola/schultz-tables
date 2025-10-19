@@ -1,0 +1,40 @@
+|       | 
+|=      | 
+
+  WARNING: Feature 'resourceGroupDeployments' is in alpha stage.
+  To learn more about alpha features and their support, visit https://aka.ms/azd-feature-stages.
+
+
+Packaging services (azd package)
+
+|       | 
+|=      | 
+|==     | 
+|===    | 
+  (Γ£ô) Done: Packaging service client-remix
+  - Image Hash: sha256:f3a40955e6bdeb98787a743a8fb2abf6a10d2f0c25fef5e294aa42470db2879f
+  - Image Tag: schultz-tables/client-remix-schultz-tables:azd-deploy-1697325971
+
+Provisioning Azure resources (azd provision)
+Provisioning Azure resources in subscription (Visual Studio Enterprise Subscription) 375b0f6d-8ad5-412d-9e11-15d36d14dc63 and location (westus3) can take some time.
+
+|       | 
+|=      | 
+
+  WARNING: Feature 'resourceGroupDeployments' is in alpha stage.
+  To learn more about alpha features and their support, visit https://aka.ms/azd-feature-stages.
+
+|       | 
+|=      | 
+|==     | 
+|===    | 
+  (-) Skipped: Didn't find new changes.
+
+
+Deploying services (azd deploy)
+
+|       | 
+|=      | 
+  (x) Failed: Deploying service client-remix
+
+ERROR: getting target resource: resource not found: unable to find a resource with name 'client'. Ensure that resourceName in azure.yaml is valid, and rerun provision

@@ -7,23 +7,23 @@ metadata:
 infra:
   path: bicep
 
-hooks:
-  provision:
-    sh: pwsh
-    run: ./pipelines/scripts/provisionShared.ps1
-
 services:
   client-remix:
     resourceName: client
     project: client-remix
     language: ts
     host: containerapp
-    # mode: ./modules/clientContainerApp.bicep
+    mode: ./modules/clientContainerApp.bicep
     hooks:
-    #   package:
-    #     sh: pwsh
-    #     run: ./pipelines/scripts/packageSchultzTablesClient.ps1
+      prepackage:
+        sh: pwsh
+        run: ./pipelines/scripts/packageSchultzTablesClient.ps1
+        interactive: true
       preprovision:
+        sh: pwsh
+        run: ./pipelines/scripts/provisionShared.ps1
+        interactive: true
+      postprovision:
         sh: pwsh
         run: ./pipelines/scripts/provisionSchultzTablesClient.ps1
         interactive: true

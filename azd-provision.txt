@@ -1,0 +1,42 @@
+PScriptRoot: 
+Repo Root: .
+Inputs
+======
+
+[32;1mName                           Value[0m
+[32;1m----                           -----[0m
+WhatIf                         False
+
+=======================
+Fetch params from Azure
+=======================
+Data
+====
+containerAppsEnvResourceId     /subscriptions/375b0f6d-8ad5-412d-9e11-15d36d14dc63/resourceGroups/shared/providers/Microsoft.App/managedEnvironments/shared-containe.
+registryUrl                    sharedklgoyiacr.azurecr.io
+registryUsername               sharedklgoyiacr
+registryPassword               b+tpJFrZhs...
+
+======================================================
+Provision Additional shared Resources (What-If: False)
+======================================================
+Succeeded
+
+
+Provisioning Azure resources (azd provision)
+Provisioning Azure resources in subscription (Visual Studio Enterprise Subscription) 375b0f6d-8ad5-412d-9e11-15d36d14dc63 and location (westus3) can take some time.
+
+|       | 
+|=      | 
+
+  WARNING: Feature 'resourceGroupDeployments' is in alpha stage.
+  To learn more about alpha features and their support, visit https://aka.ms/azd-feature-stages.
+
+|       | 
+|       | 
+|=      | 
+|==     | 
+|===    | 
+  (-) Skipped: Didn't find new changes.
+
+SUCCESS: There are no changes to provision for your application.
