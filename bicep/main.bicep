@@ -1,4 +1,4 @@
-var uniqueRgString = take(uniqueString(resourceGroup().id), 6)
+var uniqueRgString = take(uniqueString(subscription().id, resourceGroup().id), 6)
 
 module sqlDatabase 'modules/sqlDatabase.bicep' = {
   name: 'sqlDatabaseModule'
