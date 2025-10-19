@@ -1,15 +1,15 @@
 Param([switch]$WhatIf = $True)
 
-echo "PScriptRoot: $PScriptRoot"
+Write-Output "PScriptRoot: $PScriptRoot"
 $repoRoot = if ('' -eq $PScriptRoot) {
   "$PSScriptRoot/../.."
 } else {
   "."
 }
 
-echo "Repo Root: $repoRoot"
+Write-Output "Repo Root: $repoRoot"
 
-Import-Module "C:/repos/shared-resources/pipelines/scripts/common.psm1" -Force
+Import-Module "$repoRoot/../shared-resources/pipelines/scripts/common.psm1" -Force
 
 $inputs = @{
   "WhatIf" = $WhatIf
@@ -18,7 +18,7 @@ $inputs = @{
 Write-Hash "Inputs" $inputs
 
 $sharedResourceGroupName = "shared"
-$sharedRgString = 'klgoyi'
+$sharedRgString = 'zkpwxz'
 $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
