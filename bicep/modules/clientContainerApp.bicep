@@ -26,7 +26,7 @@ var clerkSecretName = 'clerk-api-secret'
 var cookieSecretName = 'cookie-secret'
 var databaseUrlSecretName = 'database-url'
 
-resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
+resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
   name: name
   location: location
   properties: {
@@ -96,6 +96,7 @@ resource containerApp 'Microsoft.App/containerapps@2022-03-01' = {
       scale: {
         minReplicas: 0
         maxReplicas: 1
+        cooldownPeriod: 1800
       }
     }
   }

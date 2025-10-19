@@ -36,7 +36,7 @@ $sharedResourceVars = Get-SharedResourceDeploymentVars $sharedResourceGroupName 
 $clientContainerName = "$schultzTablesResourceGroupName-client"
 $clientImageTag = $(Get-Date -Format "yyyyMMddhhmm")
 $clientImageName = "$($sharedResourceVars.registryUrl)/${clientContainerName}:${clientImageTag}"
-$secrectCharRevealLength = 10
+$secrectCharRevealLength = 20
 
 $data = [ordered]@{
   "clerkPublishableKey"         = $clerkPublishableKey
