@@ -16,10 +16,10 @@ https://docs.dapr.io/reference/components-reference/supported-state-stores/setup
 
 ### Setup Context
 
-```powershell
+```zsh
 az login
-az account set -n "375b0f6d-8ad5-412d-9e11-15d36d14dc63"
-az account show --query "name"
+az account set -n "Matt Mazzola - Personal Projects Recovered"
+az account show --query "name" -o tsv
 az acr login --name sharedklgoyiacr
 ```
 

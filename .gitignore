@@ -5,5 +5,7 @@ build/
 *.env
 *.env*.local
 
+!.devcontainer/devcontainer.env
+
 # Azure Developer CLI Resources
 .azure
