@@ -20,7 +20,7 @@ $inputs = @{
 Write-Hash "Inputs" $inputs
 
 $sharedResourceGroupName = "shared"
-$sharedRgString = 'zkpwxz'
+$sharedRgString = 'klgoyi'
 $resourceGroupLocation = "westus3"
 $schultzTablesResourceGroupName = "schultztables"
 
