@@ -10,7 +10,7 @@
         "ghcr.io/azure/azure-dev/azd:0": {},
         "ghcr.io/devcontainers/features/powershell:1": {},
         "ghcr.io/devcontainers/features/github-cli": {},
-        "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {},
+        "ghcr.io/devcontainers/features/python": {},
         "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
         "ghcr.io/devcontainers/features/docker-in-docker": {},
     },
@@ -19,33 +19,36 @@
             "settings": {
                 "editor.stickyScroll.defaultModel": "outlineModel",
                 "editor.stickyScroll.enabled": true,
-                "notebook.stickyScroll.enabled": true,
                 "editor.codeActionsOnSave": {
                     "source.fixAll": "explicit",
                     "source.organizeImports": "explicit"
                 }
             },
             "extensions": [
-                "dotenv.dotenv-vscode",
                 "eamodio.gitlens",
                 "EditorConfig.EditorConfig",
                 "foxundermoon.shell-format",
                 "GitHub.copilot-chat",
                 "mhutchie.git-graph",
+                "ms-azuretools.azure-dev",
                 "ms-azuretools.vscode-bicep",
                 "ms-azuretools.vscode-docker",
                 "ms-vscode.powershell",
+                "redhat.vscode-yaml",
                 "yzhang.markdown-all-in-one",
             ]
         }
     },
+    "hostRequirements": {
+        "gpu": "optional"
+    },
+    "onCreateCommand": "bash ./.devcontainer/onCreateCommand.sh",
+    "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
+    "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
     "runArgs": [
         "--env-file",
         ".devcontainer/devcontainer.env"
     ],
-    "onCreateCommand": "bash ./.devcontainer/onCreateCommand.sh",
-    "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
-    "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/dummyOne/schultz-tables,type=bind",
     "workspaceFolder": "/workspace/dummyOne/schultz-tables",
     "mounts": [

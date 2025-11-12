@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -ex
+set -e
 
 echo "Print OS and Tool Versions"
 
@@ -9,10 +9,16 @@ lsb_release -a
 
 # Tools
 git --version
-docker --version
+pwsh --version
+
 az version
+az bicep version
 azd version
+
+docker --version
 jq --version
+gh --version
+
 npm --version
 node --version
 
