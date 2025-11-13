@@ -5,7 +5,13 @@ charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
-tab_width = 2
+indent_style = space
+indent_size = 2
 
+# 4 space indentation
 [{.py,.md,.ps1,.psm1}]
-tab_width = 4
+indent_size = 4
+
+# 2 space indentation
+[*.{md,sh,yaml,yml}]
+indent_size = 2

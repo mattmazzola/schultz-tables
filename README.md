@@ -16,21 +16,24 @@ https://docs.dapr.io/reference/components-reference/supported-state-stores/setup
 
 ### Setup Context
 
-```zsh
+```sh
 az login
-az account set -n "Matt Mazzola - Personal Projects Recovered"
-az account show --query "name" -o tsv
+# Matt Mazzola - Personal
+az account set -n 375b0f6d-8ad5-412d-9e11-15d36d14dc63
 az acr login --name sharedklgoyiacr
+az account show --query "name" -o tsv
 ```
 
 ### Verify Deployment
 
-```powershell
-./pipelines/scripts/deploy.ps1
+```sh
+azd provision --preview
+
+./pipelines/scripts/what-if.sh
 ```
 
 ### Deploy
 
-```powershell
-./pipelines/scripts/deploy.ps1 -WhatIf:$False
+```sh
+azd up
 ```

@@ -1,10 +1,19 @@
+# Azure Developer CLI
+.azure/*
+!.azure/.gitignore
+!.azure/config.json
+
+# Node.js dependencies
 node_modules/
 build/
 
-*.log
+
+# Environment Vars and Secrets
 *.env
 *.env*.local
+!.devcontainer/devcontainer.env
+
+# Logs
+*.log
 
 .azure
-
-!.devcontainer/devcontainer.env

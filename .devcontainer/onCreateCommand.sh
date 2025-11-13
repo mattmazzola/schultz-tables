@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -ex
+set -e
 
 echo "CONFIGURING GIT"
 git config --global safe.directory '*'

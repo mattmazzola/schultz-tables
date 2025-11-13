@@ -1,9 +1,6 @@
 # base node image
 FROM node:18-bullseye-slim AS base
 
-# set for base and all layer that inherit from it
-ENV NODE_ENV="production"
-
 # Install openssl for Prisma
 RUN apt-get update && apt-get install -y openssl sqlite3
 
@@ -12,16 +9,18 @@ FROM base AS deps
 
 WORKDIR /myapp
 
-ADD package.json ./
-RUN npm install --production=false
+ADD package.json package-lock.json ./
+RUN npm ci
 
 # Setup production node_modules
 FROM base AS production-deps
 
+ENV NODE_ENV="production"
+
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json ./
+ADD package.json package-lock.json ./
 RUN npm prune --production
 
 # Build the app
@@ -40,9 +39,8 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM base
 
-ENV PORT="8080"
-
 ENV NODE_ENV="production"
+ENV PORT="8080"
 
 WORKDIR /myapp
 
@@ -55,7 +53,6 @@ COPY --from=build /myapp/package.json /myapp/package.json
 COPY --from=build /myapp/start.sh /myapp/start.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 
-RUN chmod +x ./start.sh
 USER node
 
 ENTRYPOINT [ "sh", "./start.sh" ]
