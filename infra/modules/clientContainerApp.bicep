@@ -7,9 +7,8 @@ param managedEnvironmentResourceId string
 param imageName string
 param containerName string
 
-param registryUsername string
-@secure()
-param registryPassword string
+param sharedResourceGroupName string
+param registryName string
 
 param clerkPublishableKey string
 @secure()
@@ -20,6 +19,12 @@ param databaseUrl string
 
 @secure()
 param cookieSecret string
+
+// Reference the ACR in the shared resource group
+resource sharedAcr 'Microsoft.ContainerRegistry/registries@2025-05-01-preview' existing = {
+  name: registryName
+  scope: resourceGroup(sharedResourceGroupName)
+}
 
 var registryPasswordName = 'container-registry-password'
 var clerkSecretName = 'clerk-api-secret'
@@ -40,15 +45,15 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
       }
       registries: [
         {
-          server: '${registryUsername}.azurecr.io'
-          username: registryUsername
+          server: '${registryName}.azurecr.io'
+          username: registryName
           passwordSecretRef: registryPasswordName
         }
       ]
       secrets: [
         {
           name: registryPasswordName
-          value: registryPassword
+          value: sharedAcr.listCredentials().passwords[0].value
         }
         {
           name: clerkSecretName
