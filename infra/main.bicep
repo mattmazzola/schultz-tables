@@ -65,7 +65,7 @@ module clientContainerApp 'modules/clientContainerApp.bicep' = {
   params: {
     name: containerAppName
     location: location
-    tags: union(tags, { 'azd-service-name': 'site' })
+    tags: union(tags, { 'azd-service-name': 'client' })
     imageName: !empty(containerAppImageName) ? containerAppImageName : defaultImageName
     managedEnvironmentResourceId: sharedContainerAppsEnv.id
     containerName: containerAppName

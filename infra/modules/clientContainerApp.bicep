@@ -72,7 +72,7 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
           // https://learn.microsoft.com/en-us/azure/container-apps/containers#configuration
           resources: {
             cpu: any('0.5')
-            memory: '0.5Gi'
+            memory: '1.0Gi'
           }
           env: [
             {
