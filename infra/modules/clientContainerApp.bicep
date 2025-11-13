@@ -1,10 +1,15 @@
 param name string = '${resourceGroup().name}-client'
 param location string = resourceGroup().location
+param tags object = {}
 
 param managedEnvironmentResourceId string
 
 param imageName string
 param containerName string
+
+param registryUsername string
+@secure()
+param registryPassword string
 
 param clerkPublishableKey string
 @secure()
@@ -16,11 +21,6 @@ param databaseUrl string
 @secure()
 param cookieSecret string
 
-param registryUrl string
-param registryUsername string
-@secure()
-param registryPassword string
-
 var registryPasswordName = 'container-registry-password'
 var clerkSecretName = 'clerk-api-secret'
 var cookieSecretName = 'cookie-secret'
@@ -29,6 +29,7 @@ var databaseUrlSecretName = 'database-url'
 resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
   name: name
   location: location
+  tags: tags
   properties: {
     managedEnvironmentId: managedEnvironmentResourceId
     configuration: {
@@ -39,7 +40,7 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
       }
       registries: [
         {
-          server: registryUrl
+          server: '${registryUsername}.azurecr.io'
           username: registryUsername
           passwordSecretRef: registryPasswordName
         }
@@ -71,7 +72,7 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
           // https://learn.microsoft.com/en-us/azure/container-apps/containers#configuration
           resources: {
             cpu: any('0.5')
-            memory: '1.0Gi'
+            memory: '0.5Gi'
           }
           env: [
             {
@@ -96,10 +97,12 @@ resource containerApp 'Microsoft.App/containerApps@2025-02-02-preview' = {
       scale: {
         minReplicas: 0
         maxReplicas: 1
+        // 30 Minutes
         cooldownPeriod: 1800
       }
     }
   }
 }
 
-output fqdn string = containerApp.properties.configuration.ingress.fqdn
+output name string = containerApp.name
+output appUrl string = 'https://${containerApp.properties.configuration.ingress.fqdn}'

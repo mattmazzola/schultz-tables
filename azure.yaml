@@ -9,7 +9,7 @@ services:
     client:
         project: client-remix
         host: containerapp
-        language: dockerfile
+        language: docker
         docker:
             path: Dockerfile
 

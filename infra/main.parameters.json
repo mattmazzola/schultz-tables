@@ -12,16 +12,28 @@
       "value": "${AZURE_RESOURCE_GROUP}"
     },
     "sharedResourceGroupName": {
-      "value": "${SHARED_RESOURCE_GROUP=shared}"
+      "value": "${SHARED_RESOURCE_GROUP}"
     },
     "sharedContainerAppsEnvironmentName": {
-      "value": "${SHARED_CONTAINER_APPS_ENVIRONMENT_NAME=shared-containerappsenv}"
+      "value": "${SHARED_CONTAINER_APPS_ENVIRONMENT_NAME}"
     },
     "sharedAcrName": {
-      "value": "${SHARED_ACR_NAME=sharedklgoyiacr}"
+      "value": "${SHARED_ACR_NAME}"
     },
     "containerAppName": {
       "value": "${SERVICE_CLIENT_NAME}"
+    },
+    "cookieSecret": {
+      "value": "${COOKIE_SECRET}"
+    },
+    "clerkPublishableKey": {
+      "value": "${CLERK_PUBLISHABLE_KEY}"
+    },
+    "clerkSecretKey": {
+      "value": "${CLERK_SECRET_KEY}"
+    },
+    "databaseUrl": {
+      "value": "${DATABASE_URL}"
     }
   }
 }
