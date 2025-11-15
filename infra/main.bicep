@@ -69,8 +69,8 @@ module clientContainerApp 'modules/clientContainerApp.bicep' = {
     imageName: !empty(containerAppImageName) ? containerAppImageName : defaultImageName
     managedEnvironmentResourceId: sharedContainerAppsEnv.id
     containerName: containerAppName
-    sharedResourceGroupName: sharedResourceGroupName
     registryName: sharedAcr.name
+    registryPassword: sharedAcr.listCredentials().passwords[0].value
     clerkPublishableKey: clerkPublishableKey
     clerkSecretKey: clerkSecretKey
     cookieSecret: cookieSecret
