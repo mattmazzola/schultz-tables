@@ -1,17 +1,31 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "client-remix"
-		},
-		{
-			"path": "../shared-resources"
-		}
-	],
-	"settings": {
-		"powershell.cwd": "c:\\repos\\schultz-tables",
-		"dotenv.enableAutocloaking": false
-	}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "client-remix"
+    },
+    {
+      "path": "../shared-resources"
+    }
+  ],
+  "settings": {
+    "powershell.cwd": "c:\\repos\\schultz-tables",
+    "dotenv.enableAutocloaking": false,
+    "git.autorefresh": true,
+    "git.autofetch": false,
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/build/**": true,
+      "**/dist/**": true,
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/build": true,
+      "**/dist": true
+    }
+  }
 }
